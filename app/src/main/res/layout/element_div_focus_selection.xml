@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <!--Divisors and focus for the time selection lists elements-->
+    <RelativeLayout
+        android:id="@+id/time_selection_div_focus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scaleX="2.3"
+        android:scaleY="2.3">
+
+        <RelativeLayout
+            android:id="@+id/time_selection_div"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@id/time_divisor_center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/grey_medium_lighter"/>
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/grey_medium_lighter"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/time_divisor_center"
+                android:layout_width="29dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal" />
+
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_toEndOf="@id/time_divisor_center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/grey_medium_lighter"/>
+
+                <LinearLayout
+                    android:layout_width="48dp"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/grey_medium_lighter"/>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/time_selection_focus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@id/time_focus_center">
+
+                <RelativeLayout
+                    android:id="@+id/hour_selection_focus"
+                    android:layout_width="50dp"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/selection_list_focus"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/time_focus_center"
+                android:layout_width="29dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_toEndOf="@id/time_focus_center">
+
+                <RelativeLayout
+                    android:id="@+id/minute_selection_focus"
+                    android:layout_width="50dp"
+                    android:layout_height="46dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/selection_list_focus"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

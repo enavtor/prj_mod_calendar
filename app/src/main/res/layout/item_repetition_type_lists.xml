@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="60dp"
+    android:layout_width="85dp"
+    android:background="@drawable/calendar_focus">
+
+    <RelativeLayout
+        android:id="@+id/selected_item_background"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/selected_rep_type_item"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:background="@color/grey_light_darker" />
+
+    <TextView
+        android:id="@+id/rep_type_item_text"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginStart="1dp"
+        android:padding="2dp"
+        android:textSize="30sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/black"/>
+</RelativeLayout>

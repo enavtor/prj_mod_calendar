@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="600dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@color/grey_lighter">
+
+    <TextView
+        android:id="@+id/date_text"
+        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:paddingStart="10dp"
+        android:padding="2dp"
+        android:gravity="start"
+        android:background="@color/headers_background"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:scrollbars="vertical"
+        android:scrollbarSize="6dp"
+        android:scrollbarThumbVertical="@color/grey_light"
+        android:scrollbarTrackVertical="@color/grey_background"
+        android:fadeScrollbars="false"/>
+</LinearLayout>

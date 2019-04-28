@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_transparent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="450dp"
+        android:layout_height="wrap_content"
+        android:paddingTop="9dp"
+        android:paddingBottom="12dp"
+        android:scaleY="1.5"
+        android:scaleX="1.5"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/date_picker_background">
+
+        <TextView
+            android:id="@+id/date_picker_hint_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="25sp"/>
+
+        <RelativeLayout
+            android:layout_width="400dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_height="1dp"
+            android:background="@drawable/date_picker_separator"/>
+
+        <LinearLayout
+            android:id="@+id/calendar_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="25dp"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/content_indication_prev"
+                    android:backgroundTint="@color/grey_medium"
+                    android:gravity="center" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/calendar_sub_container"
+                android:layout_width="380dp"
+                android:layout_height="210dp">
+
+                <include
+                    layout="@layout/element_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="25dp"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/content_indication_next"
+                    android:backgroundTint="@color/grey_medium"
+                    android:gravity="center" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/date_picker_focus_today"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/today_date_legend_text"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <RelativeLayout
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/date_picker_focus_start"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_date_legend_text"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="400dp"
+            android:layout_height="1dp"
+            android:background="@drawable/date_picker_separator"/>
+
+        <LinearLayout
+            android:id="@+id/date_picker_full_footer"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <RelativeLayout
+                android:id="@+id/time_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <include
+                    layout="@layout/element_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <!--LinearLayout
+                    android:layout_width="2dp"
+                    android:layout_height="110dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/datepicker_time_mask"/>
+
+                <LinearLayout
+                    android:layout_width="2dp"
+                    android:layout_height="110dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/datepicker_time_mask"/-->
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/time_result_separator"
+                    android:layout_width="1dp"
+                    android:layout_height="115dp"
+                    android:layout_marginStart="35dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/date_picker_separator"/>
+
+                <TextView
+                    android:id="@+id/date_text"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:background="@drawable/date_picker_date_background"
+                    android:textColor="@color/grey_dark"
+                    android:textSize="@dimen/fragment_item_text_size" />
+
+                <LinearLayout
+                    android:id="@+id/accept_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/events_focus"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusDown="@id/accept_button"
+                    android:nextFocusRight="@id/accept_button"
+                    android:padding="4dp">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/date_picker_buttons_background"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:text="@string/accept_button"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/fragment_item_text_size" />
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/date_picker_short_footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/date_text_short"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:padding="12dp"
+                android:background="@drawable/date_picker_date_background"
+                android:textColor="@color/grey_dark"
+                android:textSize="@dimen/fragment_item_text_size" />
+
+            <LinearLayout
+                android:id="@+id/accept_button_short"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/events_focus"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusDown="@id/accept_button_short"
+                android:nextFocusRight="@id/accept_button_short"
+                android:padding="4dp">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/date_picker_buttons_background"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="@string/accept_button"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fragment_item_text_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

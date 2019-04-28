@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/headers_background">
+
+    <TextView
+        android:id="@+id/day_text"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginBottom="2dp"
+        android:textAlignment="center"
+        android:textSize="26sp"
+        android:textColor="@color/white"/>
+</LinearLayout>

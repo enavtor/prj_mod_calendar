@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/black_transparent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="606dp"
+        android:orientation="vertical"
+        android:background="@color/grey_lighter">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:padding="5dp"
+            android:gravity="start"
+            android:text="@string/display_events_dialog_title"
+            android:background="@color/headers_background"
+            android:textSize="30sp"
+            android:textColor="@color/white"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="8dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/all_events_list"
+                android:layout_width="565dp"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:scrollbarSize="6dp"
+                android:scrollbarThumbVertical="@color/grey_light_darker"
+                android:scrollbarTrackVertical="@color/grey_background"
+                android:fadeScrollbars="false"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@color/grey_lighter">
+
+                <RelativeLayout
+                    android:id="@+id/loading_events_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/loading_description_content_background"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/text_loading_events"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginBottom="60dp"
+                        android:textColor="@color/black"
+                        android:textSize="55sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_please_stand_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_loading_events"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="15dp"
+                        android:text="@string/loading_layout_stand_by"
+                        android:textColor="@color/sh_cyan_dark_medium"
+                        android:textSize="40sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="350dp"
+                        android:layout_height="100dp"
+                        android:layout_below="@+id/text_please_stand_by"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="30dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/progress_bar_dark"
+                        android:indeterminateTintMode="src_atop" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

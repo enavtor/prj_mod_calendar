@@ -1,0 +1,178 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/med_alternate_rep_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:id="@+id/alternate_values_layouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical"
+            android:scaleX="1.9"
+            android:scaleY="1.9">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/med_alternate_interval_decrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edition_elements_background"
+                    android:nextFocusLeft="@id/prev_step_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp">
+                    <LinearLayout
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/minus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/med_alternate_interval_text"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:textSize="30sp" />
+
+                <LinearLayout
+                    android:id="@+id/med_alternate_interval_increase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edition_elements_background"
+                    android:nextFocusRight="@id/next_step_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp">
+                    <LinearLayout
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/med_alternate_hours_decrease"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edition_elements_background"
+                    android:nextFocusLeft="@id/prev_step_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp">
+                    <LinearLayout
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/minus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/med_alternate_hours_text"
+                    android:layout_width="220dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:textSize="30sp" />
+
+                <LinearLayout
+                    android:id="@+id/med_alternate_hours_increase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edition_elements_background"
+                    android:nextFocusRight="@id/next_step_button"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp">
+                    <LinearLayout
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/alternate_values_layouts"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="80dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/med_special_interval_buttons"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/edition_elements_background"
+                android:clickable="true"
+                android:focusable="true"
+                android:nextFocusLeft="@id/prev_step_button"
+                android:nextFocusDown="@id/display_current_parameters_button"
+                android:nextFocusRight="@id/next_step_button"
+                android:padding="6dp"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:background="@drawable/plus_symbol_black" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:gravity="center"
+                android:text="@string/parameters_special_interval"
+                android:textSize="40sp"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/med_weekly_rep_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:scaleX="1.15"
+            android:scaleY="1.15">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/med_weekly_repetition_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_light_darker" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Calendario y recordatorios</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="ir_blue">Mostrar todos los eventos</string>
+    <string name="ir_green">Volver al día de hoy</string>
+    <string name="ir_red">TV(0)</string>
+    <string name="ir_yellow">Volver al día seleccionado</string>
+    <string name="layout_config">Ajustes</string>
+    <string name="layout_help">Ayuda</string>
+    <string name="layout_need_help">¿Necesita Ayuda?</string>
+    <string name="layout_status">Estado</string>
+    <string name="layout_title">Calendario</string>
+    <string name="layout_title_240dp">Calendario@240</string>
+    <string name="layout_title_320dp">Calendario@320</string>
+    <string name="date">EEEE, dd - MMMM - yyyy</string>
+    <string name="new_event_button">Añadir evento</string>
+    <string name="view_event_button">Ver</string>
+    <string name="modify_event_button">Editar</string>
+    <string name="delete_event_button">Eliminar</string>
+    <string name="dismiss_menu_button">Cancelar</string>
+    <string name="accept_button">Aceptar</string>
+    <string name="not_installed_app">Aplicación no instalada</string>
+    <string name="status_title">Estado del dispositivo</string>
+    <string name="status_intro">El estado del dispositivo es el siguiente:</string>
+    <string name="back_to_current">Volver a hoy</string>
+    <string name="back_to_selected">Volver a selección</string>
+    <string name="show_all_events">Mostrar eventos</string>
+    <string name="delete_all_events">Borrar eventos</string>
+    <string name="back">Volver</string>
+    <string name="status_wifi_enabled">Conexión WiFi habilitada</string>
+    <string name="status_wifi_disabled">Conexión WiFi deshabilitada</string>
+    <string name="status_ethernet_disabled">Conexión Ethernet deshabilitada</string>
+    <string name="status_ethernet_enabled">Conexión Ethernet habilitada</string>
+    <string name="status_bluetooth_disabled">Conexión bluetooth deshabilitada</string>
+    <string name="status_bluetooth_enabled">Conexión bluetooth habilitada</string>
+    <string name="status_3g_enabled">Conexión 3G habilitada</string>
+    <string name="status_3g_disabled">Conexión 3G deshabilitada</string>
+    <string name="status_camera_available">Cámara disponible</string>
+    <string name="status_camera_unavailable">Cámara no disponible</string>
+    <string name="status_servers_available">Conexión a los servidores disponible</string>
+    <string name="status_servers_unavailable">Conexión a los servidores no disponible</string>
+    <string name="status_stored_used_memory" formatted="false">Memoria utilizada: %1$s %%</string>
+    <string name="status_remaining_battery">Batería restante: %1$s %%</string>
+    <string name="checking_status">Comprobando estado de los servidores…</string>
+    <string name="exit_dialog_title">Salir de la aplicación</string>
+    <string name="exit_dialog_text">¿Realmente desea salir de la aplicación?</string>
+    <string name="exit_dialog_yes">Sí</string>
+    <string name="exit_dialog_no">No</string>
+    <string name="color_button_to_tv">Pulse rojo para volver a la TV</string>
+    <string name="color_button_to_banner">Pulse 0 para más información</string>
+    <string name="device_id">"Identificador del dispositivo: "</string>
+    <string name="app_version">"Versión de la aplicación: "</string>
+    <string name="no_user">Usuario</string>
+    <string name="no_id">ID</string>
+
+    <!--Date Utils strings-->
+
+    <string name="day_1_letter">L</string>
+    <string name="day_2_letter">M</string>
+    <string name="day_3_letter">M</string>
+    <string name="day_4_letter">J</string>
+    <string name="day_5_letter">V</string>
+    <string name="day_6_letter">S</string>
+    <string name="day_7_letter">D</string>
+
+    <string name="day_1_text">Lunes</string>
+    <string name="day_2_text">Martes</string>
+    <string name="day_3_text">Miercoles</string>
+    <string name="day_4_text">Jueves</string>
+    <string name="day_5_text">Viernes</string>
+    <string name="day_6_text">Sabado</string>
+    <string name="day_7_text">Domingo</string>
+
+    <string name="month_1_text">Enero</string>
+    <string name="month_2_text">Febrero</string>
+    <string name="month_3_text">Marzo</string>
+    <string name="month_4_text">Abril</string>
+    <string name="month_5_text">Mayo</string>
+    <string name="month_6_text">Junio</string>
+    <string name="month_7_text">Julio</string>
+    <string name="month_8_text">Agosto</string>
+    <string name="month_9_text">Septiembre</string>
+    <string name="month_10_text">Octubre</string>
+    <string name="month_11_text">Noviembre</string>
+    <string name="month_12_text">Diciembre</string>
+
+    <!--\u0020 means a white space-->
+    <string name="date_divider">\u0020de\u0020</string>
+    <string name="date_divider_2">\u0020de\u0020</string>
+
+    <string name="appointment_event_name">cita</string>
+    <string name="alert_event_name">alarma</string>
+
+    <string name="display_events_dialog_title">Seleccione un evento para ir a su día:</string>
+    <string name="new_event_dialog_title">Seleccione el tipo del nuevo evento:</string>
+    <string name="new_measure_dialog_title">Seleccione el tipo de medida:</string>
+    <string name="new_survey_dialog_title">Seleccione el tipo de encuesta:</string>
+    <string name="new_personal_dialog_title">Seleccione el tipo de evento/alerta:</string>
+
+    <string name="delete_events_dialog_title">¿Desea borrar todos los eventos?</string>
+    <string name="delete_single_dialog_title">¿Desea borrar este evento?</string>
+    <string name="delete_alarm_dialog_title">¿Desea borrar esta alarma?</string>
+    <string name="delete_events_affirmative">Si</string>
+    <string name="delete_events_negative">No</string>
+
+    <string name="activity_event_title">Actividad física</string>
+    <string name="measure_event_title">Toma de medidas</string>
+    <string name="measure_event_hr_title">Toma de ritmo cardíaco</string>
+    <string name="measure_event_bp_title">Toma de presión sanguinea</string>
+    <string name="measure_event_bg_title">Toma de glucosa en sangre</string>
+    <string name="measure_event_xx_title">Toma de medida libre</string>
+    <string name="doctor_event_title">Cita médica</string>
+    <string name="medication_event_title">Toma de medicación</string>
+    <string name="personal_event_title">Evento personal</string>
+    <string name="personal_appointment_title">Cita personal</string>
+    <string name="textnofeedback_event_title">Alerta personal</string>
+    <string name="stimulus_event_title">Juegos de memoria</string>
+    <string name="survey_event_title">Evento de encuesta</string>
+    <string name="mood_event_title">Encuesta de ánimo</string>
+    <string name="textfeedback_event_title">Encuesta de acción</string>
+
+    <string name="activity_reminder_title">Actividad física</string>
+    <string name="measure_reminder_title">Toma de medidas</string>
+    <string name="doctor_reminder_title">Cita médica</string>
+    <string name="medication_reminder_title">Medicación</string>
+    <string name="personal_reminder_title">Cita Personal</string>
+    <string name="stimulus_reminder_title">Juegos de memoria</string>
+    <string name="mood_reminder_title">Encuesta de ánimo</string>
+    <string name="textfeedback_reminder_title">Encuesta de acción</string>
+    <string name="textnofeedback_reminder_title">Alerta personal</string>
+
+    <string name="activity_reminder_description">Pasea durante 30 minutos</string>
+    <string name="measure_reminder_hr_description">Tomate el ritmo cardíaco</string>
+    <string name="measure_reminder_bp_description">Tomate la presión sanguínea</string>
+    <string name="measure_reminder_bg_description">Tomate el nivel de glucosa en sangre</string>
+    <string name="measure_reminder_xx_description">Toma de medida libre:\u0020</string><!--\u0020 means a white space-->
+    <string name="doctor_reminder_description">Acude a tu centro de salud</string>
+    <string name="medication_reminder_description">2 pastillas de Sintrom 1 mg</string>
+    <string name="personal_reminder_description">Atiende tus asuntos personales</string>
+    <string name="stimulus_reminder_description">Recuerda hacer tus ejercicios de memoria</string>
+    <string name="mood_reminder_description">¿Cómo te encuentras hoy?</string>
+    <string name="textfeedback_reminder_description">¿Te has tomado el desayuno?</string>
+    <string name="textnofeedback_reminder_description">Recuerda beber agua</string>
+
+    <string name="event_parameters_previous">Anterior</string>
+    <string name="event_parameters_current">Valores actuales</string>
+    <string name="event_parameters_next">Siguiente</string>
+    <string name="event_parameters_finish">Terminar</string>
+
+    <string name="mod_parameters_dialog_title_0">Edite la descripción actual:</string>
+    <string name="mod_parameters_dialog_title_1">Modifique la fecha actual:</string>
+    <string name="mod_parameters_dialog_title_2">Modifique la hora actual:</string>
+    <string name="mod_parameters_dialog_title_3">Modifique las alarmas previas:</string>
+    <string name="mod_parameters_dialog_title_4">¿Quiére editar la repetición?</string>
+    <string name="mod_parameters_dialog_title_6">Modifique el tipo de repetición:</string>
+
+    <string name="set_parameters_dialog_title_0">Introduzca una descripción:</string>
+    <string name="set_parameters_dialog_title_1">Seleccione una fecha:</string>
+    <string name="set_parameters_dialog_title_2">Seleccione una hora:</string>
+    <string name="set_parameters_dialog_title_3">¿Quiére añadir alarmas previas?</string>
+    <string name="set_parameters_dialog_title_4">¿Quiére añadir un intervalo de repetición?</string>
+    <string name="set_parameters_dialog_title_6">Seleccione el tipo de repetición:</string>
+
+    <string name="med_parameters_dialog_title_6">¿Qué días se repetirá?</string>
+
+    <string name="parameters_dialog_title_5">¿Cuántas veces al día?</string>
+    <string name="parameters_dialog_title_7">¿Quiere que la repetición tenga una finalización?</string>
+    <string name="parameters_dialog_title_8">¿Hasta cuándo se repetirá?</string>
+
+    <string name="parameters_dialog_title">Valores seleccionados:</string>
+    <string name="parameters_event_title">Valores del evento:</string>
+    <string name="parameters_event_date">Fecha de início:\u0020</string>
+    <string name="parameters_event_time">Hora de início:\u0020</string>
+    <string name="parameters_prev_alarms">Alarmas previas:\u0020</string>
+    <string name="parameters_event_description">Descripción:\u0020</string>
+    <string name="parameters_repetition_title">Valores de la repetición:</string>
+    <string name="parameters_repetition_interval">Intervalo actual:\u0020</string>
+    <string name="parameters_repetition_date">Fecha de fín:\u0020</string>
+    <string name="parameters_repetition_time">Hora de fín:\u0020</string>
+
+    <string name="parameters_dialog_subtitle_set">Seleccione aceptar para crear un nuevo evento con estos valores.</string>
+    <string name="parameters_dialog_subtitle_mod">Seleccione aceptar para editar el evento de acuerdo a estos valores.</string>
+
+    <string name="parameters_units_suffix">\u0020antes</string>
+
+    <string name="parameters_minute_tag">Minuto</string>
+    <string name="parameters_minutes_tag">Minutos</string>
+    <string name="parameters_hour_tag">Hora</string>
+    <string name="parameters_hours_tag">Horas</string>
+    <string name="parameters_day_tag">Día</string>
+    <string name="parameters_days_tag">Días</string>
+    <string name="parameters_week_tag">Semana</string>
+    <string name="parameters_weeks_tag">Semanas</string>
+    <string name="parameters_month_tag">Mes</string>
+    <string name="parameters_months_tag">Meses</string>
+
+    <string name="parameters_rep_interval_text_1">Cada %1$s hora</string>
+    <string name="parameters_rep_interval_text_2">Cada %1$s horas</string>
+    <string name="parameters_rep_number_text_1">%1$s vez al día</string>
+    <string name="parameters_rep_number_text_2">%1$s veces al día</string>
+    <string name="parameters_alt_interval_text_1">Todos los días</string>
+    <string name="parameters_alt_interval_text_2">Cada %1$s días</string>
+    <string name="parameters_stop_days_text_1">Después de %1$s día</string>
+    <string name="parameters_stop_days_text_2">Después de %1$s días</string>
+
+    <string name="parameters_prev_alarm_title">¿Cuándo quiere que le avisemos?</string>
+    <string name="parameters_add_prev_alarm">Añadir alarma previa (máximo 4)</string>
+    <string name="parameters_prev_alarm_header">Alarma\u0020</string>
+    <string name="parameters_select_custom_date">Fecha personalizada</string>
+
+    <string name="parameters_rep_type_daily">Diaria</string>
+    <string name="parameters_rep_type_alternate">Alternada</string>
+    <string name="parameters_rep_type_weekly">Semanal</string>
+    <string name="parameters_rep_type_monthly">Mensual</string>
+    <string name="parameters_rep_type_annual">Anual</string>
+
+    <string name="parameters_rep_type_separator">\u0020y</string>
+
+    <string name="rep_type_description_header">Tipo de repetición:\u0020</string>
+    <string name="rep_type_description_daily">Repetición diaria</string>
+    <string name="rep_type_description_alternate">Repetición alternada</string>
+    <string name="rep_type_description_weekly">Repetición semanal</string>
+    <string name="rep_type_description_monthly">Repetición mensual</string>
+    <string name="rep_type_description_annual">Repetición anual</string>
+
+    <string name="rep_config_description_header">Configuración:\u0020</string>
+    <string name="rep_config_description_daily_1">La repetición tendrá lugar cada %1$d hora desde la fecha de inicio</string>
+    <string name="rep_config_description_daily_2">La repetición tendrá lugar cada %1$d horas desde la fecha de inicio</string>
+    <string name="rep_config_description_alternate_1">La repetición tendrá lugar cada %1$d día</string>
+    <string name="rep_config_description_alternate_2">La repetición tendrá lugar cada %1$d días</string>
+    <string name="rep_config_description_weekly">La repetición tendrá lugar cada\u0020</string>
+    <string name="rep_config_desc_monthly_header">La repetición tendrá lugar el\u0020</string>
+    <string name="rep_config_desc_monthly_tail">\u0020de cada mes</string>
+    <string name="rep_config_desc_annual_header">La repetición tendrá lugar cada\u0020</string>
+    <string name="rep_config_desc_annual_tail">\u0020Si la fecha de inicio es 29 de Febrero, la repetición en años no bisiestos tendrá lugar el 28</string>
+
+    <string name="rep_type_weekly_monthly_title">¿Qué días desea que se repita la alarma?</string>
+    <string name="rep_type_alternate_title">¿Cada cuantos días se repetirá la alarma?</string>
+    <string name="rep_type_alternate_hint">, empezando siempre a la hora de inicio y, dentro del día de repetición, ejecutandose de acuerdo al intervalo seleccionado (</string>
+
+    <string name="parameters_custom_date_error_header">La fecha de la alarma debe ser anterior a la de inicio:</string>
+    <string name="parameters_error_creating_prev_alarm">La fecha de la alarma no puede ser previa a la actual!!!</string>
+    <string name="parameters_custom_date_header">Fecha de la alarma:\u0020</string>
+    <string name="parameters_event_date_header">Fecha de inicio:\u0020</string>
+
+    <string name="parameters_today_date_header">Fecha actual:\u0020</string>
+
+    <string name="parameters_special_interval">Intervalos especiales</string>
+
+    <string name="parameters_custom_stop_date">Fecha personalizada</string>
+    <string name="parameters_rep_stop_description">El último día será:\u0020</string>
+    <string name="parameters_stop_date_error">La fecha de finalización tiene que ser igual o posterior a la de início!!!</string>
+
+    <string name="check_box_affirmative">Si</string>
+    <string name="check_box_negative">No</string>
+
+    <string name="no_prev_alarms_text">No establecidas.</string>
+    <string name="no_interval_text">No establecido.</string>
+    <string name="no_stop_text">No establecida.</string>
+
+    <string name="description_edit_hint">Ejemplo:\u0020</string><!--\u0020 means a white space-->
+    <string name="description_delete_button">Borrar descripción</string>
+
+    <string name="dialog_add_medicine_title">Seleccione una o varias medicaciones pulsando OK:</string>
+    <string name="description_add_medicine_button">Añadir medicación</string>
+    <string name="medicine_description_header">Tómese\u0020</string>
+    <string name="medicine_description_separator">\u0020de\u0020</string>
+
+    <string name="follow_event_dialog_title">¿Desea ir al nuevo día seleccionado?</string>
+    <string name="follow_event_affirmative">Sí, ir al nuevo día</string>
+    <string name="follow_event_negative">No, seguir en actual</string>
+
+    <string name="original_date_title">Desde:</string>
+
+    <string name="loading_layout_description">Cargando\u0020</string>
+    <string name="loading_layout_events">eventos</string>
+    <string name="loading_layout_medication">medicación</string>
+
+    <string name="loading_layout_create">Creando evento</string>
+    <string name="loading_layout_modify">Modificando evento</string>
+    <string name="loading_layout_delete_one">Borrando evento</string>
+    <string name="loading_layout_delete_all">Borrando eventos</string>
+    <string name="loading_layout_stand_by">Espere por favor…</string>
+	
+	<string name="today_date_legend_text">Fecha de hoy</string>
+    <string name="start_date_legend_text">Fecha de inicio</string>
+    <string name="selected_date_legend_text">Día seleccionado</string>
+
+    <string name="error_start_date">La fecha de inicio no puede ser previa a la actual. Por favor revise y cambie la fecha de inicio!!!</string>
+    <string name="error_start_time">La hora de inicio no puede ser previa a la actual si la fecha de inicio es hoy. Por favor revise y cambie la hora de inicio!!!\n\nSi quiere establecer la hora de inicio en una ya pasada, recuerde que tendrá que establecer la fecha de inicio en un día posterior al actual.</string>
+    <string name="error_setting_alarm">Alarma no establecida: la aplicación de recordatorios no está instalada.</string>
+    <string name="error_deleting_alarm">Alarma no eliminada: la aplicación de recordatorios no está instalada.</string>
+    <string name="daten">EEEE dd MMM, yyyy</string>
+
+</resources>

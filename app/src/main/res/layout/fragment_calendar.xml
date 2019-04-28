@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.shtvsolution.calendario.views.activities.MainActivity"
+    android:layout_height="match_parent"
+    android:layout_width="615dp"
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/calendar_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="9dp"
+        android:layout_marginLeft="9dp"
+        android:layout_marginRight="9dp"
+        android:layout_marginBottom="11.6dp">
+
+        <LinearLayout
+            android:id="@+id/date_selector"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="3dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/prev_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/calendar_focus">
+                <LinearLayout
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/button_prev_black"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="230dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/layout_title"
+                android:textSize="30sp"
+                android:textColor="@color/black"/>
+
+            <LinearLayout
+                android:id="@+id/next_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/calendar_focus">
+                <LinearLayout
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/button_next_black"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/prev_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/calendar_focus">
+                <LinearLayout
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/button_prev_black"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/year"
+                android:layout_width="190dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/layout_title"
+                android:textSize="30sp"
+                android:textColor="@color/black"/>
+
+            <LinearLayout
+                android:id="@+id/next_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/calendar_focus">
+                <LinearLayout
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:background="@drawable/button_next_black"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/day_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date_selector"
+            android:paddingLeft="0.1dp"
+            android:paddingRight="0.1dp"
+            android:background="@drawable/grid_item_divider"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_below="@id/date_selector"
+            android:background="@color/white"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/calendar_grid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/day_grid"
+            android:paddingLeft="0.1dp"
+            android:paddingRight="0.1dp"
+            android:paddingBottom="0.1dp"
+            android:focusable="true"
+            android:background="@drawable/grid_item_divider"/>
+    </RelativeLayout>
+</RelativeLayout>

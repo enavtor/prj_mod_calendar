@@ -1,0 +1,297 @@
+<resources>
+    <string name="app_name">Calendar and reminders</string>
+    <string name="layout_title">Calendar</string>
+    <string name="layout_title_240dp">Calendar@240</string>
+    <string name="layout_title_320dp">Calendar@320</string>
+    <string name="layout_need_help">Need help?</string>
+    <string name="layout_config">Settings</string>
+    <string name="action_settings">Settings</string>
+    <string name="layout_status">Status</string>
+    <string name="layout_help">Help</string>
+    <string name="ir_red">TV(0)</string>
+    <string name="ir_green">Back to current day</string>
+    <string name="ir_yellow">Back to selected day</string>
+    <string name="ir_blue">Display all the events</string>
+    <string name="layout_id" translatable="false">0a0027000015</string>
+    <string name="layout_version" translatable="false">"V. "</string>
+    <string name="date">EEEE dd MMMM, yyyy</string>
+    <string name="new_event_button">Add event</string>
+    <string name="view_event_button">View</string>
+    <string name="modify_event_button">Edit</string>
+    <string name="delete_event_button">Delete</string>
+    <string name="dismiss_menu_button">Cancel</string>
+    <string name="accept_button">Accept</string>
+    <string name="not_installed_app">Application not installed</string>
+    <string name="status_title">Device status</string>
+    <string name="status_intro">Status of the device is next:</string>
+    <string name="back_to_current">Back to current</string>
+    <string name="back_to_selected">Back to selected</string>
+    <string name="show_all_events">Show events</string>
+    <string name="delete_all_events">Delete events</string>
+    <string name="back">Back</string>
+    <string name="status_wifi_enabled">WiFi connection enabled</string>
+    <string name="status_wifi_disabled">WiFi connection disabled</string>
+    <string name="status_ethernet_enabled">Ethernet connection enabled</string>
+    <string name="status_ethernet_disabled">Ethernet connection disabled</string>
+    <string name="status_bluetooth_enabled">Bluetooth connection enabled</string>
+    <string name="status_bluetooth_disabled">Bluetooth connection disabled</string>
+    <string name="status_3g_enabled">3G connection enabled</string>
+    <string name="status_3g_disabled">3G connection disabled</string>
+    <string name="status_camera_available">Camera available</string>
+    <string name="status_camera_unavailable">Camera unavailable</string>
+    <string name="status_servers_available">Servers connection available</string>
+    <string name="status_servers_unavailable">Servers connection unavailable</string>
+    <string name="status_stored_used_memory" formatted="false">Memory used: %1$s %%</string>
+    <string name="status_remaining_battery">Battery remaining: %1$s %%</string>
+    <string name="checking_status">Checking servers status…</string>
+    <string name="exit_dialog_title">Exit app</string>
+    <string name="exit_dialog_text">Do you want to close this app?</string>
+    <string name="exit_dialog_yes">Yes</string>
+    <string name="exit_dialog_no">No</string>
+    <string name="color_button_to_tv">Press red to return to TV</string>
+    <string name="color_button_to_banner">Press 0 for more information</string>
+    <string name="device_id">Device id:</string>
+    <string name="no_user">User</string>
+    <string name="no_id">ID</string>
+
+    <!--Date Utils strings-->
+
+    <string name="day_1_letter">M</string>
+    <string name="day_2_letter">T</string>
+    <string name="day_3_letter">W</string>
+    <string name="day_4_letter">T</string>
+    <string name="day_5_letter">F</string>
+    <string name="day_6_letter">S</string>
+    <string name="day_7_letter">S</string>
+
+    <string name="day_1_text">Monday</string>
+    <string name="day_2_text">Tuesday</string>
+    <string name="day_3_text">Wednesday</string>
+    <string name="day_4_text">Thursday</string>
+    <string name="day_5_text">Friday</string>
+    <string name="day_6_text">Saturday</string>
+    <string name="day_7_text">Sunday</string>
+
+    <string name="month_1_text">January</string>
+    <string name="month_2_text">February</string>
+    <string name="month_3_text">March</string>
+    <string name="month_4_text">April</string>
+    <string name="month_5_text">May</string>
+    <string name="month_6_text">June</string>
+    <string name="month_7_text">July</string>
+    <string name="month_8_text">August</string>
+    <string name="month_9_text">September</string>
+    <string name="month_10_text">October</string>
+    <string name="month_11_text">November</string>
+    <string name="month_12_text">December</string>
+
+    <!--\u0020 means a white space-->
+    <string name="date_divider">\u0020</string>
+    <string name="date_divider_2">\u0020of\u0020</string>
+
+    <string name="appointment_event_name">appointment</string>
+    <string name="alert_event_name">alarm</string>
+
+    <string name="display_events_dialog_title">Select an event to go to its day:</string>
+    <string name="new_event_dialog_title">Select the new event type:</string>
+    <string name="new_measure_dialog_title">Select the new measure type:</string>
+    <string name="new_survey_dialog_title">Select the new survey type:</string>
+    <string name="new_personal_dialog_title">Select the event/alert type:</string>
+
+    <string name="delete_events_dialog_title">Do you wish to delete all events?</string>
+    <string name="delete_single_dialog_title">Do you wish to delete this event?</string>
+    <string name="delete_alarm_dialog_title">Do you wish to delete this alarm?</string>
+    <string name="delete_events_affirmative">Yes</string>
+    <string name="delete_events_negative">No</string>
+
+    <string name="activity_event_title">Physical activity</string>
+    <string name="measure_event_title">Measures capture</string>
+    <string name="measure_event_hr_title">Heart rate capture</string>
+    <string name="measure_event_bp_title">Blood pressure capture</string>
+    <string name="measure_event_bg_title">Blood glucose capture</string>
+    <string name="measure_event_xx_title">Free measure capture</string>
+    <string name="doctor_event_title">Medical appointment</string>
+    <string name="medication_event_title">Medication shot</string>
+    <string name="personal_event_title">Personal event</string>
+    <string name="personal_appointment_title">Personal appointment</string>
+    <string name="textnofeedback_event_title">Personal alert</string>
+    <string name="stimulus_event_title">Memory games</string>
+    <string name="survey_event_title">Survey event</string>
+    <string name="mood_event_title">Mood survey</string>
+    <string name="textfeedback_event_title">Action survey</string>
+
+    <string name="activity_reminder_title">Physical activity</string>
+    <string name="measure_reminder_title">Measures capture</string>
+    <string name="doctor_reminder_title">Medical appointment</string>
+    <string name="medication_reminder_title">Medication time</string>
+    <string name="personal_reminder_title">Personal appointment</string>
+    <string name="stimulus_reminder_title">Memory games</string>
+    <string name="mood_reminder_title">Mood survey</string>
+    <string name="textfeedback_reminder_title">Action survey</string>
+    <string name="textnofeedback_reminder_title">Personal alert</string>
+
+    <string name="activity_reminder_description">Walk for 30 minutes</string>
+    <string name="measure_reminder_hr_description">Capture your heart rate</string>
+    <string name="measure_reminder_bp_description">Capture your blood pressure</string>
+    <string name="measure_reminder_bg_description">Capture your blood glucose</string>
+    <string name="measure_reminder_xx_description">Free measure capture:\u0020</string><!--\u0020 means a white space-->
+    <string name="doctor_reminder_description">Go to your health center</string>
+    <string name="medication_reminder_description">2 tablets of sintrom 1 mg</string>
+    <string name="personal_reminder_description">Take care of your personal affairs</string>
+    <string name="stimulus_reminder_description">Remember to do your memory exercises</string>
+    <string name="mood_reminder_description">How are you feeling today?</string>
+    <string name="textfeedback_reminder_description">Have you had breakfast?</string>
+    <string name="textnofeedback_reminder_description">Remember to drink water</string>
+
+    <string name="event_parameters_previous">Prev step</string>
+    <string name="event_parameters_current">Current Values</string>
+    <string name="event_parameters_next">Next step</string>
+    <string name="event_parameters_finish">Finish</string>
+
+    <string name="mod_parameters_dialog_title_0">Edit the current description:</string>
+    <string name="mod_parameters_dialog_title_1">Modify the current date:</string>
+    <string name="mod_parameters_dialog_title_2">Modify the current time:</string>
+    <string name="mod_parameters_dialog_title_3">Modify the early alarms:</string>
+    <string name="mod_parameters_dialog_title_4">Do you want to edit the repetition?</string>
+    <string name="mod_parameters_dialog_title_6">Modify the repetition typ:</string>
+
+    <string name="set_parameters_dialog_title_0">Input a description:</string>
+    <string name="set_parameters_dialog_title_1">Select a start date:</string>
+    <string name="set_parameters_dialog_title_2">Select a start time:</string>
+    <string name="set_parameters_dialog_title_3">Do you want to add early alarms?</string>
+    <string name="set_parameters_dialog_title_4">Do you want to add a repetition?</string>
+    <string name="set_parameters_dialog_title_6">Select the repetition type:</string>
+
+    <string name="med_parameters_dialog_title_6">What days will it be repeated?</string>
+
+    <string name="parameters_dialog_title_5">How many times a day?</string>
+    <string name="parameters_dialog_title_7">Do you want to set a repetition stop?</string>
+    <string name="parameters_dialog_title_8">Until when will it be repeated?</string>
+
+    <string name="parameters_dialog_title">Current selected values:</string>
+    <string name="parameters_event_title">Event values:</string>
+    <string name="parameters_event_date">Start date:\u0020</string>
+    <string name="parameters_event_time">Start time:\u0020</string>
+    <string name="parameters_prev_alarms">Early alarms:\u0020</string>
+    <string name="parameters_event_description">Description:\u0020</string>
+    <string name="parameters_repetition_title">Repetition values:</string>
+    <string name="parameters_repetition_interval">Interval:\u0020</string>
+    <string name="parameters_repetition_date">Stop date:\u0020</string>
+    <string name="parameters_repetition_time">Stop time:\u0020</string>
+
+    <string name="parameters_dialog_subtitle_set">Select accept to create a new event with the previous values.</string>
+    <string name="parameters_dialog_subtitle_mod">Select accept to edit the event according to the previous values.</string>
+
+    <string name="parameters_units_suffix">\u0020before</string>
+
+    <string name="parameters_minute_tag">Minute</string>
+    <string name="parameters_minutes_tag">Minutes</string>
+    <string name="parameters_hour_tag">Hour</string>
+    <string name="parameters_hours_tag">Hours</string>
+    <string name="parameters_day_tag">Day</string>
+    <string name="parameters_days_tag">Days</string>
+    <string name="parameters_week_tag">Week</string>
+    <string name="parameters_weeks_tag">Weeks</string>
+    <string name="parameters_month_tag">Month</string>
+    <string name="parameters_months_tag">Months</string>
+
+    <string name="parameters_rep_interval_text_1">Every %1$s hour</string>
+    <string name="parameters_rep_interval_text_2">Every %1$s hours</string>
+    <string name="parameters_rep_number_text_1">%1$s time a day</string>
+    <string name="parameters_rep_number_text_2">%1$s times a day</string>
+    <string name="parameters_alt_interval_text_1">Everyday</string>
+    <string name="parameters_alt_interval_text_2">Every %1$s days</string>
+    <string name="parameters_stop_days_text_1">After %1$s day</string>
+    <string name="parameters_stop_days_text_2">After %1$s days</string>
+
+    <string name="parameters_prev_alarm_title">When dou you want to be notified?</string>
+    <string name="parameters_add_prev_alarm">Add early alarm (maximum 4)</string>
+    <string name="parameters_prev_alarm_header">Alarm\u0020</string>
+    <string name="parameters_select_custom_date">Select custom date</string>
+
+    <string name="parameters_rep_type_daily">Daily</string>
+    <string name="parameters_rep_type_alternate">Alternate</string>
+    <string name="parameters_rep_type_weekly">Weekly</string>
+    <string name="parameters_rep_type_monthly">Monthly</string>
+    <string name="parameters_rep_type_annual">Annual</string>
+
+    <string name="parameters_rep_type_separator">\u0020and</string>
+
+    <string name="rep_type_description_header">Repetition type:\u0020</string>
+    <string name="rep_type_description_daily">Daily repetition</string>
+    <string name="rep_type_description_alternate">Alternate repetition</string>
+    <string name="rep_type_description_weekly">Weekly repetition</string>
+    <string name="rep_type_description_monthly">Monthly repetition</string>
+    <string name="rep_type_description_annual">Annual repetition</string>
+
+    <string name="rep_config_description_header">Configuration:\u0020</string>
+    <string name="rep_config_description_daily_1">The repetition will take place every %1$d hour from the start date</string>
+    <string name="rep_config_description_daily_2">The repetition will take place every %1$d hours from the start date</string>
+    <string name="rep_config_description_alternate_1">The repetition will take place every %1$d day</string>
+    <string name="rep_config_description_alternate_2">The repetition will take place every %1$d days</string>
+    <string name="rep_config_description_weekly">The repetition will take place every\u0020</string>
+    <string name="rep_config_desc_monthly_header">Repetition will take place on the\u0020</string>
+    <string name="rep_config_desc_monthly_tail">\u0020of each month</string>
+    <string name="rep_config_desc_annual_header">The repetition will take place every\u0020</string>
+    <string name="rep_config_desc_annual_tail">\u0020If the starting date is 29 of February, the repetition in non leap years will take place on the 28</string>
+
+    <string name="rep_type_weekly_monthly_title">On which days will the alarm be repeated?</string>
+    <string name="rep_type_alternate_title">How often will the alarm be repeated?</string>
+    <string name="rep_type_alternate_hint">, always beginning at the start time and, within the repetition day, executing itself according to the selected interval (</string>
+
+    <string name="parameters_custom_date_error_header">Early alarm date must be previous to the start date:</string>
+    <string name="parameters_error_creating_prev_alarm">The early alarm date should not be previous to the current date!!!</string>
+    <string name="parameters_custom_date_header">Alarm date:\u0020</string>
+    <string name="parameters_event_date_header">Start date:\u0020</string>
+
+    <string name="parameters_today_date_header">Current date:\u0020</string>
+
+    <string name="parameters_special_interval">Special intervals</string>
+
+    <string name="parameters_custom_stop_date">Custom date</string>
+    <string name="parameters_rep_stop_description">The last day will be:\u0020</string>
+    <string name="parameters_stop_date_error">Stop date must be equals or posterior to the start day!!!</string>
+
+    <string name="check_box_affirmative">Yes</string>
+    <string name="check_box_negative">No</string>
+
+    <string name="no_prev_alarms_text">Not established.</string>
+    <string name="no_interval_text">Not established.</string>
+    <string name="no_stop_text">Not established.</string>
+
+    <string name="description_edit_hint">Example:\u0020</string><!--\u0020 means a white space-->
+    <string name="description_delete_button">Delete description</string>
+
+    <string name="dialog_add_medicine_title">Select one or more medications by pressing OK:</string>
+    <string name="description_add_medicine_button">Add medication</string>
+    <string name="medicine_description_header">Take\u0020</string>
+    <string name="medicine_description_separator">\u0020of\u0020</string>
+    
+    <string name="follow_event_dialog_title">Do you wish to go to the new selected day?</string>
+    <string name="follow_event_affirmative">Yes, go to new day</string>
+    <string name="follow_event_negative">No, stay on selected</string>
+
+    <string name="original_date_title">Since:</string>
+
+    <string name="loading_layout_description">Loading\u0020</string>
+    <string name="loading_layout_events">events</string>
+    <string name="loading_layout_medication">medication</string>
+
+    <string name="loading_layout_create">Creating event</string>
+    <string name="loading_layout_modify">Modifying event</string>
+    <string name="loading_layout_delete_one">Deleting event</string>
+    <string name="loading_layout_delete_all">Deleting events</string>
+    <string name="loading_layout_stand_by">Please stand by…</string>
+	
+	<string name="today_date_legend_text">Today date</string>
+    <string name="start_date_legend_text">Start date</string>
+    <string name="selected_date_legend_text">Selected day</string>
+	
+    <string name="error_start_date">The start date can not be previous to the current one. Please check and change the start date!!!</string>
+    <string name="error_start_time">The start time can not be previous to the current one if the start date is today. Please check and change the start time!!!\n\nIf you want to set the start time to an already passed one, remember that you will have to change the start date to a date posterior to the current one.</string>
+    <string name="error_setting_alarm">Alarm not set: the reminders app is not installed.</string>
+    <string name="error_deleting_alarm">Alarm not deleted: the reminders app is not installed.</string>
+    <string name="app_version">App version:</string>
+    <string name="daten">EEEE dd MMM, yyyy</string>
+
+</resources>

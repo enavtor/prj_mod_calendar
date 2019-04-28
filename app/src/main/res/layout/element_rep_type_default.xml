@@ -1,0 +1,327 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/rep_type_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingTop="17dp"
+        android:paddingStart="94dp"
+        android:paddingEnd="94dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="120dp">
+
+            <LinearLayout
+                android:id="@+id/daily_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/daily_rep_type_button"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edition_elements_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/prev_step_button"
+                    android:padding="6dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:gravity="center"
+                    android:text="@string/parameters_rep_type_daily"
+                    android:textSize="34sp"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/alternate_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/daily_type_layout"
+                android:layout_marginStart="80dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/alternate_rep_type_button"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edition_elements_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:gravity="center"
+                    android:text="@string/parameters_rep_type_alternate"
+                    android:textSize="34sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/weekly_rep_type_button"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edition_elements_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:nextFocusLeft="@id/prev_step_button"
+                    android:padding="6dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:gravity="center"
+                    android:text="@string/parameters_rep_type_weekly"
+                    android:textSize="34sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/monthly_type_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/alternate_type_layout"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/monthly_rep_type_button"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edition_elements_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:gravity="center"
+                    android:text="@string/parameters_rep_type_monthly"
+                    android:textSize="34sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/alternate_type_layout"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="35dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/annual_rep_type_button"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/edition_elements_background"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:gravity="center">
+
+                    <LinearLayout
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:background="@drawable/plus_symbol_black" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:gravity="center"
+                    android:text="@string/parameters_rep_type_annual"
+                    android:textSize="34sp"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/rep_type_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:gravity="center_vertical"
+            android:textSize="26sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/rep_config_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:textSize="26sp"
+            android:textColor="@color/black"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/alternate_rep_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/alternate_layout_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginEnd="60dp"
+            android:layout_alignParentTop="true"
+            android:textSize="32sp"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/alternate_layout_hint"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:scaleX="1.9"
+            android:scaleY="1.9">
+
+            <LinearLayout
+                android:id="@+id/alternate_interval_decrease"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edition_elements_background"
+                android:nextFocusLeft="@id/prev_step_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp">
+                <LinearLayout
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/minus_symbol_black" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/alternate_interval_text"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:id="@+id/alternate_interval_increase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edition_elements_background"
+                android:nextFocusRight="@id/next_step_button"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="6dp">
+                <LinearLayout
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:background="@drawable/plus_symbol_black" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/weekly_rep_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:scaleX="1.15"
+            android:scaleY="1.15">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/weekly_repetition_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_light_darker" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/monthly_rep_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/monthly_repetition_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <RelativeLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/grey_light_darker" />
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
