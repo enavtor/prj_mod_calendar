@@ -57,21 +57,4 @@
     <dimen name="activity_status_back_text_size">15sp</dimen>
 	<dimen name="activity_status_device_width">565dp</dimen>
 
-    <!-- reminder_rectangle -->
-    <dimen name="corner_radius">8dp</dimen>
-    <dimen name="rectangle_shift">5dp</dimen>
-    <dimen name="rectangle_padding">5dp</dimen>
-
-    <!-- activity_reminder -->
-    <dimen name="medium_padding">2dp</dimen>
-    <dimen name="large_padding">5dp</dimen>
-    <dimen name="container_height">200dp</dimen>
-    <dimen name="container_margin">20dp</dimen>
-    <dimen name="icon_width">180dp</dimen>
-    <dimen name="clock_size">35dp</dimen>
-    <dimen name="info_layout_width">850dp</dimen>
-    <dimen name="reminder_info_margin_up">10dp</dimen>
-    <dimen name="font_size_title">35sp</dimen>
-    <dimen name="font_size_medium">25sp</dimen>
-
 </resources>

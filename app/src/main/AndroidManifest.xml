@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-package="com.shtvsolution">
+package="com.droidmare">
 
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -23,10 +23,9 @@ package="com.shtvsolution">
     android:label="@string/app_name"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:name=".calendario.acraApplication"
     android:theme="@style/AppTheme">
 
-    <activity android:name=".calendario.views.activities.SplashActivity">
+    <activity android:name=".calendar.views.activities.SplashActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <action android:name="android.intent.action.VIEW"/>
@@ -34,90 +33,90 @@ package="com.shtvsolution">
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.MainActivity">
+    <activity android:name=".calendar.views.activities.MainActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogDeleteActivity">
+    <activity android:name=".calendar.views.activities.DialogDeleteActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogDisplayEventsActivity">
+    <activity android:name=".calendar.views.activities.DialogDisplayEventsActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogNewEventActivity">
+    <activity android:name=".calendar.views.activities.DialogNewEventActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogEventParameters">
+    <activity android:name=".calendar.views.activities.DialogEventParameters">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogDatePickerActivity">
+    <activity android:name=".calendar.views.activities.DialogDatePickerActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendario.views.activities.DialogAddDescriptionActivity">
+    <activity android:name=".calendar.views.activities.DialogAddDescriptionActivity">
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
         </intent-filter>
     </activity>
 
-    <receiver android:name=".calendario.receivers.BootCompletedReceiver" android:enabled = "true">
+    <receiver android:name=".calendar.receivers.BootCompletedReceiver" android:enabled = "true">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
         </intent-filter>
     </receiver>
 
     <service
-        android:name=".calendario.services.AlarmResetService"
+        android:name=".calendar.services.AlarmResetService"
         android:exported="false">
     </service>
 
     <service
-        android:name=".calendario.services.ApiReceiverService"
+        android:name=".calendar.services.ApiReceiverService"
         android:exported="true">
     </service>
 
     <service
-        android:name=".calendario.services.DataDeleterService"
+        android:name=".calendar.services.DataDeleterService"
         android:exported="true">
     </service>
 
     <service
-        android:name=".calendario.services.EventReceiverService"
+        android:name=".calendar.services.EventReceiverService"
         android:exported="true">
     </service>
 
     <service
-    android:name=".calendario.services.ApiConnectionService"
+    android:name=".calendar.services.ApiConnectionService"
     android:exported="false">
     </service>
 
     <service
-        android:name=".calendario.services.ApiSynchronizationService"
+        android:name=".calendar.services.ApiSynchronizationService"
         android:exported="false">
     </service>
 
     <service
-        android:name=".calendario.services.UserDataReceiverService"
+        android:name=".calendar.services.UserDataReceiverService"
         android:exported="true">
     </service>
 
-    <service android:name=".calendario.services.DateCheckerService"/>
+    <service android:name=".calendar.services.DateCheckerService"/>
 
 </application>
 
