@@ -2,10 +2,12 @@ package com.droidmare.calendar.views.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.statistics.StatisticAPI;
 import com.droidmare.statistics.StatisticService;
 import com.droidmare.R;
@@ -40,6 +42,15 @@ public class DialogDeleteActivity extends AppCompatActivity {
         super.onDestroy();
         statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        if (ToastUtils.cancelCurrentToast()) return true;
+
+        else return super.dispatchKeyEvent(event);
+    }
+
 
     //Initialization of the activity views and buttons:
     private void initializeViews (){

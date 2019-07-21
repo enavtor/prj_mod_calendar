@@ -10,11 +10,6 @@ public class TypeListItem {
     //List of event types:
     public enum eventTypes {
         ACTIVITY,
-        MEASURE,
-        MEASURE_HR,
-        MEASURE_BP,
-        MEASURE_BG,
-        MEASURE_XX,
         DOCTOR,
         MEDICATION,
         PERSONAL_EVENT,

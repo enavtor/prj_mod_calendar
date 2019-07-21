@@ -1,9 +1,7 @@
 package com.droidmare.calendar.views.adapters.events;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,7 @@ import android.widget.TextView;
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventListUtils;
+import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 
 import java.util.ArrayList;
@@ -74,8 +72,6 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         this.nextFocusedPosition = nextFocus;
     }
 
-    public int getNextFocusedPosition() { return nextFocusedPosition; }
-
     // the item on which the click was performed:
     public EventListItem getSelectedItem() { return arrayList.get(selectedPosition); }
 
@@ -110,28 +106,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
         EventListItem eventItem = arrayList.get(position);
 
-        Drawable icon = eventItem.getEventIcon();
+        holder.setTitleAndDescription(eventItem);
 
-        final int itemPosition = position;
-
-        holder.eventItemBody.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) focusedViewPosition = itemPosition;
-                else focusedViewPosition = -1;
-            }
-        });
-
-        //If the event is out of date, the title color will be red:
-        if (eventItem.outOfDate(allEventsDisplayed)) {
-            int color = context.getResources().getColor(R.color.sh_red_medium);
-            holder.eventTitle.setTextColor(color);
-        } else {
-            int color = context.getResources().getColor(R.color.black);
-            holder.eventTitle.setTextColor(color);
-        }
-
-        holder.eventIcon.setImageDrawable(icon);
+        holder.eventIcon.setImageDrawable(eventItem.getEventIcon());
 
         int interval = eventItem.getIntervalTime();
 
@@ -139,11 +116,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
         if (interval != 0) {
             holder.repetitionIconHolder.setVisibility(View.VISIBLE);
             holder.intervalTime.setText(DateUtils.formatTimeString(interval));
-        } else holder.repetitionIconHolder.setVisibility(View.GONE);
+        }
+
+        else holder.repetitionIconHolder.setVisibility(View.GONE);
 
         //When the element is the first one on the list, a top margin of 3dp will be left:
-        if (position == 0) holder.firstElementMargin.setVisibility(View.VISIBLE);
-        else holder.firstElementMargin.setVisibility(View.GONE);
+        if (position == 0) holder.setFirstEventMargins();
 
         //The visibility of the elements depends on the value of the attribute showEventMenu:
         holder.changeElementsVisibility(eventItem.showEventMenu());
@@ -168,7 +146,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         LinearLayout eventItemMenu, viewEventButton, modifyEventButton, deleteEventButton, dismissMenuButton;
-        RelativeLayout eventItemBody, firstElementMargin, eventElementsHolder, repetitionIconHolder;
+        RelativeLayout eventElementsHolder, repetitionIconHolder;
         TextView eventTitle, eventDescription, intervalTime;
         ImageView eventIcon;
 
@@ -176,22 +154,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
             super(itemView);
 
-            //The first element must have an extra top margin of 3dp:
-            firstElementMargin = itemView.findViewById(R.id.first_element_margin);
-
-            //Because of this, the items are not fully focused but only the event_item_body layout, so when that layout is clicked, a click emulation on the whole item's view must be performed:
-            eventItemBody = itemView.findViewById(R.id.event_item_body);
-            eventItemBody.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    itemView.performClick();
-                }
-            });
-
             //Since when the event menu must be shown, the event elements must set invisible, there exists an event elements holder in order to achieve this:
             eventElementsHolder = itemView.findViewById(R.id.event_elements_holder);
 
-            //An overlapping menu of three buttons (for deleting the event, modifying it or dismissing the menu) is hidden within the event layout:
+            //An overlapping menu of four buttons (for viewing the event, modifying it, deleting it or dismissing the menu) is hidden within the event layout:
             eventItemMenu = itemView.findViewById(R.id.event_item_menu);
 
             viewEventButton = itemView.findViewById(R.id.view_event_button);
@@ -209,10 +175,24 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
             eventIcon = itemView.findViewById(R.id.event_icon);
 
+            itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View view, boolean hasFocus) {
+
+                    if (hasFocus) {
+                        focusedViewPosition = getAdapterPosition();
+                        if (focusedViewPosition == 0) {
+                            RecyclerView eventList = (RecyclerView) itemView.getParent();
+                            if (eventList != null) eventList.scrollBy(0, -ImageUtils.transformDipToPix(context, 3));
+                        }
+                    }
+
+                    else if (!displayingEventMenu) focusedViewPosition = -1;
+                }
+            });
+
             itemView.setOnClickListener(this);
         }
-
-        public RelativeLayout getEventItemBody() { return this.eventItemBody; }
 
         // sets the behaviour of the event menu:
         private void setEventMenuBehaviour(){
@@ -277,22 +257,43 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                 //If the event menu was dismissed, the focus stays on the event:
                 if (eventMenuDismissed) {
                     eventMenuDismissed = false;
-                    if (nextFocusedPosition != -2) eventItemBody.requestFocus();
+                    if (nextFocusedPosition != -2) itemView.requestFocus();
                     else nextFocusedPosition = -1;
                 }
             }
         }
 
-        public void setTitleAndDescription(int position) {
-            EventListItem event = arrayList.get(position);
+        private void setTitleAndDescription(EventListItem event) {
 
             String title;
 
             if (allEventsDisplayed) title = event.getFullTitleText();
             else title = event.getTitleText();
 
-            eventTitle.setText(EventListUtils.oneLineText(eventTitle, title));
-            eventDescription.setText(EventListUtils.oneLineText(eventDescription, event.getDescriptionText()));
+            eventTitle.setText(title);
+            eventDescription.setText(event.getDescriptionText());
+
+            //If the event is out of date, the title color will be red:
+            if (event.outOfDate(allEventsDisplayed)) {
+                int color = context.getResources().getColor(R.color.sh_red_medium);
+                eventTitle.setTextColor(color);
+            }
+
+            else {
+                int color = context.getResources().getColor(R.color.black);
+                eventTitle.setTextColor(color);
+            }
+        }
+
+        private void setFirstEventMargins() {
+
+            int topMargin = ImageUtils.transformDipToPix(context, 3);
+            int lateralMargin = ImageUtils.transformDipToPix(context, 8);
+
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+            params.setMargins(lateralMargin, topMargin, lateralMargin, 0);
+
+            itemView.setLayoutParams(params);
         }
 
         @Override
@@ -307,13 +308,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     // allows clicks events to be caught
-    private void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
+    private void setClickListener(ItemClickListener itemClickListener) { this.mClickListener = itemClickListener; }
 
     // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
+    public interface ItemClickListener { void onItemClick(View view, int position); }
 }
 

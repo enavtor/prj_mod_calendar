@@ -318,7 +318,15 @@ public abstract class EventListItem {
 
     public String getRepetitionType() { return repetitionType; }
 
-    public long getNextRepetition() { return nextRepetition; }
+    //Method that returns the event's next repetition (if nextRepetition value is equals to -1, this method returns the start date millis):
+    public long getNextRepetition() {
+        long nextRepetition = this.nextRepetition;
+
+        if (nextRepetition <= 0)
+            nextRepetition = DateUtils.transformToMillis(eventMinute, eventHour, eventDay, eventMonth, eventYear);
+
+        return nextRepetition;
+    }
 
     public long getRepetitionStop() { return repetitionStop; }
 

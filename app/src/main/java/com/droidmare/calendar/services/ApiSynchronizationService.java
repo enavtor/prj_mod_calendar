@@ -43,9 +43,6 @@ public class ApiSynchronizationService extends Service {
 
     private static boolean isRunning = false;
 
-    //Server connection timeout in milliseconds
-    private static final int SERVER_TIMEOUT = 5000;
-
     private EventListItem[] retrievedEvents;
 
     private SQLiteManager database;
@@ -78,7 +75,7 @@ public class ApiSynchronizationService extends Service {
     //Method that starts the timer for resynchronizing the events every 5 minutes:
     private void startSyncTimer() {
 
-        //The resynchronization attempt will take place every 30 minutes:
+        //The resynchronization attempt will take place every 5 minutes:
         long resyncPeriod = DateUtils.minutesToMillis(5);
 
         Timer resyncTimer = new Timer("resyncTimer");
@@ -89,7 +86,7 @@ public class ApiSynchronizationService extends Service {
                 //The sync won't start until a connection is available:
                 while (!NetworkUtils.isNetworkAvailable(getApplicationContext())) {
 
-                    Log.d("TESTING", "Waiting for a connection...");
+                    Log.d(TAG, "Waiting for a connection...");
 
                     try {
                         Thread.sleep(10000);
@@ -98,11 +95,11 @@ public class ApiSynchronizationService extends Service {
                     }
                 }
 
-                Log.e("TESTING", "Resynchronization schedule started");
+                Log.e(TAG, "Resynchronization schedule started");
 
                 retrieveAndSyncApiEvents();
             }
-        }, 0, resyncPeriod);
+        }, 0, 30000);
     }
 
     @Override
@@ -120,9 +117,9 @@ public class ApiSynchronizationService extends Service {
     //This method retrieves all the events from the Api and starts the synchronization function:
     private void retrieveAndSyncApiEvents() {
 
-        String response = connectAndRetrieve();
+        String response = ApiConnectionService.sendRequest(null, urlForRetrieving, "GET");
 
-        Log.d("TESTING", "Events retrieved from API: " + response);
+        Log.d(TAG, "Events retrieved from API: " + response);
 
         try {
             JSONObject responseJson = new JSONObject(response);
@@ -151,38 +148,10 @@ public class ApiSynchronizationService extends Service {
         }
     }
 
-    //This method establishes a connection to the API and request a GET operation for all the user's events:
-    private String connectAndRetrieve() {
-
-        StringBuilder response = new StringBuilder();
-
-        try {
-            URL url = new URL(urlForRetrieving);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(SERVER_TIMEOUT);
-            connection.setReadTimeout(SERVER_TIMEOUT);
-
-            BufferedReader input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-            String inputLine;
-
-            while ((inputLine = input.readLine()) != null)
-                response.append(inputLine);
-
-            input.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return response.toString();
-    }
-
     //This method checks all the retrieved events, comparing them to the ones stored in the database and performing all the necessary synchronization operations:
     private void synchronizeEvents() {
 
-        Log.e("TESTING", "Event synchronization started");
+        Log.e(TAG, "Event synchronization started");
 
         //First of all, all the local events are retrieved:
         JSONObject[] localEventsJson = database.getEvents(-1, -1, true, false);
@@ -213,8 +182,8 @@ public class ApiSynchronizationService extends Service {
 
             //If the retrieved event does not exist in the database, it means that it was created in the Api and that, therefore, it must be locally stored:
             if (localEvent == null) {
-                Log.e("TESTING", "The event was created in the API");
-                Log.e("TESTING", retrievedEvent.eventToString());
+                Log.e(TAG, "The event was created in the API");
+                Log.e(TAG, retrievedEvent.eventToString());
                 storeEventIntoDatabase(retrievedEvent);
             }
 
@@ -223,8 +192,8 @@ public class ApiSynchronizationService extends Service {
                 //The local event id is assigned to the retrieved event in order to perform update operations on the database:
                 retrievedEvent.setEventId(localEvent.getEventId());
 
-                Log.d("TESTING", "Retrieved event: " + retrievedEvent.eventToString());
-                Log.d("TESTING", "Local event: " + localEvent.eventToString());
+                Log.d(TAG, "Retrieved event: " + retrievedEvent.eventToString());
+                Log.d(TAG, "Local event: " + localEvent.eventToString());
 
                 //The following values will be used multiple times, so they are stored in local variables:
                 String pendingOperation = localEvent.getPendingOperation();
@@ -233,7 +202,7 @@ public class ApiSynchronizationService extends Service {
 
                 //If there is not a pending operation and the last local update is previous to the API one, the event was modified in the API:
                 if (pendingOperation.equals("") && lastLocalUpdate < lastApiUpdate) {
-                    Log.e("TESTING", "The event was modified in the API (1)");
+                    Log.e(TAG, "The event was modified in the API (1)");
                     modifyEventInDatabase(localEvent, retrievedEvent);
                 }
 
@@ -242,12 +211,12 @@ public class ApiSynchronizationService extends Service {
                 else if (pendingOperation.equals("POST")) {
                     //If the modification takes place locally or remotely depends on the last update of each event (the local and the retrieved one):
                     if (lastLocalUpdate >= lastApiUpdate) {
-                        Log.e("TESTING", "The event was locally modified");
+                        Log.e(TAG, "The event was locally modified");
                         sendEventToApi(localEvent);
                         pauseService();
                     }
                     else {
-                        Log.e("TESTING", "The event was modified in the API (2)");
+                        Log.e(TAG, "The event was modified in the API (2)");
                         modifyEventInDatabase(localEvent, retrievedEvent);
                     }
                 }
@@ -256,12 +225,12 @@ public class ApiSynchronizationService extends Service {
                 //case in which it will be updated in the local database since the API events updates have priority over the STB ones:
                 else if (pendingOperation.equals("DELETE")) {
                     if (lastLocalUpdate >= lastApiUpdate) {
-                        Log.e("TESTING", "The event was locally deleted");
+                        Log.e(TAG, "The event was locally deleted");
                         deleteEventFromApi(localEvent);
                         pauseService();
                     }
                     else {
-                        Log.e("TESTING", "The event was modified in the API (3)");
+                        Log.e(TAG, "The event was modified in the API (3)");
                         modifyEventInDatabase(localEvent, retrievedEvent);
                     }
                 }
@@ -273,14 +242,14 @@ public class ApiSynchronizationService extends Service {
         if (localEvents != null) for (int i = 0; i <= localLastIndex; i++) {
             EventListItem localEvent = localEvents[i];
             if (localEvent.getEventApiId() != -1) {
-                Log.e("TESTING", "The event was deleted from the API");
-                Log.e("TESTING", localEvent.eventToString());
+                Log.e(TAG, "The event was deleted from the API");
+                Log.e(TAG, localEvent.eventToString());
                 deleteEventFromDatabase(localEvent);
             }
 
             //If the api id for the local event is equal to -1, it means that the event hasn't been sent to the API yet:
             else {
-                Log.e("TESTING", "The event was locally created");
+                Log.e(TAG, "The event was locally created");
                 sendEventToApi(localEvent);
                 pauseService();
             }
@@ -291,7 +260,7 @@ public class ApiSynchronizationService extends Service {
     private void pauseService() {
         while(ApiConnectionService.isCurrentlyRunning) {
             try {
-                Log.d("TESTING", "Connection service is running");
+                Log.d(TAG, "Connection service is running");
                 Thread.sleep(100);
             } catch (InterruptedException ie) {
                 Log.e(TAG, "pauseService. InterruptedException: " + ie.getMessage());
@@ -301,14 +270,14 @@ public class ApiSynchronizationService extends Service {
 
     //This method saves an event into the database when it was created in the API:
     private void storeEventIntoDatabase(EventListItem eventToSave) {
-            EventListItem[] eventToSaveArray = {eventToSave};
+        EventListItem[] eventToSaveArray = {eventToSave};
 
-            //The main activity will manage the communication with the event fragment to indicate if the focus must be relocated:
-            if (mainActivityReference != null && mainActivityReference.get() != null)
-                //In this case the retrievedEvent is irrelevant, since it will not be used:
-                mainActivityReference.get().relocateFocusAfterSync(eventToSave, null, LOCAL_SYNC_OP_SAVE);
+        //The main activity will manage the communication with the event fragment to indicate if the focus must be relocated:
+        if (mainActivityReference != null && mainActivityReference.get() != null)
+            //In this case the retrievedEvent is irrelevant, since it will not be used:
+            mainActivityReference.get().relocateFocusAfterSync(eventToSave, null, LOCAL_SYNC_OP_SAVE);
 
-            EventsPublisher.publishEvents(getContextToPublish(), eventToSaveArray);
+        EventsPublisher.publishEvents(getContextToPublish(), eventToSaveArray);
     }
 
     //This method modifies an event in the database when it was modified in the API:

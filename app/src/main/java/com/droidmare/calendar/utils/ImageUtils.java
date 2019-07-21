@@ -1,34 +1,35 @@
 package com.droidmare.calendar.utils;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.util.Base64;
+import android.util.TypedValue;
 
-/**
- * Utilities for images
- * @author Carolina on 23/10/2017.
- */
+//Utils for managing bitmap images and dp to px transformations
+//@author Eduardo on 27/05/2019.
 public class ImageUtils {
 
-    /**
-     * Gets drawable from assets image
-     * @param context App context
-     * @param name Filename
-     * @return Drawable object with obtained image from assets folder
-     */
-    public static Drawable getImageFromAssets(Context context, String name){
-        try{return Drawable.createFromStream(context.getAssets().open(name),null);}
-        catch(Exception e){return null;}
+    public static Bitmap decodeBitmapString(String encodedString) {
+
+        byte[] encodedBitmapByteArray = Base64.decode(encodedString, Base64.DEFAULT);
+
+        return BitmapFactory.decodeByteArray(encodedBitmapByteArray, 0, encodedBitmapByteArray.length);
     }
 
+    public static Drawable getImageFromAssets(Context context, String name) {
+        try {
+            return Drawable.createFromStream(context.getAssets().open(name), null);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-    /**
-     * Gets color from String value
-     * @param color Color in a String format: <code>#RRGGBB</code> or <code>#AARRGGBB</code>
-     * @return Color in integer format
-     */
-    public static int getColorFromString(String color){
-        //TODO Check if format is wright
-        return Color.parseColor(color);
+    //Method that transforms a dp value into pixels:
+    public static int transformDipToPix (Context context, int dpValue) {
+        Resources r = context.getResources();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, r.getDisplayMetrics());
     }
 }

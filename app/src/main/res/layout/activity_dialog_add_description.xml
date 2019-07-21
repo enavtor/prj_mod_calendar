@@ -39,38 +39,53 @@
                 android:background="@drawable/loading_description_content_background"
                 android:padding="20dp">
 
+                <RelativeLayout
+                    android:id="@+id/loading_elements_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_loading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp"
+                        android:layout_marginBottom="60dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="55sp" />
+
+                    <TextView
+                        android:id="@+id/text_please_stand_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_loading"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="15dp"
+                        android:textColor="@color/sh_cyan_dark_medium"
+                        android:text="@string/loading_layout_stand_by"
+                        android:textSize="40sp" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="350dp"
+                        android:layout_height="100dp"
+                        android:layout_below="@+id/text_please_stand_by"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="30dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/progress_bar_dark"
+                        android:indeterminateTintMode="src_atop" />
+                </RelativeLayout>
+
                 <TextView
-                    android:id="@+id/text_loading"
+                    android:id="@+id/text_no_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginBottom="60dp"
+                    android:layout_centerInParent="true"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="55sp" />
-
-                <TextView
-                    android:id="@+id/text_please_stand_by"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/text_loading"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="15dp"
-                    android:textColor="@color/sh_cyan_dark_medium"
-                    android:text="@string/loading_layout_stand_by"
-                    android:textSize="40sp" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                    android:layout_width="350dp"
-                    android:layout_height="100dp"
-                    android:layout_below="@+id/text_please_stand_by"
-                    android:layout_centerInParent="true"
-                    android:layout_marginBottom="30dp"
-                    android:indeterminate="true"
-                    android:indeterminateTint="@color/progress_bar_dark"
-                    android:indeterminateTintMode="src_atop" />
+                    android:textSize="50sp"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -135,6 +150,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-
 </RelativeLayout>

@@ -51,12 +51,8 @@ public class TypeListAdapter extends RecyclerView.Adapter<TypeListAdapter.ViewHo
         holder.text.setText(typeText);
         holder.icon.setImageDrawable(typeIcon);
 
-        //When the measure event is selected, the hole recycler view changes, and the focus must be relocated on the first element:
-        if (item.getType().equals(TypeListItem.eventTypes.MEASURE_HR))
-            holder.itemView.requestFocus();
-
         //When the survey event is selected, the hole recycler view changes, and the focus must be relocated on the first element:
-        else if (item.getType().equals(TypeListItem.eventTypes.MOOD))
+        if (item.getType().equals(TypeListItem.eventTypes.MOOD))
             holder.itemView.requestFocus();
 
         //When the personal event is selected, the hole recycler view changes, and the focus must be relocated on the first element:

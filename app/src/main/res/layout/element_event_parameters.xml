@@ -151,7 +151,7 @@
                 android:id="@+id/parameters_event_current_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/events_focus"
+                android:background="@drawable/items_edge_focus"
                 android:scrollbars = "vertical"
                 android:scrollbarSize="8dp"
                 android:fadeScrollbars="true"

@@ -20,6 +20,7 @@ import com.droidmare.calendar.services.UserDataReceiverService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.ImageUtils;
+import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.TypeListAdapter;
 import com.droidmare.statistics.StatisticAPI;
 import com.droidmare.statistics.StatisticService;
@@ -34,9 +35,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
 
     //List of items for the type list adapter:
     private ArrayList<TypeListItem> eventTypes;
-
-    //List of items for the type list adapter when the measure event is selected:
-    private ArrayList<TypeListItem> measureTypes;
 
     //List of items for the type list adapter when the survey event is selected:
     private ArrayList<TypeListItem> surveyTypes;
@@ -135,7 +133,9 @@ public class DialogNewEventActivity extends AppCompatActivity{
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if(event.getAction() == KeyEvent.ACTION_DOWN  && (event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED || event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_BACK)) {
+        if(ToastUtils.cancelCurrentToast()) return true;
+
+        else if(event.getAction() == KeyEvent.ACTION_DOWN  && (event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED || event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_BACK)) {
 
             hasDefaultDescription = false;
 
@@ -235,16 +235,8 @@ public class DialogNewEventActivity extends AppCompatActivity{
                 selectedItem = typeAdapter.getEventTypeItem(position);
                 eventType = selectedItem.getType();
 
-                //If the selected item is of type MEASURE, the type list elements visibility must change:
-                if (eventType.equals(TypeListItem.eventTypes.MEASURE)) {
-                    showingSecondaryDialog = true;
-                    //The dialog title and elements are changed:
-                    dialogTitle.setText(R.string.new_measure_dialog_title);
-                    typeAdapter.changeElementsVisibility(measureTypes);
-                }
-
                 //If the selected item is of type SURVEY, the type list elements visibility must change:
-                else if (eventType.equals(TypeListItem.eventTypes.SURVEY)) {
+                if (eventType.equals(TypeListItem.eventTypes.SURVEY)) {
                     showingSecondaryDialog = true;
                     //The dialog title and elements are changed:
                     dialogTitle.setText(R.string.new_survey_dialog_title);
@@ -261,12 +253,7 @@ public class DialogNewEventActivity extends AppCompatActivity{
 
                 //If it is a different event, an event setter dialog is created so the user can select the alarm time and the description text:
                 else {
-                    if (eventType.equals(TypeListItem.eventTypes.MOOD)
-                            ||eventType.equals(TypeListItem.eventTypes.MEASURE_BG)
-                            ||eventType.equals(TypeListItem.eventTypes.MEASURE_BP)
-                            ||eventType.equals(TypeListItem.eventTypes.MEASURE_HR)
-                            ||eventType.equals(TypeListItem.eventTypes.MEASURE_XX)
-                            ||eventType.equals(TypeListItem.eventTypes.STIMULUS))
+                    if (eventType.equals(TypeListItem.eventTypes.MOOD) || eventType.equals(TypeListItem.eventTypes.STIMULUS))
                         hasDefaultDescription = true;
                     startNewEventSetter();
                 }
@@ -317,7 +304,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
     private void initEventTypes () {
 
         this.eventTypes = new ArrayList<>();
-        this.measureTypes = new ArrayList<>();
         this.surveyTypes = new ArrayList<>();
         this.personalTypes = new ArrayList<>();
 
@@ -338,50 +324,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
                     icon = ImageUtils.getImageFromAssets(this, "activity_icon.png");
                     item = new TypeListItem(type, title, description, icon);
                     this.eventTypes.add(item);
-                    break;
-                case MEASURE:
-                    if (UserDataReceiverService.hasAnyMeasure()) {
-                        title = res.getString(R.string.measure_event_title);
-                        icon = ImageUtils.getImageFromAssets(this, "dmeasure_icon.png");
-                        item = new TypeListItem(type, title, null, icon);
-                        this.eventTypes.add(item);
-                    }
-                    break;
-                case MEASURE_HR:
-                    if (UserDataReceiverService.hasMeasure("MEASURE_HR")) {
-                        title = res.getString(R.string.measure_event_hr_title);
-                        description = res.getString(R.string.measure_reminder_hr_description);
-                        icon = ImageUtils.getImageFromAssets(this, "measure_hr_icon.png");
-                        item = new TypeListItem(type, title, description, icon);
-                        this.measureTypes.add(item);
-                    }
-                    break;
-                case MEASURE_BP:
-                    if (UserDataReceiverService.hasMeasure("MEASURE_BP")) {
-                        title = res.getString(R.string.measure_event_bp_title);
-                        description = res.getString(R.string.measure_reminder_bp_description);
-                        icon = ImageUtils.getImageFromAssets(this, "measure_bp_icon.png");
-                        item = new TypeListItem(type, title, description, icon);
-                        this.measureTypes.add(item);
-                    }
-                    break;
-                case MEASURE_BG:
-                    if (UserDataReceiverService.hasMeasure("MEASURE_BG")) {
-                        title = res.getString(R.string.measure_event_bg_title);
-                        description = res.getString(R.string.measure_reminder_bg_description);
-                        icon = ImageUtils.getImageFromAssets(this, "measure_bg_icon.png");
-                        item = new TypeListItem(type, title, description, icon);
-                        this.measureTypes.add(item);
-                    }
-                    break;
-                case MEASURE_XX:
-                    if (UserDataReceiverService.hasMeasure("MEASURE_XX")) {
-                        title = res.getString(R.string.measure_event_xx_title);
-                        description = res.getString(R.string.measure_reminder_xx_description) + UserDataReceiverService.getFreeMeasure();
-                        icon = ImageUtils.getImageFromAssets(this, "measure_xx_icon.png");
-                        item = new TypeListItem(type, title, description, icon);
-                        this.measureTypes.add(item);
-                    }
                     break;
                 case DOCTOR:
                     title = res.getString(R.string.doctor_event_title);

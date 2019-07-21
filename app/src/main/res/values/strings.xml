@@ -263,15 +263,18 @@
     <string name="description_delete_button">Delete description</string>
 
     <string name="dialog_add_medicine_title">Select one or more medications by pressing OK:</string>
+    <string name="description_no_medication">There are not medications available</string>
     <string name="description_add_medicine_button">Add medication</string>
     <string name="medicine_description_header">Take\u0020</string>
     <string name="medicine_description_separator">\u0020of\u0020</string>
-    
+
     <string name="follow_event_dialog_title">Do you wish to go to the new selected day?</string>
     <string name="follow_event_affirmative">Yes, go to new day</string>
     <string name="follow_event_negative">No, stay on selected</string>
 
     <string name="original_date_title">Since:</string>
+
+    <string name="loading_app">Loading…</string>
 
     <string name="loading_layout_description">Loading\u0020</string>
     <string name="loading_layout_events">events</string>
@@ -282,16 +285,15 @@
     <string name="loading_layout_delete_one">Deleting event</string>
     <string name="loading_layout_delete_all">Deleting events</string>
     <string name="loading_layout_stand_by">Please stand by…</string>
-	
-	<string name="today_date_legend_text">Today date</string>
+
+    <string name="today_date_legend_text">Today date</string>
     <string name="start_date_legend_text">Start date</string>
     <string name="selected_date_legend_text">Selected day</string>
-	
+
     <string name="error_start_date">The start date can not be previous to the current one. Please check and change the start date!!!</string>
     <string name="error_start_time">The start time can not be previous to the current one if the start date is today. Please check and change the start time!!!\n\nIf you want to set the start time to an already passed one, remember that you will have to change the start date to a date posterior to the current one.</string>
     <string name="error_setting_alarm">Alarm not set: the reminders app is not installed.</string>
     <string name="error_deleting_alarm">Alarm not deleted: the reminders app is not installed.</string>
     <string name="app_version">App version:</string>
     <string name="daten">EEEE dd MMM, yyyy</string>
-
 </resources>

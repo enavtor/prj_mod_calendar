@@ -2,9 +2,13 @@ package com.droidmare.calendar.utils;
 
 import android.util.Log;
 
+import com.droidmare.calendar.models.EventListItem;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 //Util for sorting an event's previous alarms by date declaration
 //@author Eduardo on 20/03/2019.
@@ -32,8 +36,6 @@ public class SortUtils {
 
                         String sortedDate = sortedAlarm.getString("Alarm");
 
-                        Log.d("SORTING", "Unsorted : " + unsortedDate + " -- Sorted: " + sortedDate);
-
                         if (DateUtils.fullDateIsPrevious(unsortedDate, sortedDate)) {
                             //Since the method put(index, JSONObject) of JSONArray overwrites the JSONObject in index,
                             //all the objects from index to the end of the array must be moved to the right:
@@ -56,5 +58,37 @@ public class SortUtils {
         }
 
         return null;
+    }
+
+    public static ArrayList<EventListItem> sortEventList (ArrayList<EventListItem> unsortedList) {
+
+        ArrayList<EventListItem> sortedList = new ArrayList<>();
+
+        for (int i = 0; i < unsortedList.size(); i++) {
+
+            EventListItem unsortedEvent = unsortedList.get(i);
+
+            for (int j = 0; j <= sortedList.size(); j++) {
+
+                if (j != sortedList.size()) {
+
+                    EventListItem sortedEvent = sortedList.get(j);
+
+                    long unsortedRepDate = unsortedEvent.getNextRepetition();
+
+                    long sortedRepDate = sortedEvent.getNextRepetition();
+
+                    if (unsortedRepDate < sortedRepDate) {
+                        sortedList.add(j, unsortedEvent);
+                        break;
+                    }
+                } else {
+                    sortedList.add(unsortedEvent);
+                    break;
+                }
+            }
+        }
+
+        return sortedList;
     }
 }

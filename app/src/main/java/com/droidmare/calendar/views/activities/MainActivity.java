@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         //If the loading layout is being display all the key events are blocked so the user can not perform any operation until the current one is done:
-        if (isLoadingLayoutDisplayed()) return false;
+        if (isLoadingLayoutDisplayed() || ToastUtils.cancelCurrentToast()) return false;
 
         else if(event.getAction() == KeyEvent.ACTION_DOWN) {
 
@@ -230,9 +230,9 @@ public class MainActivity extends AppCompatActivity {
             //Controller's ir color keys behaviour when they are pressed:
             else if (event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED) {
                 //A statistic may need to be sent so as to indicate that all the events were deleted by using the IR keys:
-               /* deleteEventStatisticInfo = "By using the IR keys";
-                startDisplayDeleteAllEventsDialog(null);*/
-               //startActivity(new Intent().setComponent(new ComponentName("com.android.tv.settings", "com.android.tv.settings.system.DateTimeActivity")));
+                //deleteEventStatisticInfo = "By using the IR keys";
+                startDisplayDeleteAllEventsDialog(null);
+                //startActivity(new Intent().setComponent(new ComponentName("com.android.tv.settings", "com.android.tv.settings.system.DateTimeActivity")));
             } else if (event.getKeyCode() == KeyEvent.KEYCODE_F3 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_GREEN) {
                 //A statistic is sent so as to indicate that the user returned to the current day by using the IR keys:
                 statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.RETURNED_TO_CURRENT, "By using the IR keys");
@@ -246,11 +246,18 @@ public class MainActivity extends AppCompatActivity {
                 statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ADD_NEW_EVENT_SELECTED, "By using the IR keys");
                 //If an event was created while the focus was on an item inside the event list, the event fragment must be notified:
                 View currentFocusParent = null;
+
                 if (currentFocused != null) currentFocusParent = (View) currentFocused.getParent();
-                if (currentFocusParent != null) currentFocusParent = (View) currentFocusParent.getParent();
-                if (currentFocusParent != null && currentFocusParent.getId() == eventFrag.getEventList().getId()){
-                    eventFrag.getAdapter().setNextFocusedPosition(eventFrag.getAdapter().getCurrentFocusedPosition());
+
+                //If the event menu is being displayed, the recycler view will be two levels above the focused view's parent:
+                if (eventFrag.displayingEventMenu() && currentFocusParent != null) {
+                    currentFocusParent = (View) currentFocusParent.getParent();
+                    currentFocusParent = (View) currentFocusParent.getParent();
                 }
+
+                if (currentFocusParent != null && currentFocusParent.getId() == eventFrag.getEventList().getId())
+                    eventFrag.getAdapter().setNextFocusedPosition(eventFrag.getAdapter().getCurrentFocusedPosition());
+
                 startNewEventDialog();
             }
 
@@ -405,10 +412,10 @@ public class MainActivity extends AppCompatActivity {
 
     //This method displays the loading layout by changing its visibility and sets the displayed text:
     public void displayLoadingLayout(String displayedText) {
-            loadingLayout.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
 
-            TextView loadingText = findViewById(R.id.text_layout_loading);
-            loadingText.setText(displayedText);
+        TextView loadingText = findViewById(R.id.text_layout_loading);
+        loadingText.setText(displayedText);
     }
 
     //This method hides the loading layout by changing its visibility:
@@ -435,11 +442,11 @@ public class MainActivity extends AppCompatActivity {
 
     //This method starts the api connection service so that all the events are deleted:
     public void sendDeleteEvents (String[] eventStrings){
-            Intent eventIntent = new Intent();
-            eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-            eventIntent.putExtra("eventStrings", eventStrings);
-            eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE_ALL);
-            startService(eventIntent);
+        Intent eventIntent = new Intent();
+        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
+        eventIntent.putExtra("eventStrings", eventStrings);
+        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE_ALL);
+        startService(eventIntent);
     }
 
     //This method tells the API to delete an event:
@@ -516,11 +523,11 @@ public class MainActivity extends AppCompatActivity {
                 if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_DELETE) && currentDayAffected)
                     eventFrag.setNextFocusedAfterSyncDelete(currentFocusedEvent);
 
-                //If an event was modified in the API and the focus is located on the modified event's day list or in a day that falls inside the event repetition, the focus must be relocated:
+                    //If an event was modified in the API and the focus is located on the modified event's day list or in a day that falls inside the event repetition, the focus must be relocated:
                 else if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_EDIT) && currentDayAffected)
                     eventFrag.setNextFocusedAfterSyncEdit(currentFocusedEvent, retrievedEvent);
 
-                //If the operation was creating an event in the API or, the deleted or modified event's day is not the currently selected one, the focus stays where it is:
+                    //If the operation was creating an event in the API or, the deleted or modified event's day is not the currently selected one, the focus stays where it is:
                 else eventFrag.getAdapter().setNextFocusedPosition(currentFocusedEvent);
             }
         }
@@ -675,18 +682,14 @@ public class MainActivity extends AppCompatActivity {
     //Method for loading the fragments:
     private void loadFragments () {
 
-        FragmentManager fragManager = getFragmentManager();
-        FragmentTransaction fragTrans;
-
         calendarFrag = new CalendarFragment();
         eventFrag = new EventFragment();
 
-        fragTrans = fragManager.beginTransaction();
-        fragTrans.add(R.id.left, calendarFrag, CalendarFragment.NAME);
-        fragTrans.commit();
+        FragmentTransaction fragTrans = getFragmentManager().beginTransaction();
 
-        fragTrans = fragManager.beginTransaction();
+        fragTrans.add(R.id.left, calendarFrag, CalendarFragment.NAME);
         fragTrans.add(R.id.right, eventFrag, EventFragment.NAME);
+
         fragTrans.commit();
     }
 }

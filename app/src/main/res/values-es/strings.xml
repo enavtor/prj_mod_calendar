@@ -263,6 +263,7 @@
     <string name="description_delete_button">Borrar descripción</string>
 
     <string name="dialog_add_medicine_title">Seleccione una o varias medicaciones pulsando OK:</string>
+    <string name="description_no_medication">No hay medicaciones disponibles</string>
     <string name="description_add_medicine_button">Añadir medicación</string>
     <string name="medicine_description_header">Tómese\u0020</string>
     <string name="medicine_description_separator">\u0020de\u0020</string>
@@ -273,6 +274,8 @@
 
     <string name="original_date_title">Desde:</string>
 
+    <string name="loading_app">Cargando…</string>
+
     <string name="loading_layout_description">Cargando\u0020</string>
     <string name="loading_layout_events">eventos</string>
     <string name="loading_layout_medication">medicación</string>
@@ -282,8 +285,8 @@
     <string name="loading_layout_delete_one">Borrando evento</string>
     <string name="loading_layout_delete_all">Borrando eventos</string>
     <string name="loading_layout_stand_by">Espere por favor…</string>
-	
-	<string name="today_date_legend_text">Fecha de hoy</string>
+
+    <string name="today_date_legend_text">Fecha de hoy</string>
     <string name="start_date_legend_text">Fecha de inicio</string>
     <string name="selected_date_legend_text">Día seleccionado</string>
 
@@ -292,5 +295,4 @@
     <string name="error_setting_alarm">Alarma no establecida: la aplicación de recordatorios no está instalada.</string>
     <string name="error_deleting_alarm">Alarma no eliminada: la aplicación de recordatorios no está instalada.</string>
     <string name="daten">EEEE dd MMM, yyyy</string>
-
 </resources>

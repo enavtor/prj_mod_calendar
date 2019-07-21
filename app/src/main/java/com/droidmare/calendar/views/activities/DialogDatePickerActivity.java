@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.statistics.StatisticAPI;
 import com.droidmare.statistics.StatisticService;
 import com.droidmare.R;
@@ -147,7 +148,9 @@ public class DialogDatePickerActivity extends AppCompatActivity {
 
         View focusedView = getCurrentFocus();
 
-        if(focusedView != null && event.getAction()== KeyEvent.ACTION_DOWN) {
+        if (ToastUtils.cancelCurrentToast()) return true;
+
+        else if (focusedView != null && event.getAction()== KeyEvent.ACTION_DOWN) {
             //If a view is focused, the parent is got so it can be checked if it is one of the list recycler views:
             View focusedItemParent = (View)focusedView.getParent();
 
@@ -165,7 +168,7 @@ public class DialogDatePickerActivity extends AppCompatActivity {
 
                     if (firstVisibleItemIndex > 0) {
 
-                         //The text color and style must be changed, since the middle elements' color is black and their style is bold, and the rest of elements' are grey by default:
+                        //The text color and style must be changed, since the middle elements' color is black and their style is bold, and the rest of elements' are grey by default:
                         DatePickerTimeListAdapter.ViewHolder holder = ((DatePickerTimeListAdapter.ViewHolder)((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + 1));
                         holder.notCenteredHolder();
 

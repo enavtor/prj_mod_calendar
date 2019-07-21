@@ -13,17 +13,15 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventListUtils;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 //Calendar grid adapter for editing the previous alarms
 //@author Eduardo on 22/03/2019.
 
 public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCalendarAdapter.ViewHolder> {
 
-    private final int DEFAULT_DAY_SIZE_SP = 15;
+    private final int DEFAULT_DAY_SIZE_SP = 17;
     private final int SELECTED_DAY_SIZE_SP = 19;
 
     private ArrayList<Integer> itemList;
@@ -90,7 +88,10 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
                     holder.text.setBackground(res.getDrawable(R.drawable.date_picker_focus_calendar));
 
                 if (currentMonth == startDateArray[DateUtils.MONTH] && currentYear == startDateArray[DateUtils.YEAR]) {
-                    if (item == startDateArray[DateUtils.DAY])
+                    if (todayDayPosition == startDayPosition && item == todayDateArray[DateUtils.DAY])  {
+                        holder.text.setBackground(res.getDrawable(R.drawable.date_picker_focus_double));
+                    }
+                    else if (item == startDateArray[DateUtils.DAY])
                         holder.text.setBackground(res.getDrawable(R.drawable.date_picker_focus_start));
                 }
 
@@ -171,6 +172,10 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
                     startDayPosition = position;
                     holder.text.setBackground(res.getDrawable(R.drawable.date_picker_focus_start));
                 }
+            }
+
+            if (todayDayPosition == startDayPosition && day == todayDateArray[DateUtils.DAY])  {
+                holder.text.setBackground(res.getDrawable(R.drawable.date_picker_focus_double));
             }
 
             if (position == selectedPosition) {

@@ -27,15 +27,7 @@ public class ToastUtils {
     public static void makeCustomToast(final Context context, final String text, final int size, final int seconds) {
 
         //If a toast is being displayed when a new toast is going to be shown, the first toast must be canceled, as well as its countdown:
-        if (toastCountDown != null) {
-            toastCountDown.cancel();
-            toastCountDown = null;
-        }
-
-        if (toast != null) {
-            toast.cancel();
-            toast = null;
-        }
+        cancelCurrentToast();
 
         //The toast must always be created on the UI thread to avoid application malfunctions:
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -52,9 +44,9 @@ public class ToastUtils {
 
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) toastTextView.getLayoutParams();
 
-                params.width = EventListUtils.transformDipToPix(600);
+                params.width = ImageUtils.transformDipToPix(context, 600);
 
-                int padding = EventListUtils.transformDipToPix(20);
+                int padding = ImageUtils.transformDipToPix(context, 20);
 
                 toastTextView.setPadding(padding, padding, padding, padding);
 
@@ -85,5 +77,22 @@ public class ToastUtils {
                 toastCountDown.start();
             }
         });
+    }
+
+    public static boolean cancelCurrentToast() {
+
+        boolean toastCanceled;
+
+        if (toastCountDown != null) {
+            toastCountDown.cancel();
+            toastCountDown = null;
+        }
+
+        if (toastCanceled = toast != null) {
+            toast.cancel();
+            toast = null;
+        }
+
+        return toastCanceled;
     }
 }

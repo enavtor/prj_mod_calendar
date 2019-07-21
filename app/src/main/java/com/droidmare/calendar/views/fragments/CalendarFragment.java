@@ -16,6 +16,7 @@ import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.calendar.CalendarGridAdapter;
 import com.droidmare.calendar.views.adapters.calendar.CalendarDayGridAdapter;
@@ -302,7 +303,7 @@ public class CalendarFragment extends Fragment {
         int numberOfDays;
 
         CalendarGridItem item;
-        Integer day;
+        int day;
 
         calendarGridList = new ArrayList<>();
         ArrayList<EventListItem> dayEventsList;
@@ -361,7 +362,7 @@ public class CalendarFragment extends Fragment {
 
                             //The repetitive events are not added to the days that are previous to the start date:
                             if ((DateUtils.isSameDay(eventNextRepetition, currentDayDate) && !DateUtils.isPrevious(eventNextRepetition, actualCurrentDate)
-                                || DateUtils.isSameDay(eventNextRepetition, currentDayDate) && DateUtils.isSameDay(eventNextRepetition, originalStartDate)) /*&& notEndDate*/) {
+                                    || DateUtils.isSameDay(eventNextRepetition, currentDayDate) && DateUtils.isSameDay(eventNextRepetition, originalStartDate)) /*&& notEndDate*/) {
                                 //The date that will be shown for the repetitive events outside their original start date is the next repetition time for the corresponding day:
                                 EventListItem eventCopy = event.getEventCopy();
                                 //The copy of the event needs to reference its original event in order to perform operations and display the start date:
@@ -388,8 +389,8 @@ public class CalendarFragment extends Fragment {
                     }
                 }
 
-                //Now the day can be created and added to the calendar grid:
-                item = new CalendarGridItem(day.toString(), DateUtils.getDayOfWeekText(dayOfWeek), dayEventsList);
+                //Now the day can be created and added to the calendar grid, having in mind that first the event list is sorted based on the next repetition of each event:
+                item = new CalendarGridItem(Integer.toString(day), DateUtils.getDayOfWeekText(dayOfWeek), SortUtils.sortEventList(dayEventsList));
             }
 
             calendarGridList.add(item);

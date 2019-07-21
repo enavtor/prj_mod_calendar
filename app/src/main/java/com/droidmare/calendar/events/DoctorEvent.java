@@ -3,7 +3,6 @@ package com.droidmare.calendar.events;
 import android.content.Context;
 
 import com.droidmare.R;
-import com.droidmare.calendar.events.measures.MeasureEventBP;
 import com.droidmare.reminders.model.Reminder;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.ImageUtils;

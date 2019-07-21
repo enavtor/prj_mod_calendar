@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,7 +14,7 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.services.ApiConnectionService;
-import com.droidmare.calendar.services.UserDataReceiverService;
+import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.DescriptionListAdapter;
 import com.droidmare.statistics.StatisticAPI;
 import com.droidmare.statistics.StatisticService;
@@ -30,6 +31,8 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
     private DescriptionListAdapter descriptionListAdapter;
 
     private String newDescription;
+
+    private String noDescriptionMessage;
 
     private StatisticService statistic;
     @Override
@@ -77,6 +80,15 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
         statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+
+        if (ToastUtils.cancelCurrentToast()) return true;
+
+        else return super.dispatchKeyEvent(event);
+    }
+
+
     //Initialization of the activity views and buttons:
     private void initializeViews (String type){
 
@@ -92,6 +104,7 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
             title.setText(getString(R.string.dialog_add_medicine_title));
             String loadingMedicationText = getString(R.string.loading_layout_description) + getString(R.string.loading_layout_medication);
             loadingDialogText.setText(loadingMedicationText);
+            noDescriptionMessage = getString(R.string.description_no_medication);
         }
 
         negative.requestFocus();
@@ -120,40 +133,48 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final RecyclerView descriptionList = findViewById(R.id.default_descriptions_list);
-                descriptionList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                if (!descriptions.equals("")) {
+                    final RecyclerView descriptionList = findViewById(R.id.default_descriptions_list);
+                    descriptionList.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-                DescriptionListAdapter.ItemClickListener listener = new DescriptionListAdapter.ItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        String description = descriptionListAdapter.getDescription(position);
+                    DescriptionListAdapter.ItemClickListener listener = new DescriptionListAdapter.ItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            String description = descriptionListAdapter.getDescription(position);
 
-                        DescriptionListAdapter.ViewHolder holder = (DescriptionListAdapter.ViewHolder) descriptionList.findViewHolderForAdapterPosition(position);
+                            DescriptionListAdapter.ViewHolder holder = (DescriptionListAdapter.ViewHolder) descriptionList.findViewHolderForAdapterPosition(position);
 
-                        if (!descriptionListAdapter.isSelected(position)) {
-                            if (newDescription == null) newDescription = description;
-                            else newDescription = newDescription + "\n" + description;
+                            if (!descriptionListAdapter.isSelected(position)) {
+                                if (newDescription == null || newDescription.equals("")) newDescription = description;
+                                else newDescription = newDescription + "\n" + description;
+                            } else {
+                                newDescription = newDescription.replace("\n" + description, "");
+                                newDescription = newDescription.replace(description + "\n", "");
+                                newDescription = newDescription.replace(description, "");
+                            }
+
+                            holder.select(position);
                         }
+                    };
 
-                        else {
-                            newDescription = newDescription.replace("\n" + description, "");
-                            newDescription = newDescription.replace(description + "\n", "");
-                            newDescription = newDescription.replace(description, "");
-                        }
+                    descriptionListAdapter = new DescriptionListAdapter(getApplicationContext(), listener, descriptions);
 
-                        holder.select(position);
-                    }
-                };
+                    descriptionList.getRecycledViewPool().setMaxRecycledViews(0, 0);
+                    descriptionList.hasFixedSize();
+                    descriptionList.setFocusable(false);
+                    descriptionList.setAdapter(descriptionListAdapter);
 
-                descriptionListAdapter = new DescriptionListAdapter(getApplicationContext(), listener, descriptions);
+                    loadingDialog.setVisibility(View.GONE);
+                    descriptionList.setVisibility(View.VISIBLE);
+                }
 
-                descriptionList.getRecycledViewPool().setMaxRecycledViews(0,0);
-                descriptionList.hasFixedSize();
-                descriptionList.setFocusable(false);
-                descriptionList.setAdapter(descriptionListAdapter);
+                else {
+                    findViewById(R.id.loading_elements_container).setVisibility(View.GONE);
 
-                loadingDialog.setVisibility(View.GONE);
-                descriptionList.setVisibility(View.VISIBLE);
+                    TextView noDescriptionText = findViewById(R.id.text_no_description);
+                    noDescriptionText.setVisibility(View.VISIBLE);
+                    noDescriptionText.setText(noDescriptionMessage);
+                }
             }
         });
     }

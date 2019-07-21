@@ -11,10 +11,6 @@ import com.droidmare.calendar.events.ActivityEvent;
 import com.droidmare.calendar.events.DoctorEvent;
 import com.droidmare.calendar.events.StimulusEvent;
 import com.droidmare.calendar.events.surveys.TextFeedbackEvent;
-import com.droidmare.calendar.events.measures.MeasureEventBG;
-import com.droidmare.calendar.events.measures.MeasureEventBP;
-import com.droidmare.calendar.events.measures.MeasureEventHR;
-import com.droidmare.calendar.events.measures.MeasureEventXX;
 import com.droidmare.calendar.events.MedicationEvent;
 import com.droidmare.calendar.events.surveys.MoodEvent;
 import com.droidmare.calendar.events.personal.PersonalEvent;
@@ -184,98 +180,6 @@ public class EventUtils {
                         lastUpdate,
                         pendingOperation
                 );
-                break;
-            case "MEASURE_HR":
-                if (UserDataReceiverService.hasMeasure(eventType))
-                    event = new MeasureEventHR(
-                            context,
-                            eventId,
-                            eventApiId,
-                            userId,
-                            eventHour,
-                            eventMinute,
-                            eventDay,
-                            eventMonth,
-                            eventYear,
-                            eventDescription,
-                            instantlyShown,
-                            intervalTime,
-                            repetitionType,
-                            repetitionStop,
-                            timeOut,
-                            prevAlarms,
-                            lastUpdate,
-                            pendingOperation
-                    );
-                break;
-            case "MEASURE_BP":
-                if (UserDataReceiverService.hasMeasure(eventType))
-                    event = new MeasureEventBP(
-                            context,
-                            eventId,
-                            eventApiId,
-                            userId,
-                            eventHour,
-                            eventMinute,
-                            eventDay,
-                            eventMonth,
-                            eventYear,
-                            eventDescription,
-                            instantlyShown,
-                            intervalTime,
-                            repetitionType,
-                            repetitionStop,
-                            timeOut,
-                            prevAlarms,
-                            lastUpdate,
-                            pendingOperation
-                    );
-                break;
-            case "MEASURE_BG":
-                if (UserDataReceiverService.hasMeasure(eventType))
-                    event = new MeasureEventBG(
-                            context,
-                            eventId,
-                            eventApiId,
-                            userId,
-                            eventHour,
-                            eventMinute,
-                            eventDay,
-                            eventMonth,
-                            eventYear,
-                            eventDescription,
-                            instantlyShown,
-                            intervalTime,
-                            repetitionType,
-                            repetitionStop,
-                            timeOut,
-                            prevAlarms,
-                            lastUpdate,
-                            pendingOperation
-                    );
-                break;
-            case "MEASURE_XX":
-                if (UserDataReceiverService.hasMeasure(eventType))
-                    event = new MeasureEventXX(
-                            context,
-                            eventId,
-                            eventApiId,
-                            userId,
-                            eventHour,
-                            eventMinute,
-                            eventDay,
-                            eventMonth,
-                            eventYear,
-                            eventDescription,
-                            instantlyShown,
-                            intervalTime,
-                            repetitionType,
-                            repetitionStop,
-                            timeOut,
-                            prevAlarms,
-                            lastUpdate,
-                            pendingOperation
-                    );
                 break;
             case "DOCTOR":
                 event = new DoctorEvent(
@@ -570,6 +474,8 @@ public class EventUtils {
                     if (eventStopDate != -1 && eventStopDate / pow(10,12) < 1) eventStopDate *= 1000;
                     eventData.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, eventStopDate);
                 }
+                if (json.has("eventRepetitionType")) eventData.putExtra(EventUtils.EVENT_REP_TYPE_FIELD, json.getString("eventRepetitionType"));
+                if (json.has("eventPrevAlarms")) eventData.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, json.getString("eventPrevAlarms"));
                 if (json.has("timeOut")) eventData.putExtra(EventUtils.EVENT_TIMEOUT_FIELD, json.getLong("timeOut"));
                 if (json.has("lastUpdate")) eventData.putExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, json.getLong("lastUpdate"));
             }

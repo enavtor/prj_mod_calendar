@@ -54,7 +54,7 @@
             <RelativeLayout
                 android:id="@+id/calendar_sub_container"
                 android:layout_width="380dp"
-                android:layout_height="210dp">
+                android:layout_height="225dp">
 
                 <include
                     layout="@layout/element_calendar"
@@ -194,7 +194,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:background="@drawable/events_focus"
+                    android:background="@drawable/items_edge_focus"
                     android:clickable="true"
                     android:focusable="true"
                     android:nextFocusDown="@id/accept_button"
@@ -237,7 +237,7 @@
                 android:id="@+id/accept_button_short"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/events_focus"
+                android:background="@drawable/items_edge_focus"
                 android:clickable="true"
                 android:focusable="true"
                 android:nextFocusDown="@id/accept_button_short"

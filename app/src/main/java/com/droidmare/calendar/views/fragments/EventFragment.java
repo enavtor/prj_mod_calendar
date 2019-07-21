@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,6 @@ import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventListUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
@@ -55,7 +55,6 @@ public class EventFragment extends Fragment {
     private Boolean goAfterEventDay;
 
     private EventListItem modifiedEvent;
-    private EventListItem originalEvent;
 
     private StatisticService statistic;
 
@@ -84,7 +83,12 @@ public class EventFragment extends Fragment {
         calFrag.referenceEventFragment();
 
         //Initialization of the event list:
-        eventList = EventListUtils.createEventList(fragmentContext, (RecyclerView)view.findViewById(R.id.event_list));
+        eventList = view.findViewById(R.id.event_list);
+
+        //First of all, the recycler view must be configured:
+        eventList.setFocusable(false);
+        eventList.setLayoutManager(new LinearLayoutManager(fragmentContext));
+        eventList.getRecycledViewPool().setMaxRecycledViews(0,0);
 
         //Obtaining the calendar item for the current day:
         CalendarGridItem calItem = calFrag.getCurrentDayItem();
@@ -245,7 +249,7 @@ public class EventFragment extends Fragment {
         //When an event is modified, the focus must always be relocated, if possible, on the next event list item or on the modified event (if neither its day, its month or its year were changed or the user didn't choose to go after it)):
         if (!goAfterEventDay) setNextFocusedPosition(adapter.getSelectedPosition());
 
-        originalEvent = adapter.getSelectedItem();
+        EventListItem originalEvent = adapter.getSelectedItem();
 
         //After modifying the event the views will go back to or stay in (depending on the calendar view) the selected day's month and year:
         updateDateParams(originalEvent, false);
@@ -290,13 +294,13 @@ public class EventFragment extends Fragment {
         //if the event is going to stay in the selected date or if the event is not going to be displayed on that day any more:
         long eventStartDate = DateUtils.transformToMillis(0, 0, modifiedEvent.getEventDay(), modifiedEvent.getEventMonth(), modifiedEvent.getEventYear());
         if (modifiedEvent.getIntervalTime() == 0 ||
-            (
-                DateUtils.isPrevious(modifiedEvent.getRepetitionStop(), DateUtils.getCurrentMillis()) &&
-                modifiedEvent.getRepetitionStop() != -1
-            )
-            || eventStartDate > DateUtils.getCurrentMillis()
-            || !DateUtils.isSameDay(modifiedEvent.getNextRepetition(), currentDate)
-            || goAfterEventDay) {
+                (
+                        DateUtils.isPrevious(modifiedEvent.getRepetitionStop(), DateUtils.getCurrentMillis()) &&
+                                modifiedEvent.getRepetitionStop() != -1
+                )
+                || eventStartDate > DateUtils.getCurrentMillis()
+                || !DateUtils.isSameDay(modifiedEvent.getNextRepetition(), currentDate)
+                || goAfterEventDay) {
             //If the event is not going to be displayed on the selected day any more, the adapter must be notified so that the focus behaviour is appropriate
             //once the views have been refreshed and a new day is selected (in this case, if the next focused position is not set to -2, the focus will be
             //relocated on the first event as soon as a day with events is selected, which, indeed, is not the correct focus behaviour for that situation):
@@ -325,7 +329,7 @@ public class EventFragment extends Fragment {
             if (numberOfEvents == position + 1)
                 adapter.setNextFocusedPosition(position - 1);
 
-            //Otherwise, the focus will stay on the selected position (that will be occupied by the next element on the list once the operation has ended):
+                //Otherwise, the focus will stay on the selected position (that will be occupied by the next element on the list once the operation has ended):
             else adapter.setNextFocusedPosition(position);
         }
     }

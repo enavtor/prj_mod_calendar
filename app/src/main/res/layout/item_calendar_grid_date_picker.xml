@@ -7,11 +7,12 @@
 
     <TextView
         android:id="@+id/calendar_item_text"
-        android:layout_height="30dp"
-        android:layout_width="30dp"
+        android:layout_height="32dp"
+        android:layout_width="32dp"
         android:padding="2dp"
         android:background="@drawable/date_picker_focus_calendar"
         android:gravity="center"
+        android:textSize="17sp"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:clickable="true"/>

@@ -118,13 +118,12 @@ class EventRetriever extends AsyncTask<Long,Void,Void>{
 
             ArrayList <EventListItem> eventList = new ArrayList<>();
 
-            if (eventArray != null) {
-                Collections.addAll(eventList, eventArray);
-                ((DialogDisplayEventsActivity) context).finishInitialization(eventList);
-            }
+            if (eventArray != null) Collections.addAll(eventList, eventArray);
+
+            ((DialogDisplayEventsActivity) context).finishInitialization(eventList);
         }
 
-        else if (MainActivity.isCreated()) {
+        else if (MainActivity.isCreated() && context instanceof MainActivity) {
 
             ArrayList<EventListItem>[] eventListsArray = EventItem.jsonArrayToEventListArray(context, jsonArray);
             EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonRepetitiveArray);
@@ -153,7 +152,7 @@ class EventRetriever extends AsyncTask<Long,Void,Void>{
         if (eventArray != null && opType == EventsPublisher.operationType.RESET_ALARMS)
             EventUtils.sendMultipleReminders(context, eventArray, false);
 
-        //When the operation is deleting all events, the MainActivity must be notified in order to send the request to the api:
+            //When the operation is deleting all events, the MainActivity must be notified in order to send the request to the api:
         else if (eventArray != null && opType == EventsPublisher.operationType.DELETE_EVENTS) {
 
             String [] eventStrings = new String [jsonArray.length];

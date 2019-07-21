@@ -27,8 +27,8 @@ import android.widget.TextView;
 import com.droidmare.R;
 import com.droidmare.calendar.models.TypeListItem;
 import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventListUtils;
 import com.droidmare.calendar.utils.EventUtils;
+import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.RepTypeListsAdapter;
@@ -385,7 +385,9 @@ public class DialogEventParameters extends AppCompatActivity{
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if (!onlyDisplayParameters) {
+        if (ToastUtils.cancelCurrentToast()) return true;
+
+        else if (!onlyDisplayParameters) {
             View focusedView = getCurrentFocus();
 
             boolean currentParamsVisible = findViewById(R.id.current_parameters_dialog).getVisibility() == View.VISIBLE;
@@ -476,7 +478,8 @@ public class DialogEventParameters extends AppCompatActivity{
 
             //Behaviour of the focus when the down key is pressed when the description text box is focused:
             else if (focusedView != null && focusedView.getId() == editDescription.getId() && event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+                //The focus will be relocated on the addDescription or deleteDescription only if the text can not be scrolled downwards:
+                if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN && !editDescription.canScrollVertically(+1)) {
                     if (addDescriptionButton.getVisibility() == View.VISIBLE)
                         addDescriptionButton.requestFocus();
                     else deleteDescriptionButton.requestFocus();
@@ -1078,6 +1081,8 @@ public class DialogEventParameters extends AppCompatActivity{
                     else if (visibleContainerIndex == REPETITION_TYPE && displayingSpecialIntervals) {
                         hideAndRevertSpecialIntervals();
                         goToPreviousStep = false;
+                        irPressed = false;
+                        specialIntervalButton.requestFocus();
                     }
 
                     else if (visibleContainerIndex == STOP_CHECK && displayingSpecialIntervals) {
@@ -1339,7 +1344,7 @@ public class DialogEventParameters extends AppCompatActivity{
         deleteDescriptionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               editDescription.setText("");
+                editDescription.setText("");
             }
         });
 
@@ -1674,7 +1679,7 @@ public class DialogEventParameters extends AppCompatActivity{
             String eventDate = eventDateText + eventTimeText;
 
             if (DateUtils.fullDateIsPrevious(prevAlarmDate, eventDate) && !DateUtils.fullDateIsPrevious(prevAlarmDate, DateUtils.getTodayFormattedDate()))
-               createPrevAlarm(prevAlarmDate);
+                createPrevAlarm(prevAlarmDate);
 
             else if (!DateUtils.fullDateIsPrevious(prevAlarmDate, eventDate)) {
                 String messageHeader = getString(R.string.parameters_custom_date_error_header) + "\n";
@@ -1758,12 +1763,12 @@ public class DialogEventParameters extends AppCompatActivity{
         int currentMinute = currentDateArray[DateUtils.MINUTE];
 
         boolean timeNotPrevious =  (
-            editingEvent ||
-            DateUtils.isPrevious(currentDate, selectedEventDate) ||
-            DateUtils.isSameDay(currentDate, selectedEventDate) && (
-                eventHour > currentHour ||
-                eventHour == currentHour && eventMinute >= currentMinute
-            )
+                editingEvent ||
+                        DateUtils.isPrevious(currentDate, selectedEventDate) ||
+                        DateUtils.isSameDay(currentDate, selectedEventDate) && (
+                                eventHour > currentHour ||
+                                        eventHour == currentHour && eventMinute >= currentMinute
+                        )
         );
 
         if (!timeNotPrevious) {
@@ -2124,7 +2129,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
                     currentDescription.setMovementMethod(new ScrollingMovementMethod());
                     currentDescription.setFocusable(true);
-                    int padding = EventListUtils.transformDipToPix(8);
+                    int padding = ImageUtils.transformDipToPix(getApplicationContext(), 8);
                     currentDescription.setPadding(padding, padding, padding, padding);
                 }
 
@@ -2132,7 +2137,7 @@ public class DialogEventParameters extends AppCompatActivity{
                     LinearLayout descriptionContainer = findViewById(R.id.current_desc_container);
                     descriptionContainer.setBackground(null);
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) descriptionContainer.getLayoutParams();
-                    int marginTop = EventListUtils.transformDipToPix(10);
+                    int marginTop = ImageUtils.transformDipToPix(getApplicationContext(), 10);
                     params.setMargins(params.leftMargin, marginTop, params.rightMargin, params.bottomMargin);
 
                     currentDescription.setMovementMethod(null);

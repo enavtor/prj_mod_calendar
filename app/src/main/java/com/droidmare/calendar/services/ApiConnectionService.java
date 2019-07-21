@@ -66,9 +66,6 @@ public class ApiConnectionService extends IntentService {
     public static final String REQUEST_METHOD_DELETE_ALL = "DELETE_ALL";
     public static final String REQUEST_MEDICATION = "MEDICATION" ;
 
-    //Security protocol
-    private static final String SECURITY_PROTOCOL_TLS = "TLS";
-
     //Content type property name
     private static final String CONTENT_TYPE_PROPERTY_NAME = "Content-Type";
 
@@ -85,7 +82,7 @@ public class ApiConnectionService extends IntentService {
 
     private EventListItem eventToSend;
 
-    private int responseCode;
+    private static int responseCode;
 
     public ApiConnectionService() {
         super("ApiConnectionService");
@@ -104,7 +101,7 @@ public class ApiConnectionService extends IntentService {
 
         operation = eventIntent.getStringExtra("operation");
 
-        if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_DELETE) || operation.equals(REQUEST_METHOD_DELETE_ALL)) {
+        if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_DELETE)) {
             eventJson = transformToJson(eventIntent);
             eventToSend = EventUtils.makeEvent(this, eventIntent);
         }
@@ -164,15 +161,17 @@ public class ApiConnectionService extends IntentService {
         String eventPrevAlarms =  eventIntent.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
         String eventRepType =  eventIntent.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD);
 
+        boolean isUpdateOperation = !operation.equals(REQUEST_METHOD_DELETE) && eventApiId != -1;
+
         try {
-            if (operation.equals(REQUEST_METHOD_DELETE) || eventApiId != -1)
+            if (operation.equals(REQUEST_METHOD_DELETE) || isUpdateOperation)
                 eventJson.put("eventId", eventApiId);
             eventJson.put("eventType", eventType);
             eventJson.put("descriptionText", eventDescription);
             eventJson.put("intervalTime", intervalTime);
-            //eventJson.put("eventRepetitionType", eventRepType);
+            eventJson.put("eventRepetitionType", eventRepType);
             eventJson.put("eventStartDate", eventStartDate);
-            //eventJson.put("eventPrevAlarms", eventPrevAlarms);
+            eventJson.put("eventPrevAlarms", eventPrevAlarms);
             eventJson.put("eventStopDate", repetitionStop);
             eventJson.put("timeOut", timeOut);
             eventJson.put("lastUpdate", lastUpdate);
@@ -180,17 +179,17 @@ public class ApiConnectionService extends IntentService {
             Log.e(TAG, "transformToJson. JSONException: " + jse.getMessage());
         }
 
+        Log.d("EVENT_TO_SEND", eventJson.toString());
+
         return eventJson;
     }
 
     private void requestMedication () {
-        try {
-            String url = "http://tvassistdem-backend.istc.cnr.it/patients/" + UserDataReceiverService.getUserId() + "/data";
-            if (addDescriptionActivityReference != null && addDescriptionActivityReference.get() != null)
-                addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(getData(new URL(url))));
-        } catch (MalformedURLException mfe) {
-            Log.e(TAG, "sendEvent. MalformedURLException: " + mfe.getMessage());
-        }
+
+        String url = "http://tvassistdem-backend.istc.cnr.it/patients/" + UserDataReceiverService.getUserId() + "/data";
+
+        if (addDescriptionActivityReference != null && addDescriptionActivityReference.get() != null)
+            addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(sendRequest(null, url, "GET")));
     }
 
     private String formatMedicationResponse(String response) {
@@ -227,11 +226,11 @@ public class ApiConnectionService extends IntentService {
                 String frequency = medication.getString("administrationFrequency").toLowerCase();
 
                 String medicationText = (
-                    "- " + getString(R.string.medicine_description_header) +
-                    quantity + " " + adminForm +
-                    getString(R.string.medicine_description_separator) + medicine + " " +
-                    totalDose + doseUnits + " " +
-                    adminMode + " " + frequency
+                        "- " + getString(R.string.medicine_description_header) +
+                                quantity + " " + adminForm +
+                                getString(R.string.medicine_description_separator) + medicine + " " +
+                                totalDose + doseUnits + " " +
+                                adminMode + " " + frequency
                 );
 
                 if (formattedMedication.toString().equals("")) formattedMedication.append(medicationText);
@@ -258,7 +257,7 @@ public class ApiConnectionService extends IntentService {
         String response;
 
         try {
-            response = sendRequest(eventJson, new URL(urlForPublishing), REQUEST_METHOD_POST);
+            response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
 
             if (!response.equals("") && responseCode == 200) {
                 eventToSend.setPendingOperation("");
@@ -267,16 +266,22 @@ public class ApiConnectionService extends IntentService {
 
                 if (eventToSend.getEventApiId() == -1)
                     eventToSend.setEventApiId(responseJson.getLong("eventId"));
+
                 eventToSend.setLastApiUpdate(responseJson.getLong("lastUpdate"));
+
+                EventListItem[] eventList = {eventToSend};
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }
-        } catch (MalformedURLException mfe) {
-            Log.e(TAG, "sendEvent. MalformedURLException: " + mfe.getMessage());
+
         } catch (JSONException jse) {
             Log.e(TAG, "sendEvent. JSONException: " + jse.getMessage());
+
         } finally {
-            if (responseCode != 200) eventToSend.setPendingOperation(REQUEST_METHOD_POST);
-            EventListItem[] eventList = {eventToSend};
-            EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+            if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)) {
+                eventToSend.setPendingOperation(REQUEST_METHOD_POST);
+                EventListItem[] eventList = {eventToSend};
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+            }
         }
     }
 
@@ -287,22 +292,19 @@ public class ApiConnectionService extends IntentService {
      */
     private void deleteEvent(String urlForPublishing) {
 
-        try {
-            sendRequest(eventJson, new URL(urlForPublishing), REQUEST_METHOD_DELETE);
-            if (responseCode == 200) {
-                if (mainActivityReference != null && mainActivityReference.get() != null && (eventToSend.getPendingOperation().equals("") || eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)))
-                    mainActivityReference.get().deleteEvent(eventToSend);
-                else database.deleteSingleEvent(eventToSend.getEventId());
-            }
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "sendDeleteEvent. MalformedURLException: " + e.getMessage());
-        }finally {
-            if (responseCode != 200) {
-                eventToSend.setPendingOperation(REQUEST_METHOD_DELETE);
-                EventListItem[] eventList = {eventToSend};
-                mainActivityReference.get().relocateFocusAfterDelete();
-                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
-            }
+        sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_DELETE);
+
+        if (responseCode == 200) {
+            if (mainActivityReference != null && mainActivityReference.get() != null && (eventToSend.getPendingOperation().equals("") || eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)))
+                mainActivityReference.get().deleteEvent(eventToSend);
+            else database.deleteSingleEvent(eventToSend.getEventId());
+        }
+
+        if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_DELETE)) {
+            eventToSend.setPendingOperation(REQUEST_METHOD_DELETE);
+            EventListItem[] eventList = {eventToSend};
+            mainActivityReference.get().relocateFocusAfterDelete();
+            EventsPublisher.modifyEvent(getContextToPublish(), eventList);
         }
     }
 
@@ -312,14 +314,14 @@ public class ApiConnectionService extends IntentService {
      * @param urlForPublishing the API URL
      */
     private void deleteAllEvents(String urlForPublishing) {
+
         try {
             for (String eventString : eventIntent.getStringArrayExtra("eventStrings")) {
-                JSONObject eventJsonObject =  new JSONObject(eventString).getJSONObject("event");
-                eventJson.put("eventId", eventJsonObject.getLong("eventApiId"));
-                sendRequest(eventJson, new URL(urlForPublishing), REQUEST_METHOD_DELETE);
+                JSONObject eventJsonObject = new JSONObject(eventString).getJSONObject("event");
+                eventJsonObject.put("eventId", eventJsonObject.getLong("eventApiId"));
+                sendRequest(eventJsonObject, urlForPublishing, REQUEST_METHOD_DELETE);
             }
-        } catch (MalformedURLException mfe) {
-            Log.e(TAG, "deleteAllEvents. MalformedURLException: " + mfe.getMessage());
+
         } catch (JSONException jse) {
             Log.e(TAG, "deleteAllEvents. JSONException: " + jse.getMessage());
         }
@@ -331,75 +333,41 @@ public class ApiConnectionService extends IntentService {
         else return this;
     }
 
-    private String getData(URL urlObject) {
-
-        String result = "";
-
-        try {
-            HttpURLConnection con;
-            con = (HttpURLConnection) urlObject.openConnection();
-            con.setRequestMethod("GET");
-            con.setConnectTimeout(10000);
-            con.setReadTimeout(10000);
-
-            responseCode = con.getResponseCode();
-
-            BufferedReader bufferedReader;
-
-            bufferedReader = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
-
-            while ((inputLine = bufferedReader.readLine()) != null) {
-                response.append(inputLine);
-            }
-
-            result = response.toString();
-
-            bufferedReader.close();
-
-        } catch (IOException ie) {
-            Log.e(TAG, "getData(). IOException: " + ie.getMessage());
-            return result;
-        }
-
-        Log.d("GET_DATA", "Response content: " + result);
-
-        return result;
-    }
-
     /**
      * Sends event requests to server
      *
      * @param json JSONObject with event information
      */
-    private String sendRequest(JSONObject json, URL serverUrl, String requestMethod) {
+    public static String sendRequest(JSONObject json, String apiURL, String requestMethod) {
+        URL serverUrl = null;
         HttpURLConnection connection = null;
         StringBuilder response = new StringBuilder();
         responseCode = -1;
 
         try {
-            this.trustEveryoneSSL();
-            //TODO change to HTTPS
-            //HttpsURLConnection connection=(HttpsURLConnection)url.openConnection();
+            serverUrl = new URL(apiURL);
             connection = (HttpURLConnection) serverUrl.openConnection();
             connection.setRequestMethod(requestMethod);
             connection.setConnectTimeout(SERVER_TIMEOUT);
             connection.setReadTimeout(SERVER_TIMEOUT);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setChunkedStreamingMode(0);
-            connection.setRequestProperty(CONTENT_TYPE_PROPERTY_NAME, CONTENT_TYPE_PROPERTY_VALUE);
 
-            OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream());
-            os.write(json.toString());
-            os.close();
+            if (!requestMethod.equals("GET")) {
+                connection.setDoInput(true);
+                connection.setDoOutput(true);
+                connection.setChunkedStreamingMode(0);
+                connection.setRequestProperty(CONTENT_TYPE_PROPERTY_NAME, CONTENT_TYPE_PROPERTY_VALUE);
+
+                if (json != null) {
+                    OutputStreamWriter os = new OutputStreamWriter(connection.getOutputStream());
+                    os.write(json.toString());
+                    os.close();
+                }
+            }
 
             responseCode = connection.getResponseCode();
 
             //If the requested method was a POST one, the event created in the backend is going to be returned as an input stream so the backend id can be saved:
-            if (requestMethod.equals(REQUEST_METHOD_POST)) {
+            if ((requestMethod.equals(REQUEST_METHOD_POST)) || requestMethod.equals("GET")) {
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
@@ -409,7 +377,7 @@ public class ApiConnectionService extends IntentService {
 
                 br.close();
 
-                Log.d("POST Request sent", "Sent event: " + json.toString());
+                if (json!= null) Log.d("POST Request sent", "Sent event: " + json.toString());
             }
 
             connection.disconnect();
@@ -417,39 +385,15 @@ public class ApiConnectionService extends IntentService {
             Log.d(TAG,"Send Request (" + requestMethod + ") destiny to " + serverUrl + ". Response code: " + responseCode);
             Log.d(requestMethod + " Request sent", "Response content: " + response.toString());
 
-            //if(responseCode==RESPONSE_CODE_NOT_FOUND); cancel(true);
         }catch (Exception e){
-            if(connection!=null)connection.disconnect();
+            if (connection != null) connection.disconnect();
             Log.d(TAG,"Send Request (" + requestMethod + ") destiny to " + serverUrl + ". Response code: " + responseCode);
             Log.d(requestMethod + " Request sent", "Response content: " + response.toString());
             e.printStackTrace();
         }
 
-        return response.toString();
-    }
+        Log.d("GET_DATA", "Response content: " + response.toString());
 
-    /**
-     * Forces to accept connection even if the certificate is invalid
-     */
-    @SuppressLint({"TrustAllX509TrustManager", "BadHostnameVerifier"})
-    private void trustEveryoneSSL() {
-        try {
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            });
-            SSLContext context = SSLContext.getInstance(SECURITY_PROTOCOL_TLS);
-            context.init(null, new X509TrustManager[]{new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] chain, String authType) { }
-                public void checkServerTrusted(X509Certificate[] chain, String authType) { }
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }
-            }}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-        } catch (Exception e) {
-            Log.e(TAG, "trustEveryoneSSL. Exception: " + e.getMessage());
-        }
+        return response.toString();
     }
 }
