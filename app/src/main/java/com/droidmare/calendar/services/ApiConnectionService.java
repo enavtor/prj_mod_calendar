@@ -1,6 +1,5 @@
 package com.droidmare.calendar.services;
 
-import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
@@ -20,21 +19,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.X509TrustManager;
 
 //Service in charge of establishing a connection with the API in order to update the events declaration
 //@author Eduardo on 04/06/2018.
@@ -57,11 +46,17 @@ public class ApiConnectionService extends IntentService {
 
     private static final String TAG = ApiConnectionService.class.getCanonicalName();
 
+    //API base URL:
+    //public static final String BASE_URL = "http://192.168.1.49:3000/";
+    public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/";
+
     //Server connection timeout in milliseconds
     private static final int SERVER_TIMEOUT = 5000;
 
     //Server request methods
+    public static final String REQUEST_METHOD_GET = "GET";
     public static final String REQUEST_METHOD_POST = "POST";
+    public static final String REQUEST_METHOD_EDIT = "PUT";
     public static final String REQUEST_METHOD_DELETE = "DELETE";
     public static final String REQUEST_METHOD_DELETE_ALL = "DELETE_ALL";
     public static final String REQUEST_MEDICATION = "MEDICATION" ;
@@ -73,8 +68,6 @@ public class ApiConnectionService extends IntentService {
     private static final String CONTENT_TYPE_PROPERTY_VALUE = "application/json";
 
     private SQLiteManager database;
-
-    private String operation;
 
     private Intent eventIntent;
 
@@ -93,13 +86,11 @@ public class ApiConnectionService extends IntentService {
 
         database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
-        String patientId = Integer.toString(UserDataReceiverService.getUserId());
-
-        String urlForPublishing = ApiReceiverService.getApiUrl(getApplicationContext()) + "patients/" + patientId + "/events";
+        String urlForPublishing = BASE_URL + "event";
 
         this.eventIntent = intentData;
 
-        operation = eventIntent.getStringExtra("operation");
+        String operation = eventIntent.getStringExtra("operation");
 
         if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_DELETE)) {
             eventJson = transformToJson(eventIntent);
@@ -109,6 +100,9 @@ public class ApiConnectionService extends IntentService {
         switch (operation) {
             case REQUEST_METHOD_POST:
                 sendEvent(urlForPublishing);
+                break;
+            case REQUEST_METHOD_EDIT:
+                modifyEvent(urlForPublishing);
                 break;
             case REQUEST_METHOD_DELETE:
                 deleteEvent(urlForPublishing);
@@ -124,9 +118,6 @@ public class ApiConnectionService extends IntentService {
         database.close();
 
         isCurrentlyRunning = false;
-
-        //Once the request has been sent, the service is stopped:
-        stopSelf();
     }
 
     /**
@@ -138,9 +129,11 @@ public class ApiConnectionService extends IntentService {
 
         JSONObject eventJson = new JSONObject();
 
-        long eventApiId = eventIntent.getLongExtra(EventUtils.EVENT_API_ID_FIELD, -1);
+        String userId = UserDataReceiverService.getUserId();
 
+        long eventId = eventIntent.getLongExtra(EventUtils.EVENT_ID_FIELD, -1);
         String eventType = eventIntent.getStringExtra(EventUtils.EVENT_TYPE_FIELD);
+        String eventText = eventIntent.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
 
         //The date parameters must be transformed into millis:
         int eventHour = eventIntent.getIntExtra(EventUtils.EVENT_HOUR_FIELD, -1);
@@ -151,30 +144,25 @@ public class ApiConnectionService extends IntentService {
 
         long eventStartDate = DateUtils.transformToMillis(eventMinute, eventHour, eventDay, eventMonth, eventYear);
 
-        String eventDescription = eventIntent.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
-        //boolean instantlyShown = eventIntent.getBooleanExtra(EventUtils.EVENT_INSTANTLY_FIELD, false);
-        int intervalTime = eventIntent.getIntExtra(EventUtils.EVENT_INTERVAL_FIELD, 0);
+        int intervalTime = eventIntent.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
         long repetitionStop = eventIntent.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
-        long timeOut = eventIntent.getLongExtra(EventUtils.EVENT_TIMEOUT_FIELD, EventUtils.DEFAULT_HIDE_TIME);
-        long lastUpdate = eventIntent.getLongExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, -1);
 
         String eventPrevAlarms =  eventIntent.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
-        String eventRepType =  eventIntent.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD);
+        String eventRepType =  eventIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
 
-        boolean isUpdateOperation = !operation.equals(REQUEST_METHOD_DELETE) && eventApiId != -1;
+        long lastUpdate = eventIntent.getLongExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, -1);
 
         try {
-            if (operation.equals(REQUEST_METHOD_DELETE) || isUpdateOperation)
-                eventJson.put("eventId", eventApiId);
-            eventJson.put("eventType", eventType);
-            eventJson.put("descriptionText", eventDescription);
-            eventJson.put("intervalTime", intervalTime);
-            eventJson.put("eventRepetitionType", eventRepType);
-            eventJson.put("eventStartDate", eventStartDate);
-            eventJson.put("eventPrevAlarms", eventPrevAlarms);
-            eventJson.put("eventStopDate", repetitionStop);
-            eventJson.put("timeOut", timeOut);
-            eventJson.put("lastUpdate", lastUpdate);
+            eventJson.put(EventUtils.EVENT_ID_FIELD, eventId);
+            eventJson.put(EventUtils.EVENT_USER_FIELD, userId);
+            eventJson.put(EventUtils.EVENT_TYPE_FIELD, eventType);
+            eventJson.put(EventUtils.EVENT_DESCRIPTION_FIELD, eventText);
+            eventJson.put(EventUtils.EVENT_START_DATE_FIELD, eventStartDate);
+            eventJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, eventPrevAlarms);
+            eventJson.put(EventUtils.EVENT_REP_INTERVAL_FIELD, intervalTime);
+            eventJson.put(EventUtils.DEFAULT_REPETITION_TYPE, eventRepType);
+            eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, repetitionStop);
+            eventJson.put(EventUtils.EVENT_LAST_UPDATE_FIELD, lastUpdate);
         } catch (JSONException jse) {
             Log.e(TAG, "transformToJson. JSONException: " + jse.getMessage());
         }
@@ -186,10 +174,10 @@ public class ApiConnectionService extends IntentService {
 
     private void requestMedication () {
 
-        String url = "http://tvassistdem-backend.istc.cnr.it/patients/" + UserDataReceiverService.getUserId() + "/data";
+        String url = BASE_URL + "medication/" + UserDataReceiverService.getUserId();
 
         if (addDescriptionActivityReference != null && addDescriptionActivityReference.get() != null)
-            addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(sendRequest(null, url, "GET")));
+            addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(sendRequest(null, url, REQUEST_METHOD_GET)));
     }
 
     private String formatMedicationResponse(String response) {
@@ -254,31 +242,49 @@ public class ApiConnectionService extends IntentService {
      */
     private void sendEvent(String urlForPublishing) {
 
-        String response;
+        String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
 
         try {
-            response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
-
             if (!response.equals("") && responseCode == 200) {
-                eventToSend.setPendingOperation("");
                 JSONObject responseJson = new JSONObject(response);
-                responseJson = (JSONObject) responseJson.getJSONArray("events").get(0);
-
-                if (eventToSend.getEventApiId() == -1)
-                    eventToSend.setEventApiId(responseJson.getLong("eventId"));
-
-                eventToSend.setLastApiUpdate(responseJson.getLong("lastUpdate"));
-
+                eventToSend.setPendingOperation("");
+                eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }
-
-        } catch (JSONException jse) {
-            Log.e(TAG, "sendEvent. JSONException: " + jse.getMessage());
-
+        } catch (JSONException jsonException) {
+            Log.e(TAG, "sendEvent. JSONException: " + jsonException.getMessage());
         } finally {
             if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_POST);
+                EventListItem[] eventList = {eventToSend};
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+            }
+        }
+    }
+
+    /**
+     * Starts the request to the api for a post method
+     *
+     * @param urlForPublishing the API URL
+     */
+    private void modifyEvent(String urlForPublishing) {
+
+        String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_EDIT);
+
+        try {
+            if (!response.equals("") && responseCode == 200) {
+                JSONObject responseJson = new JSONObject(response);
+                eventToSend.setPendingOperation("");
+                eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
+                EventListItem[] eventList = {eventToSend};
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+            }
+        } catch (JSONException jsonException) {
+            Log.e(TAG, "modifyEvent. JSONException: " + jsonException.getMessage());
+        } finally {
+            if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_EDIT)) {
+                eventToSend.setPendingOperation(REQUEST_METHOD_EDIT);
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }
@@ -321,7 +327,6 @@ public class ApiConnectionService extends IntentService {
                 eventJsonObject.put("eventId", eventJsonObject.getLong("eventApiId"));
                 sendRequest(eventJsonObject, urlForPublishing, REQUEST_METHOD_DELETE);
             }
-
         } catch (JSONException jse) {
             Log.e(TAG, "deleteAllEvents. JSONException: " + jse.getMessage());
         }
@@ -351,7 +356,7 @@ public class ApiConnectionService extends IntentService {
             connection.setConnectTimeout(SERVER_TIMEOUT);
             connection.setReadTimeout(SERVER_TIMEOUT);
 
-            if (!requestMethod.equals("GET")) {
+            if (!requestMethod.equals(REQUEST_METHOD_GET)) {
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setChunkedStreamingMode(0);
@@ -366,8 +371,8 @@ public class ApiConnectionService extends IntentService {
 
             responseCode = connection.getResponseCode();
 
-            //If the requested method was a POST one, the event created in the backend is going to be returned as an input stream so the backend id can be saved:
-            if ((requestMethod.equals(REQUEST_METHOD_POST)) || requestMethod.equals("GET")) {
+            //If the requested method is not a delete operation, the api will send a response:
+            if (!requestMethod.equals(REQUEST_METHOD_DELETE)) {
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 

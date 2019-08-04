@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.services.EventReceiverService;
 import com.droidmare.calendar.services.UserDataReceiverService;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
@@ -70,21 +69,16 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     @Override
     protected void onPostExecute(Void param) {
 
-        if (!EventReceiverService.eventReceived) {
+       //A statistic is sent in order to indicate that an event was created:
+        if (newEvent != null) sendNewEventStatistic(newEvent);
 
-            //A statistic is sent in order to indicate that an event was created:
-            if (newEvent != null) sendNewEventStatistic(newEvent);
-
-            //If the event must be sent to the api the views are not reloaded (once the event has been sent the database is updated and the views reloaded):
-            if (sendToApi) {
-                wasSent = true;
-                sendEvent(eventToSend);
-            }
-
-            else reloadEvents();
+        //If the event must be sent to the api the views are not reloaded (once the event has been sent the database is updated and the views reloaded):
+        if (sendToApi) {
+            wasSent = true;
+            sendEvent(eventToSend);
         }
 
-        else EventReceiverService.eventReceived = false;
+        else reloadEvents();
 
         super.onPostExecute(null);
     }
@@ -117,16 +111,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
                 else database.updateEvent(eventJson, event.getEventId());
 
                 //Depending on the length of the events array, the operation is storing a new event or a set of events received from the API:
-                if (events.length == 1) {
-                    eventToSend = event;
-                    EventUtils.makeAlarm(context, event);
-                    //The new event must be sent to the API unless it was received from it or the operation was updating its apiId:
-                    sendToApi = (!EventReceiverService.eventReceived && storedLastUpdate == eventLastUpdate && !event.getPendingOperation().equals("DELETE"));
-                    //Since the operation for sending an event can fail, case in which the condition storedLastUpdate == eventLastUpdate will be met,
-                    //the variable wasSent is checked in order to know if previously to this operation a sending attempt was made and to set the sendToApi
-                    //control variable to false, preventing the application from getting stuck into an infinite loop:
-                    if (wasSent) wasSent = sendToApi = false;
-                }
+                if (events.length == 1) EventUtils.makeAlarm(context, event);
 
                 else eventItemArray[index++] = event;
 
@@ -147,7 +132,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
         try {
             JSONObject eventJson = EventItem.eventToJson(event).getJSONObject("event");
             if (MainActivity.isCreated())
-                ((MainActivity)context).sendEvent(EventUtils.transformJsonToIntent(eventJson, false));
+                ((MainActivity)context).sendEvent(EventUtils.transformJsonToIntent(eventJson));
         } catch (JSONException jse) {
             Log.e(TAG, "sendEvent. JSONException: " + jse.getMessage());
         }

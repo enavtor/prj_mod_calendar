@@ -111,7 +111,7 @@ public class Reminder implements Parcelable{
         dest.writeBundle(this.additionalOptions);
     }
 
-    public static final Creator<Reminder> CREATOR=new Creator<Reminder>(){
+    public static final Creator<Reminder> CREATOR = new Creator<Reminder>(){
         public Reminder createFromParcel(Parcel parcel){
             return new Reminder(parcel);
         }

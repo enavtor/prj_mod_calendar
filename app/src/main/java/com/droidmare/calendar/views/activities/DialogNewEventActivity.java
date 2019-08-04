@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.TypeListItem;
-import com.droidmare.calendar.services.UserDataReceiverService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.ImageUtils;
@@ -167,7 +166,7 @@ public class DialogNewEventActivity extends AppCompatActivity{
                 eventMonth = data.getIntExtra(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
                 eventYear = data.getIntExtra(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
 
-                eventInterval = data.getIntExtra(EventUtils.EVENT_INTERVAL_FIELD, 0);
+                eventInterval = data.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
 
                 if (data.hasExtra(EventUtils.EVENT_PREV_ALARMS_FIELD))
                     eventPreviousAlarms = data.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
@@ -175,8 +174,8 @@ public class DialogNewEventActivity extends AppCompatActivity{
                 //The repetition stop is set only if the event has a repetition interval:
                 if (eventInterval != 0) {
 
-                    if (data.hasExtra(EventUtils.EVENT_REP_TYPE_FIELD))
-                        eventRepetitionType = data.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD);
+                    if (data.hasExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD))
+                        eventRepetitionType = data.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
 
                     eventRepetitionStop = data.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
                 }
@@ -208,15 +207,14 @@ public class DialogNewEventActivity extends AppCompatActivity{
         returnIntent.putExtra(EventUtils.EVENT_YEAR_FIELD, eventYear);
 
         returnIntent.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, eventDescription);
-        returnIntent.putExtra(EventUtils.EVENT_INSTANTLY_FIELD, selectedItem.isInstantlyShown());
 
         //The previous alarms will be stored within the intent only if the event has previous alarms:
         if (eventPreviousAlarms != null) returnIntent.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, eventPreviousAlarms);
 
         //The interval and repetition stop values are sent only when there is a repetition interval:
         if (eventInterval != 0) {
-            returnIntent.putExtra(EventUtils.EVENT_INTERVAL_FIELD, eventInterval);
-            if (eventRepetitionType != null) returnIntent.putExtra(EventUtils.EVENT_REP_TYPE_FIELD, eventRepetitionType);
+            returnIntent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, eventInterval);
+            if (eventRepetitionType != null) returnIntent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, eventRepetitionType);
             returnIntent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, eventRepetitionStop);
         }
 

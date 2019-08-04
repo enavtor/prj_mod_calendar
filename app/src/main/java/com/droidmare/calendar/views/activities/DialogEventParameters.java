@@ -592,8 +592,8 @@ public class DialogEventParameters extends AppCompatActivity{
 
         try {
             //If the received intent has no data for the repetition type, the default type is assigned:
-            if (receivedIntent.hasExtra(EventUtils.EVENT_REP_TYPE_FIELD) && !receivedIntent.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD).equals(""))
-                repetitionType = new JSONObject(receivedIntent.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD));
+            if (receivedIntent.hasExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD) && !receivedIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD).equals(""))
+                repetitionType = new JSONObject(receivedIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD));
 
             else repetitionType = new JSONObject(EventUtils.DEFAULT_REPETITION_TYPE);
 
@@ -601,7 +601,7 @@ public class DialogEventParameters extends AppCompatActivity{
             Log.e(TAG, "initializeAttributeValues. JSONException: " + jse.getMessage());
         }
 
-        repetitionInterval = receivedIntent.getIntExtra(EventUtils.EVENT_INTERVAL_FIELD, 0);
+        repetitionInterval = receivedIntent.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
 
         alternateRepetitionValue = 1;
 
@@ -2599,9 +2599,9 @@ public class DialogEventParameters extends AppCompatActivity{
 
         //The interval and repetition stop values are sent only when there is a repetition interval:
         if (repetitionInterval != 0) {
-            returnIntent.putExtra(EventUtils.EVENT_INTERVAL_FIELD, repetitionInterval);
+            returnIntent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, repetitionInterval);
 
-            returnIntent.putExtra(EventUtils.EVENT_REP_TYPE_FIELD, repetitionType.toString());
+            returnIntent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, repetitionType.toString());
 
             returnIntent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedStopDate);
         }

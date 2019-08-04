@@ -18,7 +18,7 @@ public class UserDataReceiverService extends IntentService {
 
     private static final String TAG = UserDataReceiverService.class.getCanonicalName();
 
-    private static int userId = -1;
+    private static String userId;
     private static String userName;
     private static String avatarImage;
 
@@ -29,7 +29,7 @@ public class UserDataReceiverService extends IntentService {
 
         Log.d(TAG, "onHandleIntent");
 
-        userId = eventIntent.getIntExtra("userId", -1);
+        userId = eventIntent.getStringExtra("userId");
         userName = eventIntent.getStringExtra("userName");
         avatarImage = eventIntent.getStringExtra("avatarString");
 
@@ -42,7 +42,7 @@ public class UserDataReceiverService extends IntentService {
         Log.d(TAG, "writeSharedPrefs");
 
         SharedPreferences.Editor editor = getSharedPreferences(USERDATA_PREFS, MODE_PRIVATE).edit();
-        editor.putInt("id_userId", userId);
+        editor.putString("id_userId", userId);
         editor.putString("id_userName", userName);
         editor.putString("id_avatarImage", avatarImage);
 
@@ -54,11 +54,11 @@ public class UserDataReceiverService extends IntentService {
 
         SharedPreferences prefs = context.getSharedPreferences(USERDATA_PREFS, MODE_PRIVATE);
 
-        int pref_id_userId = prefs.getInt("id_userId", -1);
+        String pref_id_userId = prefs.getString("id_userId", null);
         String pref_id_userName = prefs.getString("id_userName", null);
         String pref_id_avatarImage = prefs.getString("id_avatarImage", null);
 
-        if (pref_id_userId != -1 && pref_id_userName != null && pref_id_avatarImage != null) {
+        if (pref_id_userId != null && pref_id_userName != null && pref_id_avatarImage != null) {
             userId = pref_id_userId;
             userName = pref_id_userName;
             avatarImage = pref_id_avatarImage;
@@ -66,7 +66,7 @@ public class UserDataReceiverService extends IntentService {
     }
 
     //Method that returns the user id:
-    public static int getUserId() { return userId; }
+    public static String getUserId() { return userId; }
 
     //Method that returns the user name:
     public static String getUserName() { return userName; }
@@ -76,7 +76,7 @@ public class UserDataReceiverService extends IntentService {
 
     //Method that resets the user parameters values (logout):
     public static void resetUser() {
-        userId = -1;
+        userId = null;
         userName = null;
         avatarImage = null;
     }

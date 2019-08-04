@@ -102,8 +102,10 @@ class EventRetriever extends AsyncTask<Long,Void,Void>{
     //Retrieves all the events stored in the database for the current month and year:
     private void getEvents (){
         try {
-            jsonArray = database.getEvents(DateUtils.currentMonth, DateUtils.currentYear, false, false);
-            jsonRepetitiveArray = database.getRepetitiveEvents(DateUtils.currentMonth, DateUtils.currentYear);
+            int month = DateUtils.currentMonth;
+            int year = DateUtils.currentYear;
+            jsonArray = database.getEvents(month, year, false, false, false);
+            jsonRepetitiveArray = database.getEvents(month, year, true, false, false);
         } catch (Exception e) {
             Log.e(TAG, "getEvents. Exception: " + e.getMessage());
         }
@@ -144,7 +146,7 @@ class EventRetriever extends AsyncTask<Long,Void,Void>{
 
         boolean displayAll = opType == EventsPublisher.operationType.RETRIEVE_ALL;
 
-        jsonArray = database.getEvents(-1, -1, false, displayAll);
+        jsonArray = database.getEvents(-1, -1, true, false, displayAll);
 
         EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonArray);
 

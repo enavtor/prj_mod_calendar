@@ -2,7 +2,6 @@ package com.droidmare.calendar.views.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -21,11 +20,9 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.models.TypeListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.DateCheckerService;
-import com.droidmare.calendar.services.EventReceiverService;
 import com.droidmare.calendar.services.UserDataReceiverService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
@@ -127,12 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
         //The loading layout is initialized so it can be displayed or hidden when needed
         loadingLayout = findViewById(R.id.layout_loading);
-
-        //The event receiver needs tho have a reference to the MainActivity context so the views can be updated when receiving an external event:
-        EventReceiverService.setMainActivityReference(this);
-
-        //The event receiver needs tho have a reference to the MainActivity context so the views can be updated when receiving an external event:
-        EventReceiverService.setMainActivityReference(this);
 
         //The api connection service needs tho have a reference to the MainActivity context so the views can be updated after modifying or deleting an event:
         ApiConnectionService.setMainActivityReference(this);
@@ -311,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(EventUtils.EVENT_HOUR_FIELD, selectedEvent.getEventHour());
         intent.putExtra(EventUtils.EVENT_MINUTE_FIELD, selectedEvent.getEventMinute());
 
-        intent.putExtra(EventUtils.EVENT_INTERVAL_FIELD, selectedEvent.getIntervalTime());
+        intent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, selectedEvent.getIntervalTime());
         intent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedEvent.getRepetitionStop());
 
         intent.putExtra(EventUtils.EVENT_DAY_FIELD, selectedEvent.getEventDay());
@@ -322,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, selectedEvent.getPreviousAlarms());
 
-        intent.putExtra(EventUtils.EVENT_REP_TYPE_FIELD, selectedEvent.getRepetitionType());
+        intent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, selectedEvent.getRepetitionType());
 
         intent.putExtra("editingEvent", true);
         intent.putExtra("isAlarm", isAlarm);
@@ -451,7 +442,7 @@ public class MainActivity extends AppCompatActivity {
 
     //This method tells the API to delete an event:
     public void sendDeleteEvent(EventListItem event) {
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event), false);
+        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
 
         eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
         eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE);
@@ -646,7 +637,7 @@ public class MainActivity extends AppCompatActivity {
     public void setUserInformation () {
         UserDataReceiverService.readSharedPrefs(MainActivity.this.getApplicationContext());
 
-        if (UserDataReceiverService.getUserId() != -1) {
+        if (UserDataReceiverService.getUserId() != null) {
             ImageView avatar = findViewById(R.id.user_photo);
             TextView name = findViewById(R.id.user_name);
             TextView id = findViewById(R.id.user_id);

@@ -87,17 +87,7 @@ package="com.droidmare">
     </service>
 
     <service
-        android:name=".calendar.services.ApiReceiverService"
-        android:exported="true">
-    </service>
-
-    <service
         android:name=".calendar.services.DataDeleterService"
-        android:exported="true">
-    </service>
-
-    <service
-        android:name=".calendar.services.EventReceiverService"
         android:exported="true">
     </service>
 

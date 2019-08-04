@@ -12,12 +12,12 @@ import com.droidmare.reminders.model.Reminder;
 
 public class StimulusEvent extends EventListItem {
 
-    public StimulusEvent(Context cont, long id, long apiId, int user, int hour, int minute, int day, int month, int year, String description, boolean instantly, int interval, String repetitionType, long stop, long timeOut, String prevAlarms, long lastUpdate, String pendingOp){
-        super(cont, id, apiId, user, hour, minute, day, month, year, description, instantly, interval, repetitionType, stop, timeOut, prevAlarms, lastUpdate, pendingOp);
+    public StimulusEvent(Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
+        super(cont, id, hour, minute, day, month, year, description, interval, repetitionType, stop, timeOut, prevAlarms, pendingOp, lastUpdate);
     }
 
-    private StimulusEvent(Context cont, long id, long apiId, int user, int hour, int minute, int day, int month, int year, String description, boolean instantly, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String prevAlarms, long lastUpdate, String pendingOp){
-        super(cont, id, apiId, user, hour, minute, day, month, year, description, instantly, interval, repetitionType, nextRepetition, stop, timeOut, prevAlarms, lastUpdate, pendingOp);
+    private StimulusEvent(Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
+        super(cont, id, hour, minute, day, month, year, description, interval, repetitionType, nextRepetition, stop, timeOut, prevAlarms, pendingOp, lastUpdate);
     }
 
     @Override
@@ -38,25 +38,22 @@ public class StimulusEvent extends EventListItem {
     @Override
     public StimulusEvent getEventCopy (){
         return new StimulusEvent(
-                this.context,
-                this.eventId,
-                this.eventApiId,
-                this.userId,
-                this.eventHour,
-                this.eventMinute,
-                this.eventDay,
-                this.eventMonth,
-                this.eventYear,
-                this.descriptionText,
-                this.instantlyShown,
-                this.intervalTime,
-                this.repetitionType,
-                this.nextRepetition,
-                this.repetitionStop,
-                this.reminderTimeOut,
-                this.previousAlarms,
-                this.lastApiUpdate,
-                this.pendingOperation
+            this.context,
+            this.eventId,
+            this.eventHour,
+            this.eventMinute,
+            this.eventDay,
+            this.eventMonth,
+            this.eventYear,
+            this.descriptionText,
+            this.intervalTime,
+            this.repetitionType,
+            this.nextRepetition,
+            this.repetitionStop,
+            this.reminderTimeOut,
+            this.previousAlarms,
+            this.pendingOperation,
+            this.lastApiUpdate
         );
     }
 }

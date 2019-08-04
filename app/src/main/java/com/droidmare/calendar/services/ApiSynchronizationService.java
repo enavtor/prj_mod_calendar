@@ -21,12 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -38,7 +33,7 @@ public class ApiSynchronizationService extends Service {
     private static final String TAG = ApiSynchronizationService.class.getCanonicalName();
 
     public static final String LOCAL_SYNC_OP_SAVE = "save";
-    public static final String LOCAL_SYNC_OP_EDIT= "edit";
+    public static final String LOCAL_SYNC_OP_EDIT = "edit";
     public static final String LOCAL_SYNC_OP_DELETE = "delete";
 
     private static boolean isRunning = false;
@@ -51,6 +46,7 @@ public class ApiSynchronizationService extends Service {
 
     //A reference to the main activity:
     private static WeakReference<MainActivity> mainActivityReference;
+
     public static void setMainActivityReference(MainActivity activity) {
         mainActivityReference = new WeakReference<>(activity);
     }
@@ -62,12 +58,11 @@ public class ApiSynchronizationService extends Service {
 
         isRunning = true;
 
-        database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME,null, SQLiteManager.DATABASE_VERSION);
+        database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
         UserDataReceiverService.readSharedPrefs(this);
 
-        String patientId = Integer.toString(UserDataReceiverService.getUserId());
-        urlForRetrieving = ApiReceiverService.getApiUrl(getApplicationContext()) + "patients/" + patientId + "/events";
+        urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + UserDataReceiverService.getUserId();
 
         startSyncTimer();
     }
@@ -109,15 +104,20 @@ public class ApiSynchronizationService extends Service {
         super.onDestroy();
     }
 
-    public static boolean isRunning() { return isRunning; }
+    public static boolean isRunning() {
+        return isRunning;
+    }
 
-    @Nullable @Override
-    public IBinder onBind(Intent intent) { return null; }
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     //This method retrieves all the events from the Api and starts the synchronization function:
     private void retrieveAndSyncApiEvents() {
 
-        String response = ApiConnectionService.sendRequest(null, urlForRetrieving, "GET");
+        String response = ApiConnectionService.sendRequest(null, urlForRetrieving, ApiConnectionService.REQUEST_METHOD_GET);
 
         Log.d(TAG, "Events retrieved from API: " + response);
 
@@ -133,12 +133,12 @@ public class ApiSynchronizationService extends Service {
 
             for (int i = 0; i < numberOfRetrieved; i++) {
 
-                JSONObject eventJson = (JSONObject)eventsJson.get(i);
+                JSONObject eventJson = (JSONObject) eventsJson.get(i);
 
                 if (eventJson.getInt("intervalTime") != 0 && eventJson.getLong("eventStartDate") >= eventJson.getLong("eventStopDate"))
                     eventJson.put("eventStopDate", -1);
 
-                retrievedEvents[i] = EventUtils.makeEvent(this, eventJson, true);
+                retrievedEvents[i] = EventUtils.makeEvent(this, eventJson);
             }
 
             synchronizeEvents();
@@ -154,7 +154,7 @@ public class ApiSynchronizationService extends Service {
         Log.e(TAG, "Event synchronization started");
 
         //First of all, all the local events are retrieved:
-        JSONObject[] localEventsJson = database.getEvents(-1, -1, true, false);
+        JSONObject[] localEventsJson = database.getEvents(-1, -1, true, true, false);
         EventListItem[] localEvents = EventItem.jsonArrayToEventArray(this, localEventsJson);
 
         //When a local event is extracted from the array because its api id matches the retrieved one's, it is deleted from the array by putting the last array's
@@ -162,7 +162,7 @@ public class ApiSynchronizationService extends Service {
         int localLastIndex = 0;
         if (localEvents != null) localLastIndex = localEvents.length - 1;
 
-        for (EventListItem retrievedEvent: retrievedEvents) {
+        for (EventListItem retrievedEvent : retrievedEvents) {
 
             EventListItem localEvent = null;
 
@@ -172,7 +172,7 @@ public class ApiSynchronizationService extends Service {
                 EventListItem auxLocalEvent = localEvents[i];
 
                 //If the api id is found, the corresponding local event is deleted from the array:
-                if (auxLocalEvent.getEventApiId() == retrievedEvent.getEventApiId()) {
+                if (auxLocalEvent.getEventId() == retrievedEvent.getEventId()) {
                     localEvent = auxLocalEvent;
                     localEvents[i] = localEvents[localLastIndex];
                     localEvents[localLastIndex] = null;
@@ -206,13 +206,12 @@ public class ApiSynchronizationService extends Service {
                     modifyEventInDatabase(localEvent, retrievedEvent);
                 }
 
-                //If the pending operation is a POST one, the event will have to be updated in the API (if the pending operation is a POST one because
-                //the event couldn't be sent to the API when created, that event won't be in the retrieved events array, since it is not in the API yet):
-                else if (pendingOperation.equals("POST")) {
+                //If the pending operation is a PUT one, the event will have to be updated in the API:
+                else if (pendingOperation.equals(ApiConnectionService.REQUEST_METHOD_EDIT)) {
                     //If the modification takes place locally or remotely depends on the last update of each event (the local and the retrieved one):
                     if (lastLocalUpdate >= lastApiUpdate) {
                         Log.e(TAG, "The event was locally modified");
-                        sendEventToApi(localEvent);
+                        requestApiOperation(localEvent, pendingOperation);
                         pauseService();
                     }
                     else {
@@ -223,10 +222,10 @@ public class ApiSynchronizationService extends Service {
 
                 //If the operation is a DELETE one, the event will be deleted from the API unless its local last update is previous to the API one,
                 //case in which it will be updated in the local database since the API events updates have priority over the STB ones:
-                else if (pendingOperation.equals("DELETE")) {
+                else if (pendingOperation.equals(ApiConnectionService.REQUEST_METHOD_DELETE)) {
                     if (lastLocalUpdate >= lastApiUpdate) {
                         Log.e(TAG, "The event was locally deleted");
-                        deleteEventFromApi(localEvent);
+                        requestApiOperation(localEvent, pendingOperation);
                         pauseService();
                     }
                     else {
@@ -237,20 +236,18 @@ public class ApiSynchronizationService extends Service {
             }
         }
 
-        //All the events that are still in the local events array must be deleted from the database if they have an api id different from -1, since
-        //that will mean that the event was updated to the API and after that deleted from the API, reason why it was not in the retrieved events array:
+        //All the events that are still in the local events array must be deleted from the database if they have not a pending operation:
         if (localEvents != null) for (int i = 0; i <= localLastIndex; i++) {
             EventListItem localEvent = localEvents[i];
-            if (localEvent.getEventApiId() != -1) {
+            if (localEvent.getPendingOperation().equals("")) {
                 Log.e(TAG, "The event was deleted from the API");
                 Log.e(TAG, localEvent.eventToString());
                 deleteEventFromDatabase(localEvent);
             }
-
-            //If the api id for the local event is equal to -1, it means that the event hasn't been sent to the API yet:
-            else {
+            //If the event has a POST pending operation it means that the event hasn't been sent to the API yet:
+            else if (localEvent.getPendingOperation().equals(ApiConnectionService.REQUEST_METHOD_POST)) {
                 Log.e(TAG, "The event was locally created");
-                sendEventToApi(localEvent);
+                requestApiOperation(localEvent, ApiConnectionService.REQUEST_METHOD_POST);
                 pauseService();
             }
         }
@@ -258,7 +255,7 @@ public class ApiSynchronizationService extends Service {
 
     //Method that pauses this execution thread in order to allow the completion of API operations:
     private void pauseService() {
-        while(ApiConnectionService.isCurrentlyRunning) {
+        while (ApiConnectionService.isCurrentlyRunning) {
             try {
                 Log.d(TAG, "Connection service is running");
                 Thread.sleep(100);
@@ -310,21 +307,12 @@ public class ApiSynchronizationService extends Service {
         else return this;
     }
 
-    //This method starts the event synchronize service to send an event to the API (to store or update it remotely):
-    private void sendEventToApi(EventListItem localEvent){
+    //This method starts the ApiConnectionService in order to perform the requested operation:
+    private void requestApiOperation(EventListItem localEvent, String requestMethod) {
         ApiConnectionService.isCurrentlyRunning = true;
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(localEvent), false);
+        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(localEvent));
         eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
-        startService(eventIntent);
-    }
-
-    //This method starts the event synchronize service to delete an event from the API:
-    private void deleteEventFromApi(EventListItem localEvent){
-        ApiConnectionService.isCurrentlyRunning = true;
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(localEvent), false);
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE);
+        eventIntent.putExtra("operation", requestMethod);
         startService(eventIntent);
     }
 }

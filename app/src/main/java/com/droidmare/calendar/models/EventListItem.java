@@ -15,8 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 //Model for an event item (item inside the event list) declaration
 //@author Eduardo on 13/02/2018.
@@ -27,12 +25,6 @@ public abstract class EventListItem {
 
     //The id that the item has inside the database:
     protected long eventId;
-
-    //The id that the item has inside the backend:
-    protected long eventApiId;
-
-    //the id for the user that created the event:
-    protected int userId;
 
     //The type of the reminder:
     protected Reminder.ReminderType reminderType;
@@ -64,9 +56,6 @@ public abstract class EventListItem {
     //The year for the event alarm:
     protected int eventYear;
 
-    //Whether or not the event must be instantly shown:
-    protected boolean instantlyShown;
-
     //The time interval for repeating the alarm (in hours):
     protected int intervalTime;
 
@@ -91,11 +80,11 @@ public abstract class EventListItem {
     //The list of alarms previous to the reminder date (String structured as a JSONArray):
     protected String previousAlarms;
 
-    //The UTC date of the last update in the API for the event:
-    protected long lastApiUpdate;
-
     //A field indicating whether or not the event has any pending operation with the API:
     protected String pendingOperation;
+
+    //The UTC date of the last update in the API for the event:
+    protected long lastApiUpdate;
 
     //A byte array of the reminder:
     private byte[] reminderBytes;
@@ -118,8 +107,6 @@ public abstract class EventListItem {
     public EventListItem (){
         //The id will be set once the event is stored in the database:
         this.eventId = -1;
-        this.eventApiId = -1;
-        this.userId = -1;
         this.reminderType = null;
         this.titleText = null;
         this.descriptionText = null;
@@ -129,7 +116,6 @@ public abstract class EventListItem {
         this.eventDay = -1;
         this.eventMonth = -1;
         this.eventYear = -1;
-        this.instantlyShown = false;
         this.intervalTime = 0;
         this.repetitionType = "";
         this.nextRepetition = -1;
@@ -138,89 +124,66 @@ public abstract class EventListItem {
         this.externalAppActivity = null;
         this.reminderTimeOut = -1;
         this.previousAlarms = "";
-        this.lastApiUpdate = -1;
         this.pendingOperation = "";
+        this.lastApiUpdate = -1;
         this.context = null;
         this.showEventMenu = false;
         this.originalEvent = null;
         this.isAlarm = true;
     }
 
-    public EventListItem (Context cont, long id, long apiId, int user, int hour, int minute, int day, int month, int year, String description, boolean instantly, int interval, String repetitionType, long stop, long timeOut, String previousAlarms, long lastUpdate, String pendingOp){
+    public EventListItem (Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate) {
         this.context = cont;
         this.eventId = id;
-        this.eventApiId = apiId;
-        this.userId = user;
         this.eventHour = hour;
         this.eventMinute = minute;
         this.eventDay = day;
         this.eventMonth = month;
         this.eventYear = year;
         this.descriptionText = description;
-        this.instantlyShown = instantly;
         this.intervalTime = interval;
         this.repetitionType = repetitionType;
         this.repetitionStop = stop;
         this.reminderTimeOut = timeOut;
         this.previousAlarms = previousAlarms;
-        this.lastApiUpdate = lastUpdate;
         this.pendingOperation = pendingOp;
+        this.lastApiUpdate = lastUpdate;
         this.isAlarm = true;
 
         //Now that the context is set, the resources can be obtained
         setResources();
     }
 
-    protected EventListItem (Context cont, long id, long apiId, int user, int hour, int minute, int day, int month, int year, String description, boolean instantly, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String previousAlarms, long lastUpdate, String pendingOp){
+    protected EventListItem (Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate){
         this.context = cont;
         this.eventId = id;
-        this.eventApiId = apiId;
-        this.userId = user;
         this.eventHour = hour;
         this.eventMinute = minute;
         this.eventDay = day;
         this.eventMonth = month;
         this.eventYear = year;
         this.descriptionText = description;
-        this.instantlyShown = instantly;
         this.intervalTime = interval;
         this.repetitionType = repetitionType;
         this.nextRepetition = nextRepetition;
         this.repetitionStop = stop;
         this.reminderTimeOut = timeOut;
         this.previousAlarms = previousAlarms;
-        this.lastApiUpdate = lastUpdate;
         this.pendingOperation = pendingOp;
+        this.lastApiUpdate = lastUpdate;
         this.isAlarm = true;
 
         //Now that the context is set, the resources can be obtained
         setResources();
     }
 
-    private void setResources () {
-        this.resources = context.getResources();
-    }
+    private void setResources () { resources = context.getResources(); }
 
-    public long getEventId() {
-        return eventId;
-    }
+    public void setEventId(long id) { eventId = id; }
 
-    public long getEventApiId() {
-        return eventApiId;
-    }
+    public long getEventId() { return eventId; }
 
-    public int getUserId() { return userId; }
-
-    public void setEventId(long id) {
-        this.eventId = id;
-    }
-    public void setEventApiId(long apiId) {
-        this.eventApiId = apiId;
-    }
-
-    public String getTitleText() {
-        return titleText;
-    }
+    public String getTitleText() { return titleText; }
 
     public String getFullTitleText() {
         return getDateText(true, true) + " - " + eventTypeTitle;
@@ -276,43 +239,23 @@ public abstract class EventListItem {
         return dateText + timeText;
     }
 
-    public String getDescriptionText() {
-        return descriptionText;
-    }
+    public String getDescriptionText() { return descriptionText; }
 
-    public Drawable getEventIcon() {
-        return eventIcon;
-    }
+    public Drawable getEventIcon() { return eventIcon; }
 
-    public byte[] getReminderBytes() {return reminderBytes; }
+    public byte[] getReminderBytes() { return reminderBytes; }
 
-    public Reminder.ReminderType getReminderType() {
-        return reminderType;
-    }
+    public Reminder.ReminderType getReminderType() { return reminderType; }
 
-    public int getEventHour() {
-        return eventHour;
-    }
+    public int getEventHour() { return eventHour; }
 
-    public int getEventMinute() {
-        return eventMinute;
-    }
+    public int getEventMinute() { return eventMinute; }
 
-    public int getEventDay() {
-        return eventDay;
-    }
+    public int getEventDay() { return eventDay; }
 
-    public int getEventMonth() {
-        return eventMonth;
-    }
+    public int getEventMonth() { return eventMonth; }
 
-    public int getEventYear() {
-        return eventYear;
-    }
-
-    public boolean isInstantlyShown() {
-        return instantlyShown;
-    }
+    public int getEventYear() { return eventYear; }
 
     public int getIntervalTime() { return intervalTime; }
 
@@ -334,13 +277,13 @@ public abstract class EventListItem {
 
     public String getPreviousAlarms() { return previousAlarms; }
 
-    public long getLastApiUpdate() { return lastApiUpdate; }
-
-    public void setLastApiUpdate(long lastUpdate) { this.lastApiUpdate = lastUpdate; }
-
     public String getPendingOperation() {return pendingOperation; }
 
-    public void setPendingOperation(String pendingOp) {this.pendingOperation = pendingOp; }
+    public void setPendingOperation(String pendingOp) {pendingOperation = pendingOp; }
+
+    public long getLastApiUpdate() {return lastApiUpdate; }
+
+    public void setLastApiUpdate(long lastUpdate) { lastApiUpdate = lastUpdate; }
 
     public void showEventMenu(boolean showMenu) {
         this.showEventMenu = showMenu;
@@ -387,7 +330,7 @@ public abstract class EventListItem {
         int newEventHour = data.getIntExtra(EventUtils.EVENT_HOUR_FIELD, -1);
         int newEventMinute = data.getIntExtra(EventUtils.EVENT_MINUTE_FIELD, -1);
 
-        int newIntervalTime = data.getIntExtra(EventUtils.EVENT_INTERVAL_FIELD, 0);
+        int newIntervalTime = data.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
         long newRepetitionStop = data.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
 
         int newEventDay = data.getIntExtra(EventUtils.EVENT_DAY_FIELD, -1);
@@ -400,7 +343,7 @@ public abstract class EventListItem {
         if (newPreviousAlarms == null) newPreviousAlarms = "";
 
         String newRepetitionType = "";
-        if (newIntervalTime != 0) newRepetitionType = data.getStringExtra(EventUtils.EVENT_REP_TYPE_FIELD);
+        if (newIntervalTime != 0) newRepetitionType = data.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
 
         if (eventHour != newEventHour) {
             this.eventHour = newEventHour;
@@ -460,10 +403,9 @@ public abstract class EventListItem {
     //Function for creating a reminder for an event:
     public void createNewReminder() {
 
-        //Additional options such as if the reminder must be shown instantly, the repetition interval, etc.
+        //Additional options such as i the repetition interval, its type, etc.
         Bundle additionalOptions = new Bundle();
 
-        additionalOptions.putBoolean("instantlyShown", instantlyShown);
         additionalOptions.putInt("intervalTime", intervalTime);
         additionalOptions.putLong("repetitionStop", repetitionStop);
         additionalOptions.putLong("timeOut", reminderTimeOut);
@@ -497,7 +439,6 @@ public abstract class EventListItem {
 
         String type = "Event_Type: " + reminderType;
         String id = "Event_Id: " + eventId;
-        String apiId = "Event_Api_Id: " + eventApiId;
         String date = "Event_Date: " + getDateText(true, false);
         String description = "Event_Description: " + descriptionText;
 
@@ -523,11 +464,9 @@ public abstract class EventListItem {
             stop = "Event_Has_Repetition_Stop: " + true + " (Stop_Date: " + dateText + timeText + ")";
         }
 
-        String update = "Event_Last_Update: " + lastApiUpdate;
-
         String SPACE = "  ,,  ";
 
-        return type + SPACE + id + SPACE + apiId + SPACE + date + SPACE + description + SPACE + prevAlarms + SPACE + repetition + SPACE + stop + SPACE + update;
+        return type + SPACE + id + SPACE + SPACE + date + SPACE + description + SPACE + prevAlarms + SPACE + repetition + SPACE + stop;
     }
 
     //Function that works out the next repetition for an event (only if the event has a repetition):
@@ -541,7 +480,7 @@ public abstract class EventListItem {
             int[] auxDateArray = {eventMinute, eventHour, eventDay, eventMonth, eventYear};
             long eventDateMillis = DateUtils.getMillisFromArray(auxDateArray);
 
-            JSONObject repTypeAux = new JSONObject();
+            JSONObject repTypeAux;
 
             //First thing that must be done is to retrieve the repetition type and config:
             try {
@@ -572,15 +511,6 @@ public abstract class EventListItem {
                     nextRepetition = DateUtils.getNextAnnualRepetition(currentDate, eventDateMillis, repetitionStop, intervalTime);
                     break;
             }
-
-            /*if (nextRepetition != -1) {
-
-                auxDateArray = DateUtils.transformFromMillis(nextRepetition);
-
-                String message = auxDateArray[DateUtils.DAY] + "/" + (auxDateArray[DateUtils.MONTH] + 1) + "/" + auxDateArray[DateUtils.YEAR] + " - " + auxDateArray[DateUtils.HOUR] + ":" + auxDateArray[DateUtils.MINUTE];
-
-                Log.e("CalculateNextRepetition", message);
-            }*/
         }
     }
 
