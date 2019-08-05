@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.droidmare.calendar.utils.ToastUtils;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 import com.droidmare.R;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.views.adapters.datepicker.DatePickerCalendarAdapter;
@@ -54,16 +51,11 @@ public class DialogDatePickerActivity extends AppCompatActivity {
     //Recycler views' adapters listeners:
     private DatePickerCalendarAdapter.ItemClickListener calendarAdapterListener;
 
-    private StatisticService statistic;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         DialogEventParameters.setLaunchedActivityReference(this);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_dialog_date_picker);
 
@@ -134,12 +126,6 @@ public class DialogDatePickerActivity extends AppCompatActivity {
         hoursList.setAdapter(hoursListAdapter);
         //The list is scrolled so the central hour is the current one:
         hoursList.scrollToPosition(hour);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
     //Navigation along the recycler views is set as follows to avoid some Android bugs:

@@ -12,15 +12,12 @@ import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.database.model.EventItem;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 //Event recorder (for storing events) declaration
 //@author Eduardo on 07/03/2018.
 
 class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
-
-    private static final String TAG = EventRecorder.class.getCanonicalName();
 
     //Since the context is assigned counting on the existence of the main activity, it will never be leaking:
     @SuppressLint("StaticFieldLeak")
@@ -34,15 +31,6 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
 
     //A reference to the new event:
     private EventListItem newEvent;
-
-    //The event that is going to be sent to the api:
-    private EventListItem eventToSend;
-
-    //Whether or not the event should be sent to the api:
-    private boolean sendToApi;
-
-    //Whether or not an event was sent to the api:
-    private static boolean wasSent = false;
 
     EventRecorder(Context context){
 
@@ -69,14 +57,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     @Override
     protected void onPostExecute(Void param) {
 
-       //A statistic is sent in order to indicate that an event was created:
-        if (newEvent != null) sendNewEventStatistic(newEvent);
-
-        //If the event must be sent to the api the views are not reloaded (once the event has been sent the database is updated and the views reloaded):
-        if (sendToApi) {
-            wasSent = true;
-            sendEvent(eventToSend);
-        }
+        if (newEvent != null) sendEvent(newEvent);
 
         else reloadEvents();
 
@@ -86,7 +67,6 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     //Function for storing events in the data base:
     private void storeEvents (EventListItem[] events) {
 
-        sendToApi = false;
         eventItemArray = events;
         int index = 0;
 
@@ -95,9 +75,6 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
             if (event != null) {
                 JSONObject eventJson = EventItem.eventToJson(event);
                 long eventId = event.getEventId();
-
-                long eventLastUpdate = event.getLastApiUpdate();
-                long storedLastUpdate = database.getLastUpdateFor(eventId);
 
                 //If the event has no id, the id is assigned after storing it in the database
                 if (eventId == -1 && events.length == 1) {
@@ -122,20 +99,10 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
         if (eventItemArray.length != 1) createMultipleReminders();
     }
 
-    private void sendNewEventStatistic (EventListItem event) {
-        if (MainActivity.isCreated())
-            ((MainActivity)context).sendNewEventStatistic(event);
-    }
-
     //Method that indicates the main activity to send the new event to the API:
     private void sendEvent(EventListItem event){
-        try {
-            JSONObject eventJson = EventItem.eventToJson(event).getJSONObject("event");
-            if (MainActivity.isCreated())
-                ((MainActivity)context).sendEvent(EventUtils.transformJsonToIntent(eventJson));
-        } catch (JSONException jse) {
-            Log.e(TAG, "sendEvent. JSONException: " + jse.getMessage());
-        }
+        if (MainActivity.isCreated() && context instanceof MainActivity)
+            ((MainActivity)context).sendPostEvent(event);
     }
 
     //Method for retrieving the current month's events and reloading the views:

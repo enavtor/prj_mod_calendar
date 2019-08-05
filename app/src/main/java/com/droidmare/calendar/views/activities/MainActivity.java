@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,9 +31,10 @@ import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
 import com.droidmare.database.model.EventItem;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 import com.droidmare.reminders.model.Reminder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -67,18 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RelativeLayout loadingLayout;
 
-    private boolean justCreated;
-
-    private Handler onPauseHandler;
-
-    private Runnable onPauseRunnable;
-
     private HomeKeyUtils homeKeyListener;
 
     @SuppressLint("StaticFieldLeak")
     private static EventFragment eventFrag;
-
-    private StatisticService statistic;
 
     //A reference to the running activity to close it if a sync operation takes place and the selected day is going to be affected by it:
     private static WeakReference<AppCompatActivity> runningActivityReference;
@@ -89,10 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d("LIFECYCLE", "onCreate");
-
-        final String canonicalName =  getClass().getCanonicalName();
 
         homeKeyListener = new HomeKeyUtils(this);
 
@@ -105,19 +93,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         homeKeyListener.startWatch();
-
-        onPauseHandler = new Handler();
-        onPauseRunnable = new Runnable() {
-            @Override
-            public void run() {
-                statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_PAUSE, canonicalName);
-            }
-        };
-
-        justCreated = isCreated = true;
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_main);
         initMainActivity();
@@ -139,32 +114,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (!justCreated) statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_RESUME, getClass().getCanonicalName());
-
-        else justCreated = false;
-
-        setUserInformation();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        onPauseHandler.postDelayed(onPauseRunnable, 500);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         isCreated = false;
-
-        onPauseHandler.removeCallbacks(onPauseRunnable);
-
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
-
         homeKeyListener.stopWatch();
     }
 
@@ -219,22 +171,17 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //Controller's ir color keys behaviour when they are pressed:
-            else if (event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED) {
-                //A statistic may need to be sent so as to indicate that all the events were deleted by using the IR keys:
-                //deleteEventStatisticInfo = "By using the IR keys";
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED)
                 startDisplayDeleteAllEventsDialog(null);
-                //startActivity(new Intent().setComponent(new ComponentName("com.android.tv.settings", "com.android.tv.settings.system.DateTimeActivity")));
-            } else if (event.getKeyCode() == KeyEvent.KEYCODE_F3 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_GREEN) {
-                //A statistic is sent so as to indicate that the user returned to the current day by using the IR keys:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.RETURNED_TO_CURRENT, "By using the IR keys");
+
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_F3 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_GREEN)
                 returnToCurrent();
-            } else if (event.getKeyCode() == KeyEvent.KEYCODE_F4 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_YELLOW) {
-                //A statistic is sent so as to indicate that all the events were shown by using the IR keys:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ALL_EVENTS_SHOWN, "By using the IR keys");
+
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_F4 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_YELLOW)
                 startDisplayEventsDialog();
-            } else if (event.getKeyCode() == KeyEvent.KEYCODE_F5 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_BLUE) {
-                //A statistic is sent so as to indicate that the new event dialog were shown by using the IR keys:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ADD_NEW_EVENT_SELECTED, "By using the IR keys");
+
+            else if (event.getKeyCode() == KeyEvent.KEYCODE_F5 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_BLUE) {
+
                 //If an event was created while the focus was on an item inside the event list, the event fragment must be notified:
                 View currentFocusParent = null;
 
@@ -379,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
 
         //When the delete all events dialog returns a Ok result and the request was deleting all events, all the events are deleted and a statistic is sent:
         else if (requestCode == DELETE_ALL_EVENTS_REQUEST && resultCode == Activity.RESULT_OK) {
-            statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ALL_EVENTS_DELETED, deleteEventStatisticInfo);
             deleteAllEvents();
             //The loading layout will be displayed until the operation ends and the vies are refreshed:
             displayLoadingLayout(res.getString(R.string.loading_layout_delete_all));
@@ -388,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
         //When the delete all events dialog returns a Ok result and the request was deleting a single event, the event to delete is deleted and a statistic is sent:
         else if (requestCode == DELETE_SINGLE_EVENT_REQUEST && resultCode == Activity.RESULT_OK) {
             sendDeleteEvent(eventToDelete);
-            //The loading layout will be displayed until the operation ends and the vies are refreshed:
+            //The loading layout will be displayed until the operation ends and the views are refreshed:
             displayLoadingLayout(res.getString(R.string.loading_layout_delete_one));
         }
     }
@@ -419,15 +365,21 @@ public class MainActivity extends AppCompatActivity {
         return loadingLayout.getVisibility() == View.VISIBLE;
     }
 
-    //This method sends and statistic with thew new event information:
-    public void sendNewEventStatistic (EventListItem event) {
-        statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.EVENT_CREATED, event.eventToString());
+    //This method starts the api connection service so that the new event can be sent tho the API:
+    public void sendPostEvent(EventListItem event){
+        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
+
+        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
+        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
+        startService(eventIntent);
     }
 
     //This method starts the api connection service so that the new event can be sent tho the API:
-    public void sendEvent (Intent eventIntent){
+    public void sendEditEvent(EventListItem event){
+        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
+
         eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
+        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_EDIT);
         startService(eventIntent);
     }
 
@@ -590,8 +542,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_delete_all_events_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //A statistic may need to be sent so as to indicate that all the events were deleted by using the d-pad:
-                deleteEventStatisticInfo = "By using the d-pad";
                 startDisplayDeleteAllEventsDialog(null);
             }
         });
@@ -599,8 +549,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_move_to_current_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //A statistic is sent so as to indicate that the user returned to the current day by using the d-pad:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.RETURNED_TO_CURRENT, "By using the d-pad");
                 returnToCurrent();
             }
         });
@@ -608,8 +556,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_show_all_events_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //A statistic is sent so as to indicate that all the events were shown by using the d-pad:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ALL_EVENTS_SHOWN, "By using the d-pad");
                 startDisplayEventsDialog();
             }
         });
@@ -617,8 +563,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.ir_add_new_event_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //A statistic is sent so as to indicate that the new event dialog was shown by using the d-pad:
-                statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.ADD_NEW_EVENT_SELECTED, "By using the d-pad");
                 startNewEventDialog();
             }
         });
@@ -638,14 +582,18 @@ public class MainActivity extends AppCompatActivity {
         UserDataReceiverService.readSharedPrefs(MainActivity.this.getApplicationContext());
 
         if (UserDataReceiverService.getUserId() != null) {
-            ImageView avatar = findViewById(R.id.user_photo);
-            TextView name = findViewById(R.id.user_name);
-            TextView id = findViewById(R.id.user_id);
+            final ImageView avatar = findViewById(R.id.user_photo);
+            final TextView name = findViewById(R.id.user_name);
+            final TextView id = findViewById(R.id.user_id);
 
-            avatar.setImageBitmap(UserDataReceiverService.getAvatarImage());
-            name.setText(UserDataReceiverService.getUserName());
-            String userIdText = "id: " + UserDataReceiverService.getUserId();
-            id.setText(userIdText);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    avatar.setImageBitmap(UserDataReceiverService.getDecodedAvatar());
+                    name.setText(UserDataReceiverService.getUserName());
+                    id.setText(UserDataReceiverService.getUserNickname());
+                }
+            });
         }
     }
 

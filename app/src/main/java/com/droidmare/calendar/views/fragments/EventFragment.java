@@ -19,8 +19,6 @@ import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 import java.util.ArrayList;
 
@@ -56,16 +54,12 @@ public class EventFragment extends Fragment {
 
     private EventListItem modifiedEvent;
 
-    private StatisticService statistic;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_events, container, false);
 
         fragmentContext = getActivity();
-
-        statistic = new StatisticService(fragmentContext);
 
         //Initialization of control variables:
         deletedOrModified = false;
@@ -222,9 +216,6 @@ public class EventFragment extends Fragment {
         //When an event is deleted, the focus must always be relocated, if possible, on the next event list item:
         relocateFocusAfterDelete();
 
-        //A statistic is sent in order to indicate that an event was deleted:
-        statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.EVENT_DELETED, event.eventToString());
-
         //Now the alarm that was set for the event must be cancelled:
         EventUtils.deleteAlarm (fragmentContext, event);
 
@@ -267,15 +258,10 @@ public class EventFragment extends Fragment {
             //the focus behaves in this situation is set in the MainActivity's dispatchKeyEvent function based on the value of the adapter's nextFocusedPosition variable):
             if ((getNumberOfEvents() == 1 && DateUtils.notSameDate(modifiedEvent)) || goAfterEventDay) setFocusBehaviourAfterEdit();
 
-            //Now a statistic is sent in order to indicate that an event was modified:
-            statistic.sendStatistic(StatisticAPI.StatisticType.USER_TRACK, StatisticService.EVENT_UPDATED, modifiedEvent.eventToString());
-
             //The new alarm will have the same id than the old one and, therefore, will overwrite it:
             EventUtils.makeAlarm(fragmentContext, modifiedEvent);
 
-            EventListItem[] eventList = {modifiedEvent};
-
-            EventsPublisher.modifyEvent(fragmentContext, eventList);
+            ((MainActivity)fragmentContext).sendEditEvent(modifiedEvent);
 
             //The loading layout will be displayed until the operation ends and the views are refreshed, unless the operation was triggered by the synchronization service:
             ((MainActivity)fragmentContext).displayLoadingLayout(getResources().getString(R.string.loading_layout_modify));

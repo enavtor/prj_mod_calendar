@@ -15,9 +15,6 @@ public class DataDeleterService extends IntentService {
 
     @Override
     public void onHandleIntent(Intent eventIntent) {
-
-        UserDataReceiverService.resetUser();
-
         ((ActivityManager)getApplicationContext().getSystemService(ACTIVITY_SERVICE)).clearApplicationUserData();
     }
 }

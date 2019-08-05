@@ -21,8 +21,6 @@ import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.TypeListAdapter;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -77,8 +75,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
     //Control variable to know if the selected event is of type measure or stimulus:
     private boolean hasDefaultDescription;
 
-    private StatisticService statistic;
-
     //A reference to the running activity to close it if this activity is closed:
     private static WeakReference<AppCompatActivity> launchedActivityReference;
     public static void setLaunchedActivityReference(AppCompatActivity activity) {
@@ -90,9 +86,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         MainActivity.setRunningActivityReference(this);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_dialog_new_event);
 
@@ -118,7 +111,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
         if (launchedActivityReference != null && launchedActivityReference.get() != null)
             launchedActivityReference.get().finish();
     }

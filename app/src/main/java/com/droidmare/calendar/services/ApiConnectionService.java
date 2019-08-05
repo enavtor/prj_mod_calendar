@@ -253,7 +253,7 @@ public class ApiConnectionService extends IntentService {
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }
         } catch (JSONException jsonException) {
-            Log.e(TAG, "sendEvent. JSONException: " + jsonException.getMessage());
+            Log.e(TAG, "sendPostEvent. JSONException: " + jsonException.getMessage());
         } finally {
             if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_POST);

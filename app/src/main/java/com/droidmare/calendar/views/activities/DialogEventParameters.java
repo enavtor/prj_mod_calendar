@@ -36,8 +36,6 @@ import com.droidmare.calendar.views.adapters.events.EventCalendarAdapter;
 import com.droidmare.calendar.views.adapters.events.EventDayAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.PrevAlarmsListsAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.SelectionListAdapter;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -280,8 +278,6 @@ public class DialogEventParameters extends AppCompatActivity{
 
     private ArrayList<Integer> selectedRepTypeConfig;
 
-    private StatisticService statistic;
-
     //A reference to the running activity to close it if this activity is closed:
     private static WeakReference<AppCompatActivity> launchedActivityReference;
     public static void setLaunchedActivityReference(AppCompatActivity activity) {
@@ -296,8 +292,6 @@ public class DialogEventParameters extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         getWindow().setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         onlyDisplayParameters = getIntent().getBooleanExtra("displayParameters", false);
         editingEvent = getIntent().getBooleanExtra("editingEvent", false);
@@ -371,7 +365,6 @@ public class DialogEventParameters extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
         if (launchedActivityReference != null && launchedActivityReference.get() != null)
             launchedActivityReference.get().finish();
     }

@@ -16,8 +16,6 @@ import com.droidmare.R;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.DescriptionListAdapter;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 //Activity for displaying a dialog with default descriptions for specific events
 //@author Eduardo on 05/04/2019.
@@ -34,15 +32,11 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
 
     private String noDescriptionMessage;
 
-    private StatisticService statistic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         DialogEventParameters.setLaunchedActivityReference(this);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_dialog_add_description);
 
@@ -72,12 +66,6 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
                 startService(new Intent(getApplicationContext(), ApiConnectionService.class).putExtra("operation", type));
             }
         }).start();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
     @Override

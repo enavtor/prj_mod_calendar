@@ -8,16 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.droidmare.calendar.utils.ToastUtils;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 import com.droidmare.R;
 
 //Activity for displaying a dialog before performing a delete operation
 //@author Eduardo on 27/06/2018.
 
 public class DialogDeleteActivity extends AppCompatActivity {
-
-    private StatisticService statistic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +25,9 @@ public class DialogDeleteActivity extends AppCompatActivity {
             MainActivity.setRunningActivityReference(this);
         else DialogEventParameters.setLaunchedActivityReference(this);
 
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
-
         setContentView(R.layout.activity_dialog_delete_events);
 
         initializeViews();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
     @Override

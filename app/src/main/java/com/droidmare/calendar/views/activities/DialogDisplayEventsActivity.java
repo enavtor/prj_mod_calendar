@@ -20,8 +20,6 @@ import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 import java.util.ArrayList;
 
@@ -35,17 +33,12 @@ public class DialogDisplayEventsActivity extends AppCompatActivity {
     //Adapter for the event list inside the view:
     private EventListAdapter adapter;
 
-    private StatisticService statistic;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //The main activity needs to know that this activity is running in the event that a synchronization takes place, case in which the running activity might have to be finished   :
         MainActivity.setRunningActivityReference(this);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_dialog_display_events);
 
@@ -67,12 +60,6 @@ public class DialogDisplayEventsActivity extends AppCompatActivity {
                 }
             }
         }).start();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
     //Touch events are disabled in order to avoid application's misbehaviour:

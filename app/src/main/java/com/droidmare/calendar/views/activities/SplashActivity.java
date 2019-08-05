@@ -4,14 +4,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.droidmare.R;
 import com.droidmare.calendar.services.ApiSynchronizationService;
-import com.droidmare.statistics.StatisticAPI;
-import com.droidmare.statistics.StatisticService;
 
 //Splash activity declaration
 //@author Eduardo on 07/02/2018.
@@ -24,15 +21,10 @@ public class SplashActivity extends AppCompatActivity {
     /** Request code */
     public static final int REQUEST_CODE = 1;
 
-    private StatisticService statistic;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        statistic = new StatisticService(this);
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_CREATE, getClass().getCanonicalName());
 
         setContentView(R.layout.activity_splash);
 
@@ -44,12 +36,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         requestPermissions();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        statistic.sendStatistic(StatisticAPI.StatisticType.APP_TRACK, StatisticService.ON_DESTROY, getClass().getCanonicalName());
     }
 
     @Override
