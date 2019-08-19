@@ -31,7 +31,10 @@ public class SQLiteManager extends SQLiteOpenHelper{
     /** Events table */
     private static final String EVENTS_TABLE = "events";
 
-    /** Events id column */
+    /** Events local id column */
+    private static final String EVENT_LOCAL_ID_COLUMN = "_id";
+
+    /** Events actual id column */
     private static final String EVENT_ID_COLUMN = "id";
 
     /** Events type column */
@@ -54,9 +57,6 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
     /** Events description */
     private static final String EVENT_DESCRIPTION_COLUMN = "description";
-
-    /** Events instantlyShown column */
-    private static final String EVENT_INSTANTLY_COLUMN = "instantly";
 
     /** Events interval time field */
     private static final String EVENT_INTERVAL_COLUMN = "interval";
@@ -85,7 +85,8 @@ public class SQLiteManager extends SQLiteOpenHelper{
     /** SQL query for creating table */
     private static final String SQL_CREATE_TABLE = "create table " +
         EVENTS_TABLE + " ("+
-        EVENT_ID_COLUMN +" integer primary key autoincrement," +
+        EVENT_LOCAL_ID_COLUMN +" integer primary key autoincrement," +
+        EVENT_ID_COLUMN +" text not null," +
         EVENT_TYPE_COLUMN +" text not null," +
         EVENT_HOUR_COLUMN +" integer not null," +
         EVENT_MINUTE_COLUMN +" integer not null," +
@@ -93,7 +94,6 @@ public class SQLiteManager extends SQLiteOpenHelper{
         EVENT_MONTH_COLUMN +" integer not null," +
         EVENT_YEAR_COLUMN +" integer not null," +
         EVENT_DESCRIPTION_COLUMN +" text not null," +
-        EVENT_INSTANTLY_COLUMN +" integer not null," +
         EVENT_INTERVAL_COLUMN + " integer not null," +
         EVENT_REPETITION_STOP_COLUMN + " integer not null," +
         EVENT_TIMEOUT_COLUMN + " integer not null," +
@@ -131,12 +131,12 @@ public class SQLiteManager extends SQLiteOpenHelper{
     }
 
     //Updates the data of an existing event:
-    public void updateEvent(JSONObject eventJson, Long id) {
+    public void updateEvent(JSONObject eventJson, String id) {
 
         SQLiteDatabase database = this.getWritableDatabase();
 
         String selection = EVENT_ID_COLUMN + " = ?";
-        String[] selectionArgs = {id.toString()};
+        String[] selectionArgs = {id};
 
         database.update(EVENTS_TABLE, getValuesFromJson(eventJson), selection, selectionArgs);
 
@@ -144,10 +144,10 @@ public class SQLiteManager extends SQLiteOpenHelper{
     }
 
     //Gets the cursor for an stored event by its id:
-    private Cursor getStoredEventCursor(Long eventId) {
+    private Cursor getStoredEventCursor(String eventId) {
 
         String selection = EVENT_ID_COLUMN + " = ?";
-        String[] selectionArgs = {eventId.toString()};
+        String[] selectionArgs = {eventId};
 
         SQLiteDatabase database = this.getReadableDatabase();
 
@@ -163,7 +163,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
     }
 
     //Gets the api last update for an specific event in order to check if the event was updated to add an api id (the stored api id will be equal to -1):
-    public long getLastUpdateFor(long eventId){
+    public long getLastUpdateFor(String eventId){
 
         long lastUpdate = -1;
 
@@ -237,9 +237,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
             try{
                 do {
-                    JSONObject event = new JSONObject();
-
-                    event.put("event", getJsonFromCursor(cursor));
+                    JSONObject event = getJsonFromCursor(cursor);
 
                     jsonArray[cursor.getPosition()] = event;
 
@@ -278,12 +276,14 @@ public class SQLiteManager extends SQLiteOpenHelper{
     }
 
     //Deletes a single event based on the id field:
-    public void deleteSingleEvent (long id) {
+    public void deleteSingleEvent (String id) {
+
         SQLiteDatabase database = this.getWritableDatabase();
 
-        database.execSQL("delete from " + EVENTS_TABLE +
-                         " where " + EVENT_ID_COLUMN +
-                         " = " + id);
+        String selection = EVENT_ID_COLUMN + " = ?";
+        String[] selectionArgs = {id};
+
+        database.delete(EVENTS_TABLE, selection, selectionArgs);
 
         //When the database has not events, the id count is restarted:
         if (hasNotEvents(database)) database.execSQL("update sqlite_sequence set seq = 0 where name = 'events'");
@@ -329,6 +329,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
 
         try {
+            values.put(EVENT_ID_COLUMN,eventJson.getString(EventUtils.EVENT_ID_FIELD));
             values.put(EVENT_TYPE_COLUMN,eventJson.getString(EventUtils.EVENT_TYPE_FIELD));
             values.put(EVENT_HOUR_COLUMN,eventJson.getInt(EventUtils.EVENT_HOUR_FIELD));
             values.put(EVENT_MINUTE_COLUMN,eventJson.getInt(EventUtils.EVENT_MINUTE_FIELD));
@@ -342,7 +343,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
             values.put(EVENT_REP_TYPE_COLUMN,eventJson.getString(EventUtils.EVENT_REPETITION_TYPE_FIELD));
             values.put(EVENT_PREV_ALARMS_COLUMN,eventJson.getString(EventUtils.EVENT_PREV_ALARMS_FIELD));
             values.put(PENDING_OPERATION_COLUMN,eventJson.getString(EventUtils.EVENT_PENDING_OP_FIELD));
-            values.put(EVENT_LAST_UPDATE_COLUMN,eventJson.getString(EventUtils.EVENT_LAST_UPDATE_FIELD));
+            values.put(EVENT_LAST_UPDATE_COLUMN,eventJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
         }
         catch (JSONException jse){
             Log.e(TAG,"getValuesFromJson. JSONException: " + jse.getMessage());
@@ -355,7 +356,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
     private JSONObject getJsonFromCursor(Cursor cursor) throws JSONException{
         JSONObject auxJson = new JSONObject();
 
-        auxJson.put(EventUtils.EVENT_ID_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_ID_COLUMN)));
+        auxJson.put(EventUtils.EVENT_ID_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_ID_COLUMN)));
         auxJson.put(EventUtils.EVENT_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_TYPE_COLUMN)));
         auxJson.put(EventUtils.EVENT_HOUR_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_HOUR_COLUMN)));
         auxJson.put(EventUtils.EVENT_MINUTE_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_MINUTE_COLUMN)));
@@ -369,7 +370,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
         auxJson.put(EventUtils.EVENT_REPETITION_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_REP_TYPE_COLUMN)));
         auxJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_PREV_ALARMS_COLUMN)));
         auxJson.put(EventUtils.EVENT_PENDING_OP_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(PENDING_OPERATION_COLUMN)));
-        auxJson.put(EventUtils.EVENT_LAST_UPDATE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_LAST_UPDATE_COLUMN)));
+        auxJson.put(EventUtils.EVENT_LAST_UPDATE_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_LAST_UPDATE_COLUMN)));
 
         return auxJson;
     }

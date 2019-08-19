@@ -32,10 +32,13 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     //A reference to the new event:
     private EventListItem newEvent;
 
-    EventRecorder(Context context){
+    //The type of operation that must be performed:
+    private EventsPublisher.operationType operationType;
 
+    EventRecorder(Context context, EventsPublisher.operationType operation){
         this.newEvent = null;
         this.context = context;
+        this.operationType = operation;
     }
 
     @Override
@@ -74,15 +77,15 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
 
             if (event != null) {
                 JSONObject eventJson = EventItem.eventToJson(event);
-                long eventId = event.getEventId();
 
                 //If the event has no id, the id is assigned after storing it in the database
-                if (eventId == -1 && events.length == 1) {
-                    event.setEventId(database.addEvent(eventJson));
-                    newEvent = event;
+                if (operationType.equals(EventsPublisher.operationType.CREATE_EVENT)) {
+                    String eventLocalId = "LocalId:" + database.addEvent(eventJson);
+                    if (event.getEventId().equals("")) {
+                        event.setEventId(eventLocalId);
+                        if (events.length == 1) newEvent = event;
+                    }
                 }
-
-                else if (eventId == -1) event.setEventId(database.addEvent(eventJson));
 
                 //If the event has an id, the operation has to be a modify one:
                 else database.updateEvent(eventJson, event.getEventId());
@@ -91,8 +94,6 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
                 if (events.length == 1) EventUtils.makeAlarm(context, event);
 
                 else eventItemArray[index++] = event;
-
-                Log.e("Retrieved Event " + UserDataReceiverService.getUserId(), index + " ofifo " + events.length + " (" + event.eventToString() + ")");
             }
         }
 

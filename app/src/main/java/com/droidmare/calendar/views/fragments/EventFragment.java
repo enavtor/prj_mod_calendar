@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -218,6 +219,8 @@ public class EventFragment extends Fragment {
 
         //Now the alarm that was set for the event must be cancelled:
         EventUtils.deleteAlarm (fragmentContext, event);
+
+        Log.d("API_TEST", "DELETING: " +  event.eventToString());
 
         //First the event is deleted from the database and the application views:
         EventsPublisher.deleteEvent(fragmentContext, event.getEventId());

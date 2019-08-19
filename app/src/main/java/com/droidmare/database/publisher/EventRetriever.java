@@ -22,7 +22,7 @@ import java.util.Collections;
 //Event retriever (for retrieving events based on the month and year) declaration
 //@author Eduardo on 07/03/2018.
 
-class EventRetriever extends AsyncTask<Long,Void,Void>{
+class EventRetriever extends AsyncTask<String,Void,Void>{
 
     private static final String TAG = EventRetriever.class.getCanonicalName();
 
@@ -58,7 +58,7 @@ class EventRetriever extends AsyncTask<Long,Void,Void>{
     }
 
     @Override
-    protected Void doInBackground(Long... params) {
+    protected Void doInBackground(String... params) {
 
         switch (opType) {
             case RETRIEVE_EVENTS:

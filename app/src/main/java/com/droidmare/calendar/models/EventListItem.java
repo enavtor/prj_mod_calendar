@@ -24,7 +24,7 @@ public abstract class EventListItem {
     private static final String TAG = EventListItem.class.getCanonicalName();
 
     //The id that the item has inside the database:
-    protected long eventId;
+    protected String eventId;
 
     //The type of the reminder:
     protected Reminder.ReminderType reminderType;
@@ -106,7 +106,7 @@ public abstract class EventListItem {
 
     public EventListItem (){
         //The id will be set once the event is stored in the database:
-        this.eventId = -1;
+        this.eventId = "";
         this.reminderType = null;
         this.titleText = null;
         this.descriptionText = null;
@@ -132,7 +132,7 @@ public abstract class EventListItem {
         this.isAlarm = true;
     }
 
-    public EventListItem (Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate) {
+    public EventListItem (Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate) {
         this.context = cont;
         this.eventId = id;
         this.eventHour = hour;
@@ -154,7 +154,7 @@ public abstract class EventListItem {
         setResources();
     }
 
-    protected EventListItem (Context cont, long id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate){
+    protected EventListItem (Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String previousAlarms, String pendingOp, long lastUpdate){
         this.context = cont;
         this.eventId = id;
         this.eventHour = hour;
@@ -179,9 +179,9 @@ public abstract class EventListItem {
 
     private void setResources () { resources = context.getResources(); }
 
-    public void setEventId(long id) { eventId = id; }
+    public void setEventId(String id) { eventId = id; }
 
-    public long getEventId() { return eventId; }
+    public String getEventId() { return eventId; }
 
     public String getTitleText() { return titleText; }
 
@@ -420,7 +420,7 @@ public abstract class EventListItem {
 
         //Creation of the reminder:
         Reminder newReminder = new Reminder(
-                (int)eventId,
+                eventId,
                 reminderType,
                 eventDay,
                 eventMonth,
@@ -466,7 +466,7 @@ public abstract class EventListItem {
 
         String SPACE = "  ,,  ";
 
-        return type + SPACE + id + SPACE + SPACE + date + SPACE + description + SPACE + prevAlarms + SPACE + repetition + SPACE + stop;
+        return type + SPACE + id + SPACE  + date + SPACE + description + SPACE + prevAlarms + SPACE + repetition + SPACE + stop + SPACE + getLastApiUpdate();
     }
 
     //Function that works out the next repetition for an event (only if the event has a repetition):

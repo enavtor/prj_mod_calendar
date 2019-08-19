@@ -119,7 +119,7 @@ public class EventItem {
         Intent eventData = new Intent();
 
         try {
-            eventData.putExtra(EventUtils.EVENT_ID_FIELD, eventJson.getLong(EventUtils.EVENT_ID_FIELD));
+            eventData.putExtra(EventUtils.EVENT_ID_FIELD, eventJson.getString(EventUtils.EVENT_ID_FIELD));
             eventData.putExtra(EventUtils.EVENT_TYPE_FIELD, eventJson.getString(EventUtils.EVENT_TYPE_FIELD));
             eventData.putExtra(EventUtils.EVENT_HOUR_FIELD, eventJson.getInt(EventUtils.EVENT_HOUR_FIELD));
             eventData.putExtra(EventUtils.EVENT_MINUTE_FIELD, eventJson.getInt(EventUtils.EVENT_MINUTE_FIELD));
@@ -133,9 +133,9 @@ public class EventItem {
             eventData.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, eventJson.getString(EventUtils.EVENT_REPETITION_TYPE_FIELD));
             eventData.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, eventJson.getString(EventUtils.EVENT_PREV_ALARMS_FIELD));
             eventData.putExtra(EventUtils.EVENT_PENDING_OP_FIELD, eventJson.getString(EventUtils.EVENT_PENDING_OP_FIELD));
-            eventData.putExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, eventJson.getString(EventUtils.EVENT_LAST_UPDATE_FIELD));
+            eventData.putExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, eventJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
         } catch (JSONException jse) {
-            Log.e(TAG, "jsonToIntent. JSONException: " + jse.getMessage());
+            Log.e(TAG, "transformJson. JSONException: " + jse.getMessage());
         }
 
         return eventData;

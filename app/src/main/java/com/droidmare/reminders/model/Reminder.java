@@ -34,7 +34,7 @@ public class Reminder implements Parcelable{
     private ReminderType type;
 
     /** Number of reminder. Required for adding different alarms in AlarmManager */
-    private int number;
+    private String number;
 
     /** Day of reminder */
     private int day;
@@ -57,7 +57,7 @@ public class Reminder implements Parcelable{
     /** Additional options for the reminder */
     private Bundle additionalOptions;
 
-    public Reminder(int number, ReminderType type, int day, int month, int year, int hour, int minute, String additionalInfo) {
+    public Reminder(String number, ReminderType type, int day, int month, int year, int hour, int minute, String additionalInfo) {
         this.number = number;
         this.type = type;
         this.day = day;
@@ -69,7 +69,7 @@ public class Reminder implements Parcelable{
         this.additionalOptions = null;
     }
 
-    public Reminder(int number, ReminderType type, int day, int month, int year, int hour, int minute, String additionalInfo, Bundle options) {
+    public Reminder(String number, ReminderType type, int day, int month, int year, int hour, int minute, String additionalInfo, Bundle options) {
         this.number = number;
         this.type = type;
         this.day = day;
@@ -82,7 +82,7 @@ public class Reminder implements Parcelable{
     }
 
     private Reminder(Parcel parcel){
-        this.number = parcel.readInt();
+        this.number = parcel.readString();
         this.type = (ReminderType)parcel.readSerializable();
         this.day = parcel.readInt();
         this.month = parcel.readInt();
@@ -100,7 +100,7 @@ public class Reminder implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.number);
+        dest.writeString(this.number);
         dest.writeSerializable(this.type);
         dest.writeInt(this.day);
         dest.writeInt(this.month);

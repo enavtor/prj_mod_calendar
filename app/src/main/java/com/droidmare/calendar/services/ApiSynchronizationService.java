@@ -122,12 +122,9 @@ public class ApiSynchronizationService extends Service {
         Log.d(TAG, "Events retrieved from API: " + response);
 
         try {
-            JSONObject responseJson = new JSONObject(response);
-            JSONArray eventsJson = responseJson.getJSONArray("events");
+            JSONArray eventsJson = new JSONArray(response);
 
-            int numberOfRetrieved = 0;
-
-            if (eventsJson != null) numberOfRetrieved = eventsJson.length();
+            int numberOfRetrieved = eventsJson.length();
 
             retrievedEvents = new EventListItem[numberOfRetrieved];
 
@@ -135,8 +132,8 @@ public class ApiSynchronizationService extends Service {
 
                 JSONObject eventJson = (JSONObject) eventsJson.get(i);
 
-                if (eventJson.getInt("intervalTime") != 0 && eventJson.getLong("eventStartDate") >= eventJson.getLong("eventStopDate"))
-                    eventJson.put("eventStopDate", -1);
+                if (eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD) != 0 && eventJson.getLong(EventUtils.EVENT_START_DATE_FIELD) >= eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD))
+                    eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
 
                 retrievedEvents[i] = EventUtils.makeEvent(this, eventJson);
             }
@@ -172,7 +169,7 @@ public class ApiSynchronizationService extends Service {
                 EventListItem auxLocalEvent = localEvents[i];
 
                 //If the api id is found, the corresponding local event is deleted from the array:
-                if (auxLocalEvent.getEventId() == retrievedEvent.getEventId()) {
+                if (auxLocalEvent.getEventId().equals(retrievedEvent.getEventId())) {
                     localEvent = auxLocalEvent;
                     localEvents[i] = localEvents[localLastIndex];
                     localEvents[localLastIndex] = null;

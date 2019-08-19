@@ -15,16 +15,18 @@ public class EventsPublisher {
         DELETE_EVENTS,
         RETRIEVE_ALL,
         RESET_ALARMS,
+        CREATE_EVENT,
+        EDIT_EVENT
     }
 
     //Publishes all the events stored inside eventList:
     public static void publishEvents(Context context, EventListItem[] eventList) {
-        new EventRecorder(context).execute(eventList);
+        new EventRecorder(context, operationType.CREATE_EVENT).execute(eventList);
     }
 
     //Modifies the event stored inside eventList (the difference with the previous function is that the event inside eventList will have an id):
     public static void modifyEvent(Context context, EventListItem[] eventList) {
-        new EventRecorder(context).execute(eventList);
+        new EventRecorder(context, operationType.EDIT_EVENT).execute(eventList);
     }
 
     //Retrieves all the events for the current month and year:
@@ -43,12 +45,12 @@ public class EventsPublisher {
     }
 
     //Deletes a single event:
-    public static void deleteEvent(Context context, long id) {
+    public static void deleteEvent(Context context, String id) {
         new EventRetriever(context, operationType.DELETE_EVENTS).execute(id);
     }
 
     //Deletes all the stored events for the current user:
     public static void deleteAllEvents(Context context) {
-        new EventRetriever(context, operationType.DELETE_EVENTS).execute((Long)null);
+        new EventRetriever(context, operationType.DELETE_EVENTS).execute((String)null);
     }
 }

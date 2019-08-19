@@ -85,7 +85,9 @@ public class EventUtils {
 
         EventListItem event = null;
 
-        long eventId = data.getLongExtra(EVENT_ID_FIELD, -1);
+        String eventId = data.getStringExtra(EVENT_ID_FIELD);
+
+        if (eventId == null) eventId = "";
 
         String eventType = data.getStringExtra(EVENT_TYPE_FIELD);
 
@@ -367,7 +369,7 @@ public class EventUtils {
         try {
             if (json.has("event")) json = json.getJSONObject("event");
 
-            eventData.putExtra(EventUtils.EVENT_ID_FIELD, json.getLong(EVENT_ID_FIELD));
+            eventData.putExtra(EventUtils.EVENT_ID_FIELD, json.getString(EVENT_ID_FIELD));
             eventData.putExtra(EventUtils.EVENT_TYPE_FIELD, json.getString(EVENT_TYPE_FIELD));
             eventData.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, json.getString(EVENT_DESCRIPTION_FIELD));
 

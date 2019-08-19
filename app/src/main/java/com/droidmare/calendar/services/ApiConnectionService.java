@@ -47,8 +47,8 @@ public class ApiConnectionService extends IntentService {
     private static final String TAG = ApiConnectionService.class.getCanonicalName();
 
     //API base URL:
-    //public static final String BASE_URL = "http://192.168.1.49:3000/";
-    public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/";
+    public static final String BASE_URL = "http://192.168.1.49:3000/";
+    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/";
 
     //Server connection timeout in milliseconds
     private static final int SERVER_TIMEOUT = 5000;
@@ -92,7 +92,7 @@ public class ApiConnectionService extends IntentService {
 
         String operation = eventIntent.getStringExtra("operation");
 
-        if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_DELETE)) {
+        if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_EDIT) || operation.equals(REQUEST_METHOD_DELETE)) {
             eventJson = transformToJson(eventIntent);
             eventToSend = EventUtils.makeEvent(this, eventIntent);
         }
@@ -131,7 +131,7 @@ public class ApiConnectionService extends IntentService {
 
         String userId = UserDataReceiverService.getUserId();
 
-        long eventId = eventIntent.getLongExtra(EventUtils.EVENT_ID_FIELD, -1);
+        String eventId = eventIntent.getStringExtra(EventUtils.EVENT_ID_FIELD);
         String eventType = eventIntent.getStringExtra(EventUtils.EVENT_TYPE_FIELD);
         String eventText = eventIntent.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
 
@@ -248,6 +248,7 @@ public class ApiConnectionService extends IntentService {
             if (!response.equals("") && responseCode == 200) {
                 JSONObject responseJson = new JSONObject(response);
                 eventToSend.setPendingOperation("");
+                eventToSend.setEventId(responseJson.getString(EventUtils.EVENT_ID_FIELD));
                 eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);

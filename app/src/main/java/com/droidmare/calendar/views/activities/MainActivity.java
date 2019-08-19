@@ -33,9 +33,6 @@ import com.droidmare.database.model.EventItem;
 import com.droidmare.database.publisher.EventsPublisher;
 import com.droidmare.reminders.model.Reminder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
     //Elements for handling the fragments:
     private CalendarFragment calendarFrag;
 
-    private String deleteEventStatisticInfo;
-
     private RelativeLayout loadingLayout;
 
     private HomeKeyUtils homeKeyListener;
@@ -81,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isCreated = true;
 
         homeKeyListener = new HomeKeyUtils(this);
 
