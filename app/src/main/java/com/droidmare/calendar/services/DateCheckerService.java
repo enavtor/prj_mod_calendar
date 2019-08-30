@@ -61,8 +61,6 @@ public class DateCheckerService extends Service {
 
         super.onCreate();
 
-        Log.d("DATE_CHECKER", "Date checker service created");
-
         isInstantiated = true;
 
         calculateMillisTillDateChange();
@@ -88,7 +86,6 @@ public class DateCheckerService extends Service {
             updateTimer.purge();
             updateTimer.cancel();
             updateTimer = null;
-            Log.d("DATE_CHECKER", "Previous schedule deleted");
         }
 
         updateTimer = new Timer();
@@ -96,7 +93,6 @@ public class DateCheckerService extends Service {
         updateTask = new TimerTask() {
             @Override
             public void run() {
-                Log.d("DATE_CHECKER", "Date update schedule started");
                 calculateMillisTillDateChange();
             }
         };
@@ -104,8 +100,6 @@ public class DateCheckerService extends Service {
         setActivitiesDate();
 
         updateTimer.schedule(updateTask, millisTillDateChange);
-
-        Log.d("DATE_CHECKER", "Date update schedule created");
     }
 
     public static void setActivitiesDate () {
@@ -129,10 +123,6 @@ public class DateCheckerService extends Service {
 
         if ((secondsLeft != 0 || minutesLeft != 0) && hoursLeft != 0) hoursLeft = --hoursLeft;
 
-        Log.d("DATE_CHECKER", "Hours left: " + hoursLeft);
-        Log.d("DATE_CHECKER", "Minutes left: " + minutesLeft);
-        Log.d("DATE_CHECKER", "Seconds left: " + secondsLeft);
-
         millisTillDateChange = (hoursLeft * 60 * 60 * 1000) + (minutesLeft * 60 * 1000) + (secondsLeft * 1000);
 
         createUpdateSchedule();
@@ -146,7 +136,6 @@ public class DateCheckerService extends Service {
             final String action = intent.getAction();
 
             if (action != null && (action.equals(Intent.ACTION_TIME_CHANGED) || action.equals(Intent.ACTION_TIMEZONE_CHANGED) || action.equals(Intent.ACTION_DATE_CHANGED))) {
-                Log.d("DATE_CHECKER", "Change detected");
                 calculateMillisTillDateChange();
             }
         }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
@@ -176,8 +176,11 @@ public class EventFragment extends Fragment {
     //Function for creating a new event:
     public void createNewEvent(Intent data) {
 
+        EventJsonObject eventJson = EventJsonObject.createEventJson(data.getStringExtra(EventUtils.EVENT_JSON_FIELD));
+        eventJson.put(EventUtils.EVENT_TYPE_FIELD, data.getStringExtra(EventUtils.EVENT_TYPE_FIELD));
+
         //The event is created and added to the selected day:
-        EventListItem event = EventUtils.makeEvent(fragmentContext, data);
+        EventListItem event = EventUtils.makeEvent(fragmentContext, eventJson);
 
         if (event != null) addNewEvent(event);
     }
@@ -220,8 +223,6 @@ public class EventFragment extends Fragment {
         //Now the alarm that was set for the event must be cancelled:
         EventUtils.deleteAlarm (fragmentContext, event);
 
-        Log.d("API_TEST", "DELETING: " +  event.eventToString());
-
         //First the event is deleted from the database and the application views:
         EventsPublisher.deleteEvent(fragmentContext, event.getEventId());
     }
@@ -251,7 +252,7 @@ public class EventFragment extends Fragment {
         modifiedEvent = originalEvent;
 
         //The update only happens if at least one parameter was modified:
-        if (modifiedEvent.updateEventParams(data) || goAfterEventDay) {
+        if (modifiedEvent.updateEventParams(EventJsonObject.createEventJson(data.getStringExtra(EventUtils.EVENT_JSON_FIELD))) || goAfterEventDay) {
 
             //After modifying the event the views will go to the modified event's new date based on the value of the extra "goAfterEventDay":
             if (goAfterEventDay) updateDateParams(modifiedEvent, false);

@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidmare.R;
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.services.ApiSynchronizationService;
@@ -29,7 +30,6 @@ import com.droidmare.calendar.utils.HomeKeyUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
-import com.droidmare.database.model.EventItem;
 import com.droidmare.database.publisher.EventsPublisher;
 import com.droidmare.reminders.model.Reminder;
 
@@ -228,36 +228,24 @@ public class MainActivity extends AppCompatActivity {
     //This method starts a new event dialog, waiting for the result:
     public void startNewEventDialog() {
         Intent intent = new Intent(this, DialogNewEventActivity.class);
-        intent.putExtra(EventUtils.EVENT_MONTH_FIELD, calendarFrag.getSelectedMonth());
-        intent.putExtra(EventUtils.EVENT_YEAR_FIELD, calendarFrag.getSelectedYear());
+        intent.putExtra(com.droidmare.calendar.utils.EventUtils.EVENT_MONTH_FIELD, calendarFrag.getSelectedMonth());
+        intent.putExtra(com.droidmare.calendar.utils.EventUtils.EVENT_YEAR_FIELD, calendarFrag.getSelectedYear());
         startActivityForResult(intent, NEW_EVENT_REQUEST);
     }
 
     //This method starts a modify event dialog, waiting for the result:
     public void startModifyEventDialog(EventListItem selectedEvent, boolean onlyDisplayValues) {
 
+        EventJsonObject eventJson = EventJsonObject.createEventJson(selectedEvent);
+
         Reminder.ReminderType eventType = selectedEvent.getReminderType();
 
         //Whether or not the selected event is an alarm:
         boolean isAlarm = !(eventType.equals(Reminder.ReminderType.DOCTOR_REMINDER) || eventType.equals(Reminder.ReminderType.PERSONAL_REMINDER));
 
-        Intent intent = new Intent(this, DialogEventParameters.class);
+        Intent intent = new Intent(getApplicationContext(), DialogEventParameters.class);
 
-        intent.putExtra(EventUtils.EVENT_HOUR_FIELD, selectedEvent.getEventHour());
-        intent.putExtra(EventUtils.EVENT_MINUTE_FIELD, selectedEvent.getEventMinute());
-
-        intent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, selectedEvent.getIntervalTime());
-        intent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedEvent.getRepetitionStop());
-
-        intent.putExtra(EventUtils.EVENT_DAY_FIELD, selectedEvent.getEventDay());
-        intent.putExtra(EventUtils.EVENT_MONTH_FIELD, selectedEvent.getEventMonth());
-        intent.putExtra(EventUtils.EVENT_YEAR_FIELD, selectedEvent.getEventYear());
-
-        intent.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, selectedEvent.getDescriptionText());
-
-        intent.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, selectedEvent.getPreviousAlarms());
-
-        intent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, selectedEvent.getRepetitionType());
+        intent.putExtra(EventUtils.EVENT_JSON_FIELD, eventJson.toString());
 
         intent.putExtra("editingEvent", true);
         intent.putExtra("isAlarm", isAlarm);
@@ -303,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
         //When a new event is selected inside the new event dialog, the event fragment is notified so the operation can be completed:
         else if (requestCode == NEW_EVENT_REQUEST && resultCode == Activity.RESULT_OK) {
-
             calendarFrag.focusSelectedItem();
             //This operation should be performed in the DialogNewEventActivity, but since CalendarFragment is not accessible from that activity, it is performed here:
             fragmentCreateNewEvent(data);
@@ -364,38 +351,34 @@ public class MainActivity extends AppCompatActivity {
 
     //This method starts the api connection service so that the new event can be sent tho the API:
     public void sendPostEvent(EventListItem event){
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
-
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
-        startService(eventIntent);
+        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
+        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
+        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
+        startService(dataIntent);
     }
 
     //This method starts the api connection service so that the new event can be sent tho the API:
     public void sendEditEvent(EventListItem event){
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
-
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_EDIT);
-        startService(eventIntent);
+        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
+        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
+        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_EDIT);
+        startService(dataIntent);
     }
 
     //This method starts the api connection service so that all the events are deleted:
     public void sendDeleteEvents (String[] eventStrings){
-        Intent eventIntent = new Intent();
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("eventStrings", eventStrings);
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE_ALL);
-        startService(eventIntent);
+        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
+        dataIntent.putExtra("eventStrings", eventStrings);
+        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE_ALL);
+        startService(dataIntent);
     }
 
     //This method tells the API to delete an event:
     public void sendDeleteEvent(EventListItem event) {
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(event));
-
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE);
-        startService(eventIntent);
+        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
+        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
+        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE);
+        startService(dataIntent);
     }
 
     //This method tells the event fragment to delete an event:

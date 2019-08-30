@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.droidmare.R;
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.DialogAddDescriptionActivity;
 import com.droidmare.calendar.views.activities.MainActivity;
@@ -69,9 +69,9 @@ public class ApiConnectionService extends IntentService {
 
     private SQLiteManager database;
 
-    private Intent eventIntent;
+    private Intent dataIntent;
 
-    private JSONObject eventJson;
+    private EventJsonObject eventJson;
 
     private EventListItem eventToSend;
 
@@ -82,19 +82,20 @@ public class ApiConnectionService extends IntentService {
     }
 
     @Override
-    public void onHandleIntent(Intent intentData) {
+    public void onHandleIntent(Intent dataIntent) {
 
         database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
         String urlForPublishing = BASE_URL + "event";
 
-        this.eventIntent = intentData;
+        this.dataIntent = dataIntent;
 
-        String operation = eventIntent.getStringExtra("operation");
+        String operation = this.dataIntent.getStringExtra("operation");
 
         if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_EDIT) || operation.equals(REQUEST_METHOD_DELETE)) {
-            eventJson = transformToJson(eventIntent);
-            eventToSend = EventUtils.makeEvent(this, eventIntent);
+            eventJson = EventJsonObject.createEventJson(dataIntent.getStringExtra(EventUtils.EVENT_JSON_FIELD));
+            eventJson.put(EventUtils.EVENT_USER_FIELD, UserDataReceiverService.getUserId());
+            eventToSend = EventUtils.makeEvent(getApplicationContext(), eventJson);
         }
 
         switch (operation) {
@@ -118,58 +119,6 @@ public class ApiConnectionService extends IntentService {
         database.close();
 
         isCurrentlyRunning = false;
-    }
-
-    /**
-     * Transforms an Intent into a Json
-     *
-     * @param eventIntent the intent containing the event's information
-     */
-    private JSONObject transformToJson(Intent eventIntent) {
-
-        JSONObject eventJson = new JSONObject();
-
-        String userId = UserDataReceiverService.getUserId();
-
-        String eventId = eventIntent.getStringExtra(EventUtils.EVENT_ID_FIELD);
-        String eventType = eventIntent.getStringExtra(EventUtils.EVENT_TYPE_FIELD);
-        String eventText = eventIntent.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
-
-        //The date parameters must be transformed into millis:
-        int eventHour = eventIntent.getIntExtra(EventUtils.EVENT_HOUR_FIELD, -1);
-        int eventMinute = eventIntent.getIntExtra(EventUtils.EVENT_MINUTE_FIELD, -1);
-        int eventDay = eventIntent.getIntExtra(EventUtils.EVENT_DAY_FIELD, DateUtils.currentDay);
-        int eventMonth = eventIntent.getIntExtra(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
-        int eventYear = eventIntent.getIntExtra(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
-
-        long eventStartDate = DateUtils.transformToMillis(eventMinute, eventHour, eventDay, eventMonth, eventYear);
-
-        int intervalTime = eventIntent.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
-        long repetitionStop = eventIntent.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
-
-        String eventPrevAlarms =  eventIntent.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
-        String eventRepType =  eventIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
-
-        long lastUpdate = eventIntent.getLongExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, -1);
-
-        try {
-            eventJson.put(EventUtils.EVENT_ID_FIELD, eventId);
-            eventJson.put(EventUtils.EVENT_USER_FIELD, userId);
-            eventJson.put(EventUtils.EVENT_TYPE_FIELD, eventType);
-            eventJson.put(EventUtils.EVENT_DESCRIPTION_FIELD, eventText);
-            eventJson.put(EventUtils.EVENT_START_DATE_FIELD, eventStartDate);
-            eventJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, eventPrevAlarms);
-            eventJson.put(EventUtils.EVENT_REP_INTERVAL_FIELD, intervalTime);
-            eventJson.put(EventUtils.DEFAULT_REPETITION_TYPE, eventRepType);
-            eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, repetitionStop);
-            eventJson.put(EventUtils.EVENT_LAST_UPDATE_FIELD, lastUpdate);
-        } catch (JSONException jse) {
-            Log.e(TAG, "transformToJson. JSONException: " + jse.getMessage());
-        }
-
-        Log.d("EVENT_TO_SEND", eventJson.toString());
-
-        return eventJson;
     }
 
     private void requestMedication () {
@@ -244,6 +193,8 @@ public class ApiConnectionService extends IntentService {
 
         String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
 
+        String localEventId = eventToSend.getEventId();
+
         try {
             if (!response.equals("") && responseCode == 200) {
                 JSONObject responseJson = new JSONObject(response);
@@ -251,7 +202,7 @@ public class ApiConnectionService extends IntentService {
                 eventToSend.setEventId(responseJson.getString(EventUtils.EVENT_ID_FIELD));
                 eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
                 EventListItem[] eventList = {eventToSend};
-                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList, localEventId);
             }
         } catch (JSONException jsonException) {
             Log.e(TAG, "sendPostEvent. JSONException: " + jsonException.getMessage());
@@ -259,7 +210,7 @@ public class ApiConnectionService extends IntentService {
             if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_POST);
                 EventListItem[] eventList = {eventToSend};
-                EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+                EventsPublisher.modifyEvent(getContextToPublish(), eventList, localEventId);
             }
         }
     }
@@ -323,7 +274,7 @@ public class ApiConnectionService extends IntentService {
     private void deleteAllEvents(String urlForPublishing) {
 
         try {
-            for (String eventString : eventIntent.getStringArrayExtra("eventStrings")) {
+            for (String eventString : dataIntent.getStringArrayExtra("eventStrings")) {
                 JSONObject eventJsonObject = new JSONObject(eventString).getJSONObject("event");
                 eventJsonObject.put("eventId", eventJsonObject.getLong("eventApiId"));
                 sendRequest(eventJsonObject, urlForPublishing, REQUEST_METHOD_DELETE);

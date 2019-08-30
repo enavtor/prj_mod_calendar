@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidmare.R;
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.TypeListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
@@ -293,10 +294,12 @@ public class DialogEventParameters extends AppCompatActivity{
 
         getWindow().setSoftInputMode(SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        onlyDisplayParameters = getIntent().getBooleanExtra("displayParameters", false);
-        editingEvent = getIntent().getBooleanExtra("editingEvent", false);
-        isAlarm = getIntent().getBooleanExtra("isAlarm", true);
-        eventType = getIntent().getStringExtra("type");
+        Intent receivedIntent = getIntent();
+
+        onlyDisplayParameters = receivedIntent.getBooleanExtra("displayParameters", false);
+        editingEvent = receivedIntent.getBooleanExtra("editingEvent", false);
+        isAlarm = receivedIntent.getBooleanExtra("isAlarm", true);
+        eventType = receivedIntent.getStringExtra("type");
 
         //The main activity needs to know that this activity is running in the event that a synchronization takes place, case in which the running activity might have to be finished:
         if (editingEvent) MainActivity.setRunningActivityReference(this);
@@ -561,48 +564,32 @@ public class DialogEventParameters extends AppCompatActivity{
 
     //Method that assigns values to the variables based on the contents within the received intent:
     private void initializeAttributeValues() {
-        Intent receivedIntent = getIntent();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        originalYear = eventYear = receivedIntent.getIntExtra(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
-        originalMonth = eventMonth = receivedIntent.getIntExtra(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
-        originalDay = eventDay = receivedIntent.getIntExtra(EventUtils.EVENT_DAY_FIELD, DateUtils.currentDay);
+        EventJsonObject receivedEventJson = EventJsonObject.createEventJson(getIntent().getStringExtra(EventUtils.EVENT_JSON_FIELD));
 
-        originalHour = eventHour = receivedIntent.getIntExtra(EventUtils.EVENT_HOUR_FIELD, calendar.get(Calendar.HOUR_OF_DAY));
-        originalMinute = eventMinute = receivedIntent.getIntExtra(EventUtils.EVENT_MINUTE_FIELD, calendar.get(Calendar.MINUTE));
+        originalYear = eventYear = receivedEventJson.getInt(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
+        originalMonth = eventMonth = receivedEventJson.getInt(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
+        originalDay = eventDay = receivedEventJson.getInt(EventUtils.EVENT_DAY_FIELD, DateUtils.currentDay);
 
-        previousAlarms = new JSONArray();
+        originalHour = eventHour = receivedEventJson.getInt(EventUtils.EVENT_HOUR_FIELD, calendar.get(Calendar.HOUR_OF_DAY));
+        originalMinute = eventMinute = receivedEventJson.getInt(EventUtils.EVENT_MINUTE_FIELD, calendar.get(Calendar.MINUTE));
 
-        if (receivedIntent.hasExtra(EventUtils.EVENT_PREV_ALARMS_FIELD)) {
-            try {
-                previousAlarms = new JSONArray(receivedIntent.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD));
-            } catch (JSONException jse) {
-                Log.e(TAG, "initializeAttributeValues. JSONException: " + jse.getMessage());
-            }
-        }
+        previousAlarms = receivedEventJson.getPreviousAlarmsArray();
 
-        try {
-            //If the received intent has no data for the repetition type, the default type is assigned:
-            if (receivedIntent.hasExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD) && !receivedIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD).equals(""))
-                repetitionType = new JSONObject(receivedIntent.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD));
+        repetitionType = receivedEventJson.getRepetitionTypeJson();
 
-            else repetitionType = new JSONObject(EventUtils.DEFAULT_REPETITION_TYPE);
-
-        } catch (JSONException jse) {
-            Log.e(TAG, "initializeAttributeValues. JSONException: " + jse.getMessage());
-        }
-
-        repetitionInterval = receivedIntent.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
+        repetitionInterval = receivedEventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
 
         alternateRepetitionValue = 1;
 
-        selectedStopDate = receivedIntent.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
+        selectedStopDate = receivedEventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
 
         if (selectedStopDate != -1) repStopDaysDuration = 0;
 
-        selectedDescription = receivedIntent.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
+        selectedDescription = receivedEventJson.getString(EventUtils.EVENT_DESCRIPTION_FIELD, "");
 
         hasRepetition = false;
     }
@@ -2582,28 +2569,28 @@ public class DialogEventParameters extends AppCompatActivity{
 
         Intent returnIntent = new Intent();
 
-        returnIntent.putExtra("goAfterEvent", goAfterEvent);
+        EventJsonObject eventJson = new EventJsonObject();
 
-        returnIntent.putExtra(EventUtils.EVENT_HOUR_FIELD, eventHour);
-        returnIntent.putExtra(EventUtils.EVENT_MINUTE_FIELD, eventMinute);
+        eventJson.put(EventUtils.EVENT_HOUR_FIELD, eventHour);
+        eventJson.put(EventUtils.EVENT_MINUTE_FIELD, eventMinute);
+        eventJson.put(EventUtils.EVENT_DAY_FIELD, eventDay);
+        eventJson.put(EventUtils.EVENT_MONTH_FIELD, eventMonth);
+        eventJson.put(EventUtils.EVENT_YEAR_FIELD, eventYear);
+
+        eventJson.put(EventUtils.EVENT_DESCRIPTION_FIELD, selectedDescription);
 
         if (previousAlarms.length() > 0)
-            returnIntent.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, previousAlarms.toString());
+            eventJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, previousAlarms.toString());
 
         //The interval and repetition stop values are sent only when there is a repetition interval:
         if (repetitionInterval != 0) {
-            returnIntent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, repetitionInterval);
-
-            returnIntent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, repetitionType.toString());
-
-            returnIntent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedStopDate);
+            eventJson.put(EventUtils.EVENT_REP_INTERVAL_FIELD, repetitionInterval);
+            eventJson.put(EventUtils.EVENT_REPETITION_TYPE_FIELD, repetitionType.toString());
+            eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedStopDate);
         }
 
-        returnIntent.putExtra(EventUtils.EVENT_DAY_FIELD, eventDay);
-        returnIntent.putExtra(EventUtils.EVENT_MONTH_FIELD, eventMonth);
-        returnIntent.putExtra(EventUtils.EVENT_YEAR_FIELD, eventYear);
-
-        returnIntent.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, selectedDescription);
+        returnIntent.putExtra(EventUtils.EVENT_JSON_FIELD, eventJson.toString());
+        returnIntent.putExtra("goAfterEvent", goAfterEvent);
 
         setResult(Activity.RESULT_OK, returnIntent);
 

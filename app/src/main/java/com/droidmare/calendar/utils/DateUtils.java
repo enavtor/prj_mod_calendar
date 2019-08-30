@@ -371,10 +371,6 @@ public class DateUtils {
 
         if (hoursUntilNextRep == 0 && currentMinute > eventMinute) hoursUntilNextRep = intervalTime;
 
-        Log.d("Difference", numberOfHours + " hours");
-        Log.d("Skipped reps", numberOfSkippedRep + " skips");
-        Log.d("Next repetition in", hoursUntilNextRep + " hours");
-
         //Now it is necessary to modify the reminder attributes' values with the current time and date ones (if they are different from each other).
         //Given that the reminder could have been received out of its time and date (if the device was off for a long time, for instance):
 

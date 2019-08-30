@@ -1,25 +1,23 @@
 package com.droidmare.calendar.services;
 
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.NetworkUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
-import com.droidmare.database.model.EventItem;
 import com.droidmare.database.publisher.EventsPublisher;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.Timer;
@@ -130,12 +128,12 @@ public class ApiSynchronizationService extends Service {
 
             for (int i = 0; i < numberOfRetrieved; i++) {
 
-                JSONObject eventJson = (JSONObject) eventsJson.get(i);
+                EventJsonObject eventJson = EventJsonObject.createEventJson(eventsJson.get(i).toString());
 
                 if (eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD) != 0 && eventJson.getLong(EventUtils.EVENT_START_DATE_FIELD) >= eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD))
                     eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
 
-                retrievedEvents[i] = EventUtils.makeEvent(this, eventJson);
+                retrievedEvents[i] = EventUtils.makeEvent(getApplicationContext(), eventJson);
             }
 
             synchronizeEvents();
@@ -151,8 +149,8 @@ public class ApiSynchronizationService extends Service {
         Log.e(TAG, "Event synchronization started");
 
         //First of all, all the local events are retrieved:
-        JSONObject[] localEventsJson = database.getEvents(-1, -1, true, true, false);
-        EventListItem[] localEvents = EventItem.jsonArrayToEventArray(this, localEventsJson);
+        EventJsonObject[] localEventsJson = database.getEvents(-1, -1, true, true, false);
+        EventListItem[] localEvents = EventUtils.jsonArrayToEventArray(this, localEventsJson);
 
         //When a local event is extracted from the array because its api id matches the retrieved one's, it is deleted from the array by putting the last array's
         //element into its position and setting the last occupied position's value to null, so it is necessary to store and modify the actual local last index:
@@ -307,9 +305,9 @@ public class ApiSynchronizationService extends Service {
     //This method starts the ApiConnectionService in order to perform the requested operation:
     private void requestApiOperation(EventListItem localEvent, String requestMethod) {
         ApiConnectionService.isCurrentlyRunning = true;
-        Intent eventIntent = EventUtils.transformJsonToIntent(EventItem.eventToJson(localEvent));
-        eventIntent.setComponent(new ComponentName(getPackageName(), ApiConnectionService.class.getCanonicalName()));
-        eventIntent.putExtra("operation", requestMethod);
-        startService(eventIntent);
+        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
+        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(localEvent).toString());
+        dataIntent.putExtra("operation", requestMethod);
+        startService(dataIntent);
     }
 }

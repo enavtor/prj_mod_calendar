@@ -56,7 +56,6 @@ public class DialogAddDescriptionActivity extends AppCompatActivity {
                 }
                 while(ApiConnectionService.isCurrentlyRunning) {
                     try {
-                        Log.d("TESTING", "Connection service is running");
                         Thread.sleep(100);
                     } catch (InterruptedException ie) {
                         Log.e(TAG, "onCreate. InterruptedException: " + ie.getMessage());

@@ -3,16 +3,12 @@ package com.droidmare.database.publisher;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.services.UserDataReceiverService;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
-import com.droidmare.database.model.EventItem;
-
-import org.json.JSONObject;
 
 //Event recorder (for storing events) declaration
 //@author Eduardo on 07/03/2018.
@@ -35,10 +31,19 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     //The type of operation that must be performed:
     private EventsPublisher.operationType operationType;
 
+    private String localEventId;
+
     EventRecorder(Context context, EventsPublisher.operationType operation){
         this.newEvent = null;
         this.context = context;
         this.operationType = operation;
+    }
+
+    EventRecorder(Context context, EventsPublisher.operationType operation, String localId){
+        this.newEvent = null;
+        this.context = context;
+        this.operationType = operation;
+        this.localEventId = localId;
     }
 
     @Override
@@ -76,7 +81,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
         for (EventListItem event: events) {
 
             if (event != null) {
-                JSONObject eventJson = EventItem.eventToJson(event);
+                EventJsonObject eventJson = EventJsonObject.createEventJson(event);
 
                 //If the event has no id, the id is assigned after storing it in the database
                 if (operationType.equals(EventsPublisher.operationType.CREATE_EVENT)) {
@@ -88,7 +93,11 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
                 }
 
                 //If the event has an id, the operation has to be a modify one:
-                else database.updateEvent(eventJson, event.getEventId());
+                else {
+                    String eventId = event.getEventId();
+                    if (localEventId != null) eventId = localEventId;
+                    database.updateEvent(eventJson, eventId);
+                }
 
                 //Depending on the length of the events array, the operation is storing a new event or a set of events received from the API:
                 if (events.length == 1) EventUtils.makeAlarm(context, event);

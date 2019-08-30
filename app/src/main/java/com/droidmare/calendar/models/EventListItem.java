@@ -323,27 +323,25 @@ public abstract class EventListItem {
     }
 
     //Function for updating the event parameters (just the ones that doesn't depend on the event type):
-    public boolean updateEventParams(Intent data){
+    public boolean updateEventParams(EventJsonObject eventJson){
 
         boolean eventUpdated = false;
 
-        int newEventHour = data.getIntExtra(EventUtils.EVENT_HOUR_FIELD, -1);
-        int newEventMinute = data.getIntExtra(EventUtils.EVENT_MINUTE_FIELD, -1);
+        int newEventHour = eventJson.getInt(EventUtils.EVENT_HOUR_FIELD, -1);
+        int newEventMinute = eventJson.getInt(EventUtils.EVENT_MINUTE_FIELD, -1);
 
-        int newIntervalTime = data.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
-        long newRepetitionStop = data.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
+        int newIntervalTime = eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
+        long newRepetitionStop = eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
 
-        int newEventDay = data.getIntExtra(EventUtils.EVENT_DAY_FIELD, -1);
-        int newEventMonth = data.getIntExtra(EventUtils.EVENT_MONTH_FIELD, -1);
-        int newEventYear = data.getIntExtra(EventUtils.EVENT_YEAR_FIELD, -1);
+        int newEventDay = eventJson.getInt(EventUtils.EVENT_DAY_FIELD, -1);
+        int newEventMonth = eventJson.getInt(EventUtils.EVENT_MONTH_FIELD, -1);
+        int newEventYear = eventJson.getInt(EventUtils.EVENT_YEAR_FIELD, -1);
 
-        String newDescriptionText = data.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
+        String newDescriptionText = eventJson.getString(EventUtils.EVENT_DESCRIPTION_FIELD, "");
 
-        String newPreviousAlarms = data.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
-        if (newPreviousAlarms == null) newPreviousAlarms = "";
+        String newPreviousAlarms = eventJson.getPreviousAlarmsArray().toString();
 
-        String newRepetitionType = "";
-        if (newIntervalTime != 0) newRepetitionType = data.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
+        String newRepetitionType = eventJson.getRepetitionTypeJson().toString();
 
         if (eventHour != newEventHour) {
             this.eventHour = newEventHour;

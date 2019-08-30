@@ -29,6 +29,11 @@ public class EventsPublisher {
         new EventRecorder(context, operationType.EDIT_EVENT).execute(eventList);
     }
 
+    //Modifies the event stored inside eventList (the difference with the previous function is that the event inside eventList will have an id):
+    public static void modifyEvent(Context context, EventListItem[] eventList, String localId) {
+        new EventRecorder(context, operationType.EDIT_EVENT, localId).execute(eventList);
+    }
+
     //Retrieves all the events for the current month and year:
     public static void retrieveMonthEvents(Context context) {
         new EventRetriever(context, operationType.RETRIEVE_EVENTS).execute();

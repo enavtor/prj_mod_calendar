@@ -29,16 +29,11 @@ public class AlarmResetService extends IntentService {
         EventsPublisher.retrieveAndReset(this);
 
         while (resettingEvents) {
-
-            Log.d("TESTING", "resetting events...");
-
             try {
                 Thread.sleep(500);
             } catch (InterruptedException ie) {
                 Log.e(TAG, "onHandelIntent. InterruptedException: " + ie.getMessage());
             }
         }
-
-        Log.d("TESTING", "Events reset");
     }
 }

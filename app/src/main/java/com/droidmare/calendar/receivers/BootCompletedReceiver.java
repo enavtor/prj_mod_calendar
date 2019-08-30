@@ -9,8 +9,6 @@ import android.util.Log;
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.AlarmResetService;
 
-import java.util.Objects;
-
 //A broadcast receiver for boot completed event
 //@author Eduardo on 14/11/2018.
 

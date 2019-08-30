@@ -57,18 +57,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
     //The selected item inside the dialog:
     private TypeListItem selectedItem;
 
-    //New event reminder parameters:
-    private int eventHour;
-    private int eventMinute;
-    private int eventDay;
-    private int eventMonth;
-    private int eventYear;
-    private int eventInterval;
-    private long eventRepetitionStop;
-    private String eventDescription;
-    private String eventPreviousAlarms;
-    private String eventRepetitionType;
-
     //Control variable to know if the measure types dialog is being shown:
     private boolean showingSecondaryDialog;
 
@@ -150,33 +138,9 @@ public class DialogNewEventActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-
-                eventHour = data.getIntExtra(EventUtils.EVENT_HOUR_FIELD, -1);
-                eventMinute = data.getIntExtra(EventUtils.EVENT_MINUTE_FIELD, -1);
-
-                eventDay = data.getIntExtra(EventUtils.EVENT_DAY_FIELD, DateUtils.currentDay);
-                eventMonth = data.getIntExtra(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
-                eventYear = data.getIntExtra(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
-
-                eventInterval = data.getIntExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
-
-                if (data.hasExtra(EventUtils.EVENT_PREV_ALARMS_FIELD))
-                    eventPreviousAlarms = data.getStringExtra(EventUtils.EVENT_PREV_ALARMS_FIELD);
-
-                //The repetition stop is set only if the event has a repetition interval:
-                if (eventInterval != 0) {
-
-                    if (data.hasExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD))
-                        eventRepetitionType = data.getStringExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD);
-
-                    eventRepetitionStop = data.getLongExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
-                }
-
-                eventDescription = data.getStringExtra(EventUtils.EVENT_DESCRIPTION_FIELD);
-
-                //Now we need to send a response with the event type to the main activity,
-                //so it can communicate it to the event fragment in order to create a new event:
-                sendNewEventType();
+                data.putExtra(EventUtils.EVENT_TYPE_FIELD, eventType.toString());
+                setResult(Activity.RESULT_OK, data);
+                finish();
             }
 
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -184,35 +148,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
                 dialogView.setVisibility(View.VISIBLE);
             }
         }
-    }
-
-    //This method sends the event type selected so the event fragment can do as needed with it:
-    private void sendNewEventType () {
-        Intent returnIntent = new Intent();
-
-        returnIntent.putExtra(EventUtils.EVENT_TYPE_FIELD, eventType.toString());
-        returnIntent.putExtra(EventUtils.EVENT_HOUR_FIELD, eventHour);
-        returnIntent.putExtra(EventUtils.EVENT_MINUTE_FIELD, eventMinute);
-
-        returnIntent.putExtra(EventUtils.EVENT_DAY_FIELD, eventDay);
-        returnIntent.putExtra(EventUtils.EVENT_MONTH_FIELD, eventMonth);
-        returnIntent.putExtra(EventUtils.EVENT_YEAR_FIELD, eventYear);
-
-        returnIntent.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, eventDescription);
-
-        //The previous alarms will be stored within the intent only if the event has previous alarms:
-        if (eventPreviousAlarms != null) returnIntent.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, eventPreviousAlarms);
-
-        //The interval and repetition stop values are sent only when there is a repetition interval:
-        if (eventInterval != 0) {
-            returnIntent.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, eventInterval);
-            if (eventRepetitionType != null) returnIntent.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, eventRepetitionType);
-            returnIntent.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, eventRepetitionStop);
-        }
-
-        setResult(Activity.RESULT_OK, returnIntent);
-
-        finish();
     }
 
     //Behaviour of event type items (elements inside the new event dialog) when they are clicked:

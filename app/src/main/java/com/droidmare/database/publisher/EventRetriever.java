@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.AlarmResetService;
 import com.droidmare.calendar.utils.DateUtils;
@@ -12,9 +13,6 @@ import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.DialogDisplayEventsActivity;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
-import com.droidmare.database.model.EventItem;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,10 +25,10 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
     private static final String TAG = EventRetriever.class.getCanonicalName();
 
     //The array with all the retrieved events:
-    private JSONObject[] jsonArray;
+    private EventJsonObject[] jsonArray;
 
     //The array with all the repetitive events:
-    private JSONObject[] jsonRepetitiveArray;
+    private EventJsonObject[] jsonRepetitiveArray;
 
     //The type of operation for an specific instance:
     private EventsPublisher.operationType opType;
@@ -116,7 +114,7 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
 
         if (opType == EventsPublisher.operationType.RETRIEVE_ALL) {
 
-            EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonArray);
+            EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonArray);
 
             ArrayList <EventListItem> eventList = new ArrayList<>();
 
@@ -127,8 +125,8 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
 
         else if (MainActivity.isCreated() && context instanceof MainActivity) {
 
-            ArrayList<EventListItem>[] eventListsArray = EventItem.jsonArrayToEventListArray(context, jsonArray);
-            EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonRepetitiveArray);
+            ArrayList<EventListItem>[] eventListsArray = EventUtils.jsonArrayToEventListArray(context, jsonArray);
+            EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonRepetitiveArray);
 
             ArrayList<EventListItem> repetitiveEvents = null;
 
@@ -148,11 +146,11 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
 
         jsonArray = database.getEvents(-1, -1, true, false, displayAll);
 
-        EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonArray);
+        EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonArray);
 
         //When the database has not events, the value of eventArray will be null, so not alarms can be reset:
         if (eventArray != null && opType == EventsPublisher.operationType.RESET_ALARMS)
-            EventUtils.sendMultipleReminders(context, eventArray, false);
+            com.droidmare.calendar.utils.EventUtils.sendMultipleReminders(context, eventArray, false);
 
             //When the operation is deleting all events, the MainActivity must be notified in order to send the request to the api:
         else if (eventArray != null && opType == EventsPublisher.operationType.DELETE_EVENTS) {
@@ -161,7 +159,7 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
 
             int i = 0;
 
-            for (JSONObject eventJson : jsonArray) eventStrings[i++] = eventJson.toString();
+            for (EventJsonObject eventJson : jsonArray) eventStrings[i++] = eventJson.toString();
 
             ((MainActivity)context).sendDeleteEvents(eventStrings);
         }
@@ -169,10 +167,10 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
 
     //Method for deleting all the alarms for the retrieved events:
     private void deleteAllAlarms() {
-        EventListItem[] eventArray = EventItem.jsonArrayToEventArray(context, jsonArray);
+        EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonArray);
 
         //When the database has not events, the value of eventArray will be null, so not alarms can be deleted:
-        if (eventArray != null) EventUtils.sendMultipleReminders(context, eventArray, true);
+        if (eventArray != null) com.droidmare.calendar.utils.EventUtils.sendMultipleReminders(context, eventArray, true);
     }
 }
 

@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.droidmare.R;
 import com.droidmare.calendar.events.ActivityEvent;
@@ -15,10 +14,8 @@ import com.droidmare.calendar.events.MedicationEvent;
 import com.droidmare.calendar.events.surveys.MoodEvent;
 import com.droidmare.calendar.events.personal.PersonalEvent;
 import com.droidmare.calendar.events.personal.TextNoFeedbackEvent;
+import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -40,8 +37,8 @@ public class EventUtils {
     private static final long SURVEY_HIDE_TIME = 90 * 1000;
 
     //Package and main activity of the reminder module:
-    private static final String REMINDER_PACKAGE = "com.shtvsolution.recordatorios";
-    private static final String REMINDER_MAIN = "com.shtvsolution.recordatorios.view.SplashActivity";
+    private static final String REMINDER_PACKAGE = "com.droidmare.remainders";
+    private static final String REMINDER_MAIN = "com.droidmare.reminders.view.SplashActivity";
 
     //Integer value for each type of repetition (daily, weekly, on alternate days, etc):
     public static final int DAILY_REPETITION = 0;
@@ -52,6 +49,9 @@ public class EventUtils {
 
     //Repetition type default string:
     public static final String DEFAULT_REPETITION_TYPE = "{\"type\":1,\"config\":\"[1]\"}";
+
+    //Field where the event json string will be stored within an intent:
+    public static final String EVENT_JSON_FIELD = "eventJsonString";
 
     //Strings that store the name of the different fields that the intent and jsons containing the event info will have:
     public static final String EVENT_ID_FIELD = "eventId";
@@ -75,211 +75,74 @@ public class EventUtils {
     public static final String EVENT_LAST_UPDATE_FIELD = "eventLastUpdate";
     public static final String EVENT_TIMEOUT_FIELD = "eventTimeOut";
 
-    //Function for making an event object from a Json:
-    public static  EventListItem makeEvent (Context context, JSONObject json) {
-        return makeEvent(context, transformJsonToIntent(json));
-    }
-
     //Function for making an event object from an Intent:
-    public static EventListItem makeEvent (Context context, Intent data) {
+    public static EventListItem makeEvent (Context context, EventJsonObject eventJson) {
 
         EventListItem event = null;
 
-        String eventId = data.getStringExtra(EVENT_ID_FIELD);
+        String eventId = eventJson.getString(EVENT_ID_FIELD, "");
 
-        if (eventId == null) eventId = "";
+        String eventType = eventJson.getString(EVENT_TYPE_FIELD, "");
 
-        String eventType = data.getStringExtra(EVENT_TYPE_FIELD);
+        int eventHour = eventJson.getInt(EVENT_HOUR_FIELD, -1);
+        int eventMinute = eventJson.getInt(EVENT_MINUTE_FIELD, -1);
+        int eventDay = eventJson.getInt(EVENT_DAY_FIELD, DateUtils.currentDay);
+        int eventMonth = eventJson.getInt(EVENT_MONTH_FIELD, DateUtils.currentMonth);
+        int eventYear = eventJson.getInt(EVENT_YEAR_FIELD, DateUtils.currentYear);
 
-        int eventHour = data.getIntExtra(EVENT_HOUR_FIELD, -1);
-        int eventMinute = data.getIntExtra(EVENT_MINUTE_FIELD, -1);
-        int eventDay = data.getIntExtra(EVENT_DAY_FIELD, DateUtils.currentDay);
-        int eventMonth = data.getIntExtra(EVENT_MONTH_FIELD, DateUtils.currentMonth);
-        int eventYear = data.getIntExtra(EVENT_YEAR_FIELD, DateUtils.currentYear);
+        String eventDescription = eventJson.getString(EVENT_DESCRIPTION_FIELD, "");
+        int intervalTime = eventJson.getInt(EVENT_REP_INTERVAL_FIELD, 0);
 
-        String eventDescription = data.getStringExtra(EVENT_DESCRIPTION_FIELD);
-        int intervalTime = data.getIntExtra(EVENT_REP_INTERVAL_FIELD, 0);
+        String repetitionType = eventJson.getRepetitionTypeJson().toString();
+        long repetitionStop = eventJson.getLong(EVENT_REPETITION_STOP_FIELD, -1);
 
-        String repetitionType = "";
-        long repetitionStop = -1;
+        long reminderTimeOut = eventJson.getLong(EVENT_TIMEOUT_FIELD, DEFAULT_HIDE_TIME);
 
-        if (intervalTime != 0) {
-            repetitionStop = data.getLongExtra(EVENT_REPETITION_STOP_FIELD, -1);
+        String prevAlarms = eventJson.getPreviousAlarmsArray().toString();
 
-            //If the event has a repetition interval, the repetition type is initialize:
-            if (data.hasExtra(EVENT_REPETITION_TYPE_FIELD) && !data.getStringExtra(EVENT_REPETITION_TYPE_FIELD).equals("")) {
-                repetitionType = data.getStringExtra(EVENT_REPETITION_TYPE_FIELD);
-            }
-            //If the intent has no data for the repetition type, it is initialize as its default value (daily repetition):
-            else repetitionType = DEFAULT_REPETITION_TYPE;
-        }
+        String pendingOperation = eventJson.getString(EVENT_PENDING_OP_FIELD, "");
 
-        long timeOut = data.getLongExtra(EVENT_TIMEOUT_FIELD, DEFAULT_HIDE_TIME);
-
-        String prevAlarms = "";
-
-        if (data.hasExtra(EVENT_PREV_ALARMS_FIELD)) {
-            prevAlarms = data.getStringExtra(EVENT_PREV_ALARMS_FIELD);
-        }
-
-        String pendingOperation = "";
-
-        if (data.hasExtra(EVENT_PENDING_OP_FIELD))
-            pendingOperation = data.getStringExtra(EVENT_PENDING_OP_FIELD);
-
-        long lastApiUpdate = data.getLongExtra(EVENT_LAST_UPDATE_FIELD, -1);
+        long lastApiUpdate = eventJson.getLong(EVENT_LAST_UPDATE_FIELD, -1);
 
         switch (eventType) {
             case "ACTIVITY":
-                event = new ActivityEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new ActivityEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "DOCTOR":
-                event = new DoctorEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new DoctorEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "MEDICATION":
-                event = new MedicationEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new MedicationEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "PERSONAL":
-                event = new PersonalEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new PersonalEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "STIMULUS":
-                event = new StimulusEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new StimulusEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "MOOD":
-                event = new MoodEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    SURVEY_HIDE_TIME,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new MoodEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, SURVEY_HIDE_TIME, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "TEXTFEEDBACK":
-                event = new TextFeedbackEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    SURVEY_HIDE_TIME,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new TextFeedbackEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, SURVEY_HIDE_TIME, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
             case "TEXTNOFEEDBACK":
-                event = new TextNoFeedbackEvent(
-                    context,
-                    eventId,
-                    eventHour,
-                    eventMinute,
-                    eventDay,
-                    eventMonth,
-                    eventYear,
-                    eventDescription,
-                    intervalTime,
-                    repetitionType,
-                    repetitionStop,
-                    timeOut,
-                    prevAlarms,
-                    pendingOperation,
-                    lastApiUpdate
+                event = new TextNoFeedbackEvent(context, eventId, eventHour, eventMinute, eventDay, eventMonth, eventYear, eventDescription,
+                    intervalTime, repetitionType, repetitionStop, reminderTimeOut, prevAlarms, pendingOperation, lastApiUpdate
                 );
                 break;
         }
@@ -362,51 +225,6 @@ public class EventUtils {
         }
     }
 
-    //Method that transforms the received JSONObject into an Intent:
-    public static Intent transformJsonToIntent (JSONObject json) {
-        Intent eventData = new Intent();
-
-        try {
-            if (json.has("event")) json = json.getJSONObject("event");
-
-            eventData.putExtra(EventUtils.EVENT_ID_FIELD, json.getString(EVENT_ID_FIELD));
-            eventData.putExtra(EventUtils.EVENT_TYPE_FIELD, json.getString(EVENT_TYPE_FIELD));
-            eventData.putExtra(EventUtils.EVENT_DESCRIPTION_FIELD, json.getString(EVENT_DESCRIPTION_FIELD));
-
-            //The event start date is retrieved as a long and transformed into hour, minute, day, month and year (only if it exists):
-            if (json.has(EVENT_START_DATE_FIELD)) {
-                long eventStartDate = json.getLong(EVENT_START_DATE_FIELD);
-
-                int[] dateArray = DateUtils.transformFromMillis(eventStartDate);
-
-                json.put(EVENT_HOUR_FIELD, dateArray[DateUtils.HOUR]);
-                json.put(EVENT_MINUTE_FIELD, dateArray[DateUtils.MINUTE]);
-                json.put(EVENT_DAY_FIELD, dateArray[DateUtils.DAY]);
-                json.put(EVENT_MONTH_FIELD, dateArray[DateUtils.MONTH]);
-                json.put(EVENT_YEAR_FIELD, dateArray[DateUtils.YEAR]);
-            }
-
-            eventData.putExtra(EventUtils.EVENT_HOUR_FIELD, json.getInt(EVENT_HOUR_FIELD));
-            eventData.putExtra(EventUtils.EVENT_MINUTE_FIELD, json.getInt(EVENT_MINUTE_FIELD));
-            eventData.putExtra(EventUtils.EVENT_DAY_FIELD, json.getInt(EVENT_DAY_FIELD));
-            eventData.putExtra(EventUtils.EVENT_MONTH_FIELD, json.getInt(EVENT_MONTH_FIELD));
-            eventData.putExtra(EventUtils.EVENT_YEAR_FIELD, json.getInt(EVENT_YEAR_FIELD));
-
-            if (json.has(EVENT_PREV_ALARMS_FIELD)) eventData.putExtra(EventUtils.EVENT_PREV_ALARMS_FIELD, json.getString(EVENT_PREV_ALARMS_FIELD));
-            if (json.has(EVENT_REP_INTERVAL_FIELD)) eventData.putExtra(EventUtils.EVENT_REP_INTERVAL_FIELD, json.getInt(EVENT_REP_INTERVAL_FIELD));
-            if (json.has(EVENT_REPETITION_TYPE_FIELD)) eventData.putExtra(EventUtils.EVENT_REPETITION_TYPE_FIELD, json.getString(EVENT_REPETITION_TYPE_FIELD));
-            if (json.has(EVENT_REPETITION_STOP_FIELD)) eventData.putExtra(EventUtils.EVENT_REPETITION_STOP_FIELD, json.getLong(EVENT_REPETITION_STOP_FIELD));
-            if (json.has(EVENT_PENDING_OP_FIELD)) eventData.putExtra(EventUtils.EVENT_PENDING_OP_FIELD, json.getString(EVENT_PENDING_OP_FIELD));
-            if (json.has(EVENT_LAST_UPDATE_FIELD)) eventData.putExtra(EventUtils.EVENT_LAST_UPDATE_FIELD, json.getLong(EVENT_LAST_UPDATE_FIELD));
-            if (json.has(EVENT_TIMEOUT_FIELD)) eventData.putExtra(EventUtils.EVENT_TIMEOUT_FIELD, json.getLong(EVENT_TIMEOUT_FIELD));
-
-        } catch (JSONException jse) {
-            Log.e(TAG, "transformJsonToIntent. JSONException: " + jse.getMessage());
-        }
-
-        return eventData;
-    }
-
     //This method transforms the repetition config string, inside repetitionType, into an array list:
     public static ArrayList<Integer> getRepetitionConfigArray(String config) {
 
@@ -423,5 +241,53 @@ public class EventUtils {
         }
 
         return configList;
+    }
+
+    //Method that transforms an array of JSON Objects into an array of event lists
+    public static ArrayList<EventListItem>[] jsonArrayToEventListArray(Context context, EventJsonObject[] jsonArray) {
+
+        ArrayList<EventListItem>[] eventsList = new ArrayList[31];
+
+        if (jsonArray != null) {
+            for (int i = 0; i < 31; i++)
+                eventsList[i] = new ArrayList<>();
+
+            EventListItem event;
+
+            for (EventJsonObject eventJson : jsonArray) {
+
+                //Every event is added to its corresponding day:
+                int dayOfTheEvent = eventJson.getInt(EVENT_DAY_FIELD, -1);
+                event = com.droidmare.calendar.utils.EventUtils.makeEvent(context, eventJson);
+
+                if (event != null) eventsList[dayOfTheEvent - 1].add(event);
+            }
+        }
+
+        return eventsList;
+    }
+
+    //Method that transforms an array of JSON Objects into an array of events:
+    public static EventListItem[] jsonArrayToEventArray(Context context, EventJsonObject[] jsonArray) {
+
+        EventListItem[] eventsArray = null;
+
+        if (jsonArray != null) {
+
+            eventsArray = new EventListItem[jsonArray.length];
+
+            EventListItem event;
+
+            int index = 0;
+
+            for (EventJsonObject json : jsonArray) {
+
+                event = makeEvent(context, json);
+
+                if (event != null) eventsArray[index++] = event;
+            }
+        }
+
+        return eventsArray;
     }
 }
