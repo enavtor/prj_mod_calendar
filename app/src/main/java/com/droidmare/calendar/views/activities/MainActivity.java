@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -23,10 +24,11 @@ import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.DateCheckerService;
-import com.droidmare.calendar.services.UserDataReceiverService;
+import com.droidmare.calendar.services.UserDataService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.HomeKeyUtils;
+import com.droidmare.calendar.utils.PackageUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
@@ -39,10 +41,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_DURATION;
+import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_SIZE;
+
 //Main activity declaration
 //@author Eduardo on 07/02/2018.
 
 public class MainActivity extends AppCompatActivity {
+
+    //Accounts application package:
+    private static final String ACCOUNTS_PACKAGE = "com.droidmare.accounts";
+    private static final String ACCOUNTS_ACTIVITY = "com.droidmare.accounts.views.activities.MainActivity";
 
     //Static attribute and method to know if the app is running or not:
     private static boolean isCreated = false;
@@ -52,8 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private int DISPLAY_EVENTS_REQUEST = 0;
     private int NEW_EVENT_REQUEST = 1;
     private int MODIFY_EVENT_REQUEST = 2;
-    private int DELETE_ALL_EVENTS_REQUEST = 3;
-    private int DELETE_SINGLE_EVENT_REQUEST = 4;
+    private int DELETE_EVENT_REQUEST = 3;
 
     private EventListItem eventToDelete;
 
@@ -140,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean dispatchKeyEvent(KeyEvent event) {
 
         //If the loading layout is being display all the key events are blocked so the user can not perform any operation until the current one is done:
-        if (isLoadingLayoutDisplayed() || ToastUtils.cancelCurrentToast()) return false;
+        if (isLoadingLayoutDisplayed() ||  event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast())
+            return false;
 
         else if(event.getAction() == KeyEvent.ACTION_DOWN) {
 
@@ -169,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             //Controller's ir color keys behaviour when they are pressed:
             else if (event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED)
-                startDisplayDeleteAllEventsDialog(null);
+                launchAccountsApp();
 
             else if (event.getKeyCode() == KeyEvent.KEYCODE_F3 || event.getKeyCode() == KeyEvent.KEYCODE_PROG_GREEN)
                 returnToCurrent();
@@ -261,17 +270,28 @@ public class MainActivity extends AppCompatActivity {
         else startActivityForResult(intent, MODIFY_EVENT_REQUEST);
     }
 
-    //This method starts a delete all events dialog, waiting for the result:
-    public void startDisplayDeleteAllEventsDialog(EventListItem eventToDelete) {
+    //This method starts a delete single event confirmation dialog, waiting for the result afterwards:
+    public void startDeleteEventDialog(EventListItem eventToDelete) {
         this.eventToDelete = eventToDelete;
 
         Intent intent = new Intent(this, DialogDeleteActivity.class);
 
-        if (eventToDelete == null) startActivityForResult(intent, DELETE_ALL_EVENTS_REQUEST);
-        else {
-            intent.putExtra("deleteSingleEvent", true);
-            startActivityForResult(intent, DELETE_SINGLE_EVENT_REQUEST);
+        intent.putExtra("deleteSingleEvent", true);
+        startActivityForResult(intent, DELETE_EVENT_REQUEST);
+    }
+
+    //This method starts the accounts application so the user can manage his/her account:
+    public void launchAccountsApp() {
+        Context context = getApplicationContext();
+
+        Intent accountsIntent = PackageUtils.getLaunchIntent(context, ACCOUNTS_PACKAGE);
+
+        if (accountsIntent != null) {
+            accountsIntent.setComponent(new ComponentName(ACCOUNTS_PACKAGE, ACCOUNTS_ACTIVITY));
+            startActivity(accountsIntent);
         }
+
+        else ToastUtils.makeCustomToast(context, getString(R.string.error_launching_accounts), DEFAULT_TOAST_SIZE, DEFAULT_TOAST_DURATION);
     }
 
     @Override
@@ -308,15 +328,8 @@ public class MainActivity extends AppCompatActivity {
             fragmentModifyEvent(data);
         }
 
-        //When the delete all events dialog returns a Ok result and the request was deleting all events, all the events are deleted and a statistic is sent:
-        else if (requestCode == DELETE_ALL_EVENTS_REQUEST && resultCode == Activity.RESULT_OK) {
-            deleteAllEvents();
-            //The loading layout will be displayed until the operation ends and the vies are refreshed:
-            displayLoadingLayout(res.getString(R.string.loading_layout_delete_all));
-        }
-
-        //When the delete all events dialog returns a Ok result and the request was deleting a single event, the event to delete is deleted and a statistic is sent:
-        else if (requestCode == DELETE_SINGLE_EVENT_REQUEST && resultCode == Activity.RESULT_OK) {
+        //When the delete all events dialog returns a Ok result and the request was deleting a single event, the event to delete is deleted:
+        else if (requestCode == DELETE_EVENT_REQUEST && resultCode == Activity.RESULT_OK) {
             sendDeleteEvent(eventToDelete);
             //The loading layout will be displayed until the operation ends and the views are refreshed:
             displayLoadingLayout(res.getString(R.string.loading_layout_delete_one));
@@ -362,14 +375,6 @@ public class MainActivity extends AppCompatActivity {
         Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
         dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
         dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_EDIT);
-        startService(dataIntent);
-    }
-
-    //This method starts the api connection service so that all the events are deleted:
-    public void sendDeleteEvents (String[] eventStrings){
-        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
-        dataIntent.putExtra("eventStrings", eventStrings);
-        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE_ALL);
         startService(dataIntent);
     }
 
@@ -483,16 +488,6 @@ public class MainActivity extends AppCompatActivity {
         EventsPublisher.retrieveMonthEvents(this);
     }
 
-    public void deleteAllEvents(){
-        //The selected day must get the focus once the operation has finished:
-        eventFrag.goAfterEventDay();
-
-        DateUtils.currentMonth = calendarFrag.getSelectedMonth();
-        DateUtils.currentYear = calendarFrag.getSelectedYear();
-
-        EventsPublisher.deleteAllEvents(this);
-    }
-
     private void initMainActivity(){
 
         String appVersionNumber = "";
@@ -519,10 +514,10 @@ public class MainActivity extends AppCompatActivity {
     //Method for setting the buttons behaviour:
     private void setButtonsBehaviour () {
 
-        findViewById(R.id.ir_delete_all_events_layout).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ir_delete_launch_accounts_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startDisplayDeleteAllEventsDialog(null);
+                launchAccountsApp();
             }
         });
 
@@ -559,9 +554,9 @@ public class MainActivity extends AppCompatActivity {
 
     //Method that configures the user information view:
     public void setUserInformation () {
-        UserDataReceiverService.readSharedPrefs(MainActivity.this.getApplicationContext());
+        UserDataService.readSharedPrefs(MainActivity.this.getApplicationContext());
 
-        if (UserDataReceiverService.getUserId() != null) {
+        if (UserDataService.getUserId() != null) {
             final ImageView avatar = findViewById(R.id.user_photo);
             final TextView name = findViewById(R.id.user_name);
             final TextView id = findViewById(R.id.user_id);
@@ -569,9 +564,9 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    avatar.setImageBitmap(UserDataReceiverService.getDecodedAvatar());
-                    name.setText(UserDataReceiverService.getUserName());
-                    id.setText(UserDataReceiverService.getUserNickname());
+                    avatar.setImageBitmap(UserDataService.getDecodedAvatar());
+                    name.setText(UserDataService.getUserName());
+                    id.setText(UserDataService.getUserNickname());
                 }
             });
         }

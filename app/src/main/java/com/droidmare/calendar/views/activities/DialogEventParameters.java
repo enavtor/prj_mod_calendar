@@ -381,7 +381,7 @@ public class DialogEventParameters extends AppCompatActivity{
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if (ToastUtils.cancelCurrentToast()) return true;
+        if (event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
 
         else if (!onlyDisplayParameters) {
             View focusedView = getCurrentFocus();

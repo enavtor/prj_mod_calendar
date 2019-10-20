@@ -134,7 +134,7 @@ public class DialogDatePickerActivity extends AppCompatActivity {
 
         View focusedView = getCurrentFocus();
 
-        if (ToastUtils.cancelCurrentToast()) return true;
+        if (event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
 
         else if (focusedView != null && event.getAction()== KeyEvent.ACTION_DOWN) {
             //If a view is focused, the parent is got so it can be checked if it is one of the list recycler views:

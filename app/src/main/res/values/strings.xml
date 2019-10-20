@@ -27,7 +27,7 @@
     <string name="back_to_current">Back to current</string>
     <string name="back_to_selected">Back to selected</string>
     <string name="show_all_events">Show events</string>
-    <string name="delete_all_events">Delete events</string>
+    <string name="launch_accounts_app">Manage account</string>
     <string name="back">Back</string>
     <string name="status_wifi_enabled">WiFi connection enabled</string>
     <string name="status_wifi_disabled">WiFi connection disabled</string>
@@ -292,6 +292,7 @@
 
     <string name="error_start_date">The start date can not be previous to the current one. Please check and change the start date!!!</string>
     <string name="error_start_time">The start time can not be previous to the current one if the start date is today. Please check and change the start time!!!\n\nIf you want to set the start time to an already passed one, remember that you will have to change the start date to a date posterior to the current one.</string>
+    <string name="error_launching_accounts">The accounts manager application is not installed!!!</string>
     <string name="error_setting_alarm">Alarm not set: the reminders app is not installed.</string>
     <string name="error_deleting_alarm">Alarm not deleted: the reminders app is not installed.</string>
     <string name="app_version">App version:</string>

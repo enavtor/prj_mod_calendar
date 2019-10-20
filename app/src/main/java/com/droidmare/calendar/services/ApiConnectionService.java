@@ -94,7 +94,7 @@ public class ApiConnectionService extends IntentService {
 
         if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_EDIT) || operation.equals(REQUEST_METHOD_DELETE)) {
             eventJson = EventJsonObject.createEventJson(dataIntent.getStringExtra(EventUtils.EVENT_JSON_FIELD));
-            eventJson.put(EventUtils.EVENT_USER_FIELD, UserDataReceiverService.getUserId());
+            eventJson.put(EventUtils.EVENT_USER_FIELD, UserDataService.getUserId());
             eventToSend = EventUtils.makeEvent(getApplicationContext(), eventJson);
         }
 
@@ -123,7 +123,7 @@ public class ApiConnectionService extends IntentService {
 
     private void requestMedication () {
 
-        String url = BASE_URL + "medication/" + UserDataReceiverService.getUserId();
+        String url = BASE_URL + "medication/" + UserDataService.getUserId();
 
         if (addDescriptionActivityReference != null && addDescriptionActivityReference.get() != null)
             addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(sendRequest(null, url, REQUEST_METHOD_GET)));

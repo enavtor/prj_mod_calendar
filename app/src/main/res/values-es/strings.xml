@@ -26,7 +26,7 @@
     <string name="back_to_current">Volver a hoy</string>
     <string name="back_to_selected">Volver a selección</string>
     <string name="show_all_events">Mostrar eventos</string>
-    <string name="delete_all_events">Borrar eventos</string>
+    <string name="launch_accounts_app">Gestionar Cuenta</string>
     <string name="back">Volver</string>
     <string name="status_wifi_enabled">Conexión WiFi habilitada</string>
     <string name="status_wifi_disabled">Conexión WiFi deshabilitada</string>
@@ -292,6 +292,7 @@
 
     <string name="error_start_date">La fecha de inicio no puede ser previa a la actual. Por favor revise y cambie la fecha de inicio!!!</string>
     <string name="error_start_time">La hora de inicio no puede ser previa a la actual si la fecha de inicio es hoy. Por favor revise y cambie la hora de inicio!!!\n\nSi quiere establecer la hora de inicio en una ya pasada, recuerde que tendrá que establecer la fecha de inicio en un día posterior al actual.</string>
+    <string name="error_launching_accounts">La aplicación de gestión de cuentas no está instalada!!!</string>
     <string name="error_setting_alarm">Alarma no establecida: la aplicación de recordatorios no está instalada.</string>
     <string name="error_deleting_alarm">Alarma no eliminada: la aplicación de recordatorios no está instalada.</string>
     <string name="daten">EEEE dd MMM, yyyy</string>

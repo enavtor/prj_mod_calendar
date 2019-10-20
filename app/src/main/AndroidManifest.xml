@@ -102,7 +102,7 @@ package="com.droidmare">
     </service>
 
     <service
-        android:name=".calendar.services.UserDataReceiverService"
+        android:name=".calendar.services.UserDataService"
         android:exported="true">
     </service>
 

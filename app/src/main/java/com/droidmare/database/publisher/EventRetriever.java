@@ -66,19 +66,9 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
             case RESET_ALARMS:
                 retrieveAndResetAll();
                 break;
-            case DELETE_EVENTS:
-                if (params[0] != null){
-                    database.deleteSingleEvent(params[0]);
-                    getEvents();
-                }
-                else {
-                    //To delete the events, they must be retrieved first:
-                    retrieveAndResetAll();
-                    deleteAllAlarms();
-                    database.deleteAllEvents();
-                    //The returning arrays are set to null so that the views can know that there are not events:
-                    jsonArray = null;
-                }
+            case DELETE_EVENT:
+                database.deleteSingleEvent(params[0]);
+                getEvents();
                 break;
         }
 
@@ -151,26 +141,6 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
         //When the database has not events, the value of eventArray will be null, so not alarms can be reset:
         if (eventArray != null && opType == EventsPublisher.operationType.RESET_ALARMS)
             com.droidmare.calendar.utils.EventUtils.sendMultipleReminders(context, eventArray, false);
-
-            //When the operation is deleting all events, the MainActivity must be notified in order to send the request to the api:
-        else if (eventArray != null && opType == EventsPublisher.operationType.DELETE_EVENTS) {
-
-            String [] eventStrings = new String [jsonArray.length];
-
-            int i = 0;
-
-            for (EventJsonObject eventJson : jsonArray) eventStrings[i++] = eventJson.toString();
-
-            ((MainActivity)context).sendDeleteEvents(eventStrings);
-        }
-    }
-
-    //Method for deleting all the alarms for the retrieved events:
-    private void deleteAllAlarms() {
-        EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonArray);
-
-        //When the database has not events, the value of eventArray will be null, so not alarms can be deleted:
-        if (eventArray != null) com.droidmare.calendar.utils.EventUtils.sendMultipleReminders(context, eventArray, true);
     }
 }
 

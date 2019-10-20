@@ -58,9 +58,9 @@ public class ApiSynchronizationService extends Service {
 
         database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
-        UserDataReceiverService.readSharedPrefs(this);
+        UserDataService.readSharedPrefs(this);
 
-        urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + UserDataReceiverService.getUserId();
+        urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + UserDataService.getUserId();
 
         startSyncTimer();
     }

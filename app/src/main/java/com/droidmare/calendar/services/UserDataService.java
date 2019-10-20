@@ -15,9 +15,9 @@ import org.json.JSONObject;
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
 
-public class UserDataReceiverService extends IntentService {
+public class UserDataService extends IntentService {
 
-    private static final String TAG = UserDataReceiverService.class.getCanonicalName();
+    private static final String TAG = UserDataService.class.getCanonicalName();
 
     private static final String USER_DATA_PREF = "userDataPrefFile";
 
@@ -41,7 +41,7 @@ public class UserDataReceiverService extends IntentService {
 
     public static boolean infoSet = false;
 
-    public UserDataReceiverService() { super(TAG); }
+    public UserDataService() { super(TAG); }
 
     @Override
     public void onHandleIntent(Intent dataIntent) {
@@ -49,6 +49,8 @@ public class UserDataReceiverService extends IntentService {
         Log.d(TAG, "onHandleIntent");
 
         userJsonString = dataIntent.getStringExtra("userJsonString");
+
+        Log.d(TAG, userJsonString);
 
         writeSharedPrefs();
         setUserAttributes();

@@ -58,7 +58,7 @@ public class ToastUtils {
                 toastCountDown = new CountDownTimer(seconds * 1000, 1000) {
 
                     public void onTick(long millisUntilFinished) {
-                        toast.show();
+                        if (toast != null) toast.show();
                     }
 
                     public void onFinish() {

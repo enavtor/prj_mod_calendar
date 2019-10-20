@@ -48,15 +48,14 @@
 
         <!--Delete all events button-->
         <RelativeLayout
-            android:id="@+id/ir_delete_all_events_layout"
+            android:id="@+id/ir_delete_launch_accounts_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="70dp"
             android:background="@drawable/calendar_focus"
             android:clickable="true"
             android:focusable="true"
-            android:padding="8dp"
-            android:visibility="gone">
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/ir_delete_all_events"
@@ -75,7 +74,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_toEndOf="@id/ir_delete_all_events"
                 android:fontFamily="sans-serif-light"
-                android:text="@string/delete_all_events"
+                android:text="@string/launch_accounts_app"
                 android:textColor="@color/black"
                 android:textSize="25sp" />
         </RelativeLayout>

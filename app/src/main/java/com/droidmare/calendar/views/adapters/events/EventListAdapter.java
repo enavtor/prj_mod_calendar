@@ -223,7 +223,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                 public void onClick(View view) {
                     EventListItem eventToDelete = arrayList.get(selectedPosition);
 
-                    ((MainActivity)context).startDisplayDeleteAllEventsDialog(eventToDelete);
+                    ((MainActivity)context).startDeleteEventDialog(eventToDelete);
                 }
             });
 

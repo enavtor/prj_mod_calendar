@@ -12,10 +12,10 @@ public class EventsPublisher {
     //An enumeration with the different operation types:
     public enum operationType {
         RETRIEVE_EVENTS,
-        DELETE_EVENTS,
         RETRIEVE_ALL,
         RESET_ALARMS,
         CREATE_EVENT,
+        DELETE_EVENT,
         EDIT_EVENT
     }
 
@@ -51,11 +51,6 @@ public class EventsPublisher {
 
     //Deletes a single event:
     public static void deleteEvent(Context context, String id) {
-        new EventRetriever(context, operationType.DELETE_EVENTS).execute(id);
-    }
-
-    //Deletes all the stored events for the current user:
-    public static void deleteAllEvents(Context context) {
-        new EventRetriever(context, operationType.DELETE_EVENTS).execute((String)null);
+        new EventRetriever(context, operationType.DELETE_EVENT).execute(id);
     }
 }

@@ -24,7 +24,7 @@ public class AlarmResetService extends IntentService {
 
         resettingEvents = true;
 
-        UserDataReceiverService.readSharedPrefs(this);
+        UserDataService.readSharedPrefs(this);
 
         EventsPublisher.retrieveAndReset(this);
 

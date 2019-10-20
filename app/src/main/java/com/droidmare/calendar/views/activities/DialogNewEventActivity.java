@@ -112,7 +112,7 @@ public class DialogNewEventActivity extends AppCompatActivity{
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if(ToastUtils.cancelCurrentToast()) return true;
+        if(event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
 
         else if(event.getAction() == KeyEvent.ACTION_DOWN  && (event.getKeyCode() == KeyEvent.KEYCODE_PROG_RED || event.getKeyCode() == KeyEvent.KEYCODE_F2 || event.getKeyCode() == KeyEvent.KEYCODE_BACK)) {
 

@@ -71,7 +71,7 @@ public class DialogDisplayEventsActivity extends AppCompatActivity {
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
 
-        if (ToastUtils.cancelCurrentToast()) return true;
+        if (event.getAction() == KeyEvent.ACTION_DOWN && ToastUtils.cancelCurrentToast()) return true;
 
         else return super.dispatchKeyEvent(event);
     }
