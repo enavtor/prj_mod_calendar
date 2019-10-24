@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.service.voice.AlwaysOnHotwordDetector;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,6 +34,7 @@ import com.droidmare.calendar.utils.PackageUtils;
 import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
+import com.droidmare.database.publisher.EventRetriever;
 import com.droidmare.database.publisher.EventsPublisher;
 import com.droidmare.reminders.model.Reminder;
 
@@ -57,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isCreated = false;
     public static boolean isCreated() { return isCreated; }
 
+    //Static attribute and method to know if the app is running or not:
+    private static boolean dataReset = false;
+    public static void resetData() { dataReset = true; }
+
     //Values of the request codes for the activities that are started in this activity:
     private int DISPLAY_EVENTS_REQUEST = 0;
     private int NEW_EVENT_REQUEST = 1;
@@ -69,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
     private CalendarFragment calendarFrag;
 
     private RelativeLayout loadingLayout;
+
+    private BitmapDrawable defaultAvatar;
 
     private HomeKeyUtils homeKeyListener;
 
@@ -111,11 +120,28 @@ public class MainActivity extends AppCompatActivity {
         //The api synchronization service needs tho have a reference to the MainActivity context so the views can be updated after adding, modifying or deleting an event:
         ApiSynchronizationService.setMainActivityReference(this);
 
+        //The user data service needs tho have a reference to the MainActivity context so the views can be updated after receiving the user information:
+        UserDataService.setMainActivityReference(this);
+
         //The date checker service is initialised and the date text set:
         DateCheckerService.setMainActivityReference(this);
 
+        //The event retriever needs a reference to this activity in order to refresh its views:
+        EventRetriever.setMainActivityReference(this);
+
         if (!DateCheckerService.isInstantiated) startService(new Intent(getApplicationContext(), DateCheckerService.class));
         else DateCheckerService.setActivitiesDate();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (dataReset) {
+            dataReset = false;
+            setUserInformation();
+            EventsPublisher.resetData(getApplicationContext());
+            startService(new Intent(getApplicationContext(), ApiSynchronizationService.class));
+        }
     }
 
     @Override
@@ -502,6 +528,8 @@ public class MainActivity extends AppCompatActivity {
         TextView appVersion = findViewById(R.id.version_number);
         appVersion.append(appVersionNumber);
 
+        defaultAvatar = (BitmapDrawable) getDrawable(R.drawable.photo);
+
         setButtonsBehaviour();
 
         //User information:
@@ -556,20 +584,25 @@ public class MainActivity extends AppCompatActivity {
     public void setUserInformation () {
         UserDataService.readSharedPrefs(MainActivity.this.getApplicationContext());
 
-        if (UserDataService.getUserId() != null) {
-            final ImageView avatar = findViewById(R.id.user_photo);
-            final TextView name = findViewById(R.id.user_name);
-            final TextView id = findViewById(R.id.user_id);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        final ImageView avatar = findViewById(R.id.user_photo);
+        final TextView name = findViewById(R.id.user_name);
+        final TextView id = findViewById(R.id.user_id);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (UserDataService.getUserId() != null) {
                     avatar.setImageBitmap(UserDataService.getDecodedAvatar());
                     name.setText(UserDataService.getUserName());
                     id.setText(UserDataService.getUserNickname());
                 }
-            });
-        }
+
+                else {
+                    avatar.setImageBitmap(defaultAvatar.getBitmap());
+                    name.setText(getString(R.string.no_user));
+                    id.setText(getString(R.string.no_id));
+                }
+            }
+        });
     }
 
     //Method for setting the date text displayed on the upper right corner of the application:

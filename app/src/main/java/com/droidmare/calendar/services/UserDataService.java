@@ -8,9 +8,12 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.droidmare.calendar.utils.ImageUtils;
+import com.droidmare.calendar.views.activities.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.lang.ref.WeakReference;
 
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
@@ -18,6 +21,8 @@ import org.json.JSONObject;
 public class UserDataService extends IntentService {
 
     private static final String TAG = UserDataService.class.getCanonicalName();
+
+    public static final String USER_JSON_FIELD = "userJsonString";
 
     private static final String USER_DATA_PREF = "userDataPrefFile";
 
@@ -43,19 +48,39 @@ public class UserDataService extends IntentService {
 
     public UserDataService() { super(TAG); }
 
+    //A reference to the synchronization service:
+    private static WeakReference<ApiSynchronizationService> syncServiceReference;
+    public static void setSyncServiceReference(ApiSynchronizationService service) {
+        syncServiceReference = new WeakReference<>(service);
+    }
+
+    private static WeakReference<MainActivity> mainActivityReference;
+    public static void setMainActivityReference(MainActivity activity) {
+        mainActivityReference = new WeakReference<>(activity);
+    }
+
     @Override
     public void onHandleIntent(Intent dataIntent) {
 
         Log.d(TAG, "onHandleIntent");
 
-        userJsonString = dataIntent.getStringExtra("userJsonString");
+        //If the data Intent contains the user json, that information is stored within the shared preferences:
+        if (dataIntent.hasExtra(USER_JSON_FIELD)) {
 
-        Log.d(TAG, userJsonString);
+            userJsonString = dataIntent.getStringExtra(USER_JSON_FIELD);
 
-        writeSharedPrefs();
-        setUserAttributes();
+            writeSharedPrefs();
+            setUserAttributes();
 
-        infoSet = true;
+            infoSet = true;
+        }
+
+        //Otherwise, the current user information is cleared:
+        else deleteSharedPreferences();
+
+        stopSyncService();
+
+        MainActivity.resetData();
     }
 
     private void writeSharedPrefs() {
@@ -67,6 +92,19 @@ public class UserDataService extends IntentService {
         editor.putString(USER_PREF_KEY, userJsonString);
 
         editor.apply();
+    }
+
+    private void deleteSharedPreferences() {
+
+        Log.d(TAG, "deleteSharedPreferences");
+
+        SharedPreferences.Editor editor = getSharedPreferences(USER_DATA_PREF, MODE_PRIVATE).edit();
+
+        editor.clear();
+
+        editor.apply();
+
+        resetUserData();
     }
 
     private static void setUserAttributes() {
@@ -110,4 +148,14 @@ public class UserDataService extends IntentService {
 
     //Method that returns the user surname:
     public static String getUserPassword() { return userPassword; }
+
+    private void stopSyncService() {
+        //First of all, the ApiSynchronizationService must be relaunched:
+        if (syncServiceReference != null && syncServiceReference.get() != null)
+            syncServiceReference.get().stopSelf();
+    }
+
+    private void resetUserData() {
+        userId = userName = userSurname = avatarString = userNickname = userPassword = null;
+    }
 }

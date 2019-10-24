@@ -16,7 +16,8 @@ public class EventsPublisher {
         RESET_ALARMS,
         CREATE_EVENT,
         DELETE_EVENT,
-        EDIT_EVENT
+        EDIT_EVENT,
+        RESET_DATA
     }
 
     //Publishes all the events stored inside eventList:
@@ -52,5 +53,10 @@ public class EventsPublisher {
     //Deletes a single event:
     public static void deleteEvent(Context context, String id) {
         new EventRetriever(context, operationType.DELETE_EVENT).execute(id);
+    }
+
+    //Deletes all the events in the database when the user performs a logout:
+    public static void resetData(Context context) {
+        new EventRetriever(context, operationType.RESET_DATA).execute();
     }
 }

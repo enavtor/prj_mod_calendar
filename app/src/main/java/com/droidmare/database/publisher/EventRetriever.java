@@ -8,19 +8,21 @@ import android.util.Log;
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.AlarmResetService;
+import com.droidmare.calendar.services.DataDeleterService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.DialogDisplayEventsActivity;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 
 //Event retriever (for retrieving events based on the month and year) declaration
 //@author Eduardo on 07/03/2018.
 
-class EventRetriever extends AsyncTask<String,Void,Void>{
+public class EventRetriever extends AsyncTask<String,Void,Void>{
 
     private static final String TAG = EventRetriever.class.getCanonicalName();
 
@@ -40,8 +42,12 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
     //The database manager that stores the events:
     private SQLiteManager database;
 
-    EventRetriever(Context context, EventsPublisher.operationType operation){
+    private static WeakReference<MainActivity> mainActivityReference;
+    public static void setMainActivityReference(MainActivity activity) {
+        mainActivityReference = new WeakReference<>(activity);
+    }
 
+    EventRetriever(Context context, EventsPublisher.operationType operation){
         this.opType = operation;
         this.context = context;
     }
@@ -68,6 +74,10 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
                 break;
             case DELETE_EVENT:
                 database.deleteSingleEvent(params[0]);
+                getEvents();
+                break;
+            case RESET_DATA:
+                database.deleteAllEvents();
                 getEvents();
                 break;
         }
@@ -113,7 +123,7 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
             ((DialogDisplayEventsActivity) context).finishInitialization(eventList);
         }
 
-        else if (MainActivity.isCreated() && context instanceof MainActivity) {
+        else if (mainActivityReference != null && mainActivityReference.get() != null) {
 
             ArrayList<EventListItem>[] eventListsArray = EventUtils.jsonArrayToEventListArray(context, jsonArray);
             EventListItem[] eventArray = EventUtils.jsonArrayToEventArray(context, jsonRepetitiveArray);
@@ -125,7 +135,10 @@ class EventRetriever extends AsyncTask<String,Void,Void>{
                 Collections.addAll(repetitiveEvents, eventArray);
             }
 
-            ((MainActivity)context).returnMonthEvents(eventListsArray, repetitiveEvents);
+            mainActivityReference.get().returnMonthEvents(eventListsArray, repetitiveEvents);
+
+            if (opType.equals(EventsPublisher.operationType.RESET_DATA))
+                DataDeleterService.dataResetPerformed = true;
         }
     }
 

@@ -36,15 +36,16 @@ public class ApiSynchronizationService extends Service {
 
     private static boolean isRunning = false;
 
+    private Timer resyncTimer;
+
+    private String urlForRetrieving;
+
     private EventListItem[] retrievedEvents;
 
     private SQLiteManager database;
 
-    private String urlForRetrieving;
-
     //A reference to the main activity:
     private static WeakReference<MainActivity> mainActivityReference;
-
     public static void setMainActivityReference(MainActivity activity) {
         mainActivityReference = new WeakReference<>(activity);
     }
@@ -60,6 +61,8 @@ public class ApiSynchronizationService extends Service {
 
         UserDataService.readSharedPrefs(this);
 
+        UserDataService.setSyncServiceReference(this);
+
         urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + UserDataService.getUserId();
 
         startSyncTimer();
@@ -71,7 +74,7 @@ public class ApiSynchronizationService extends Service {
         //The resynchronization attempt will take place every 5 minutes:
         long resyncPeriod = DateUtils.minutesToMillis(5);
 
-        Timer resyncTimer = new Timer("resyncTimer");
+        resyncTimer = new Timer("resyncTimer");
 
         resyncTimer.schedule(new TimerTask() {
             @Override
@@ -99,6 +102,7 @@ public class ApiSynchronizationService extends Service {
     public void onDestroy() {
         database.close();
         isRunning = false;
+        resyncTimer.cancel();
         super.onDestroy();
     }
 
