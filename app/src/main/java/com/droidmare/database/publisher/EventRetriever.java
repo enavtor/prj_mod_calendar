@@ -8,7 +8,6 @@ import android.util.Log;
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.AlarmResetService;
-import com.droidmare.calendar.services.DataDeleterService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.DialogDisplayEventsActivity;
@@ -136,9 +135,6 @@ public class EventRetriever extends AsyncTask<String,Void,Void>{
             }
 
             mainActivityReference.get().returnMonthEvents(eventListsArray, repetitiveEvents);
-
-            if (opType.equals(EventsPublisher.operationType.RESET_DATA))
-                DataDeleterService.dataResetPerformed = true;
         }
     }
 

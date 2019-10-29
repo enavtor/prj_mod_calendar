@@ -1,11 +1,10 @@
 package com.droidmare.calendar.views.fragments;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.calendar.CalendarGridAdapter;
 import com.droidmare.calendar.views.adapters.calendar.CalendarDayGridAdapter;
-import com.droidmare.calendar.views.adapters.events.EventListAdapter;
 import com.droidmare.database.publisher.EventsPublisher;
 
 import java.util.ArrayList;
@@ -188,11 +186,6 @@ public class CalendarFragment extends Fragment {
         calendarAdapter.selectNewDay(false);
     }
 
-    //Function for updating the selected day's event list:
-    public void updateSelectedDayEvent (EventListItem eventModification, EventListItem eventOriginal) {
-        calendarAdapter.updateSelectedDayEvent(eventModification, eventOriginal);
-    }
-
     //Function for retrieving the month that corresponds to the selected day's one:
     public int getSelectedMonth () {
         return calendarAdapter.getSelectedMonth();
@@ -209,12 +202,6 @@ public class CalendarFragment extends Fragment {
         int position = calendarAdapter.getSelectedPosition();
 
         return calendarAdapter.getItem(position);
-    }
-
-    //Function for getting the position for the current selected day:
-    public int getCurrentDayPosition () {
-
-        return calendarAdapter.getSelectedPosition();
     }
 
     //Function for getting the position for the current focused day:
@@ -261,7 +248,7 @@ public class CalendarFragment extends Fragment {
             calendarAdapter.updateAdapterItems(calendarGridList);
 
             //If the loading layout was being displayed, it must be hidden:
-            ((MainActivity) fragmentContext).hideLoadingLayout();
+            ((MainActivity) fragmentContext).hideLoadingScreen();
 
             //Since this function will be called when a month or year change is performed but the event list must only be updated when a new day is selected or an event
             //operation (modify, delete, add, go to current, etc) is performed, the event list will be updated only if the month and year coincide with the selected ones:
@@ -357,8 +344,6 @@ public class CalendarFragment extends Fragment {
                             else event.calculateNextRepetition(currentDayDate);
 
                             long eventNextRepetition = event.getNextRepetition();
-
-                            boolean notEndDate = eventNextRepetition <= repetitionStopMillis;
 
                             //The repetitive events are not added to the days that are previous to the start date:
                             if ((DateUtils.isSameDay(eventNextRepetition, currentDayDate) && !DateUtils.isPrevious(eventNextRepetition, actualCurrentDate)

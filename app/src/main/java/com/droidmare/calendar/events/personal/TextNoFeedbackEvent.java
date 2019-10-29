@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.reminders.model.Reminder;
+import com.shtvsolution.common.utils.ImageUtils;
 
 //Model for an event item (of type text feedback) declaration
 //@author Eduardo on 7/05/2018.

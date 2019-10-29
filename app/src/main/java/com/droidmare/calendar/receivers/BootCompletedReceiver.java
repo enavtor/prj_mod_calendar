@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.AlarmResetService;
+import com.shtvsolution.common.utils.ServiceUtils;
 
 //A broadcast receiver for boot completed event
 //@author Eduardo on 14/11/2018.
@@ -27,11 +28,11 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 
             //The alarm reset service is started (it is better to perform this operation in a service, though it could be directly performed here):
             servicesIntent.setComponent(new ComponentName(context.getPackageName(), AlarmResetService.class.getCanonicalName()));
-            context.startService(servicesIntent);
+            ServiceUtils.startService(context, servicesIntent);
 
             //The api synchronization service is started and will be running until the device is turned off:
             servicesIntent.setComponent(new ComponentName(context.getPackageName(), ApiSynchronizationService.class.getCanonicalName()));
-            if (!ApiSynchronizationService.isRunning()) context.startService(servicesIntent);
+            if (!ApiSynchronizationService.isRunning()) ServiceUtils.startService(context, servicesIntent);
         }
     }
 }

@@ -18,9 +18,9 @@ import com.droidmare.R;
 import com.droidmare.calendar.models.TypeListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
-import com.droidmare.calendar.utils.ImageUtils;
-import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.TypeListAdapter;
+import com.shtvsolution.common.utils.ImageUtils;
+import com.shtvsolution.common.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

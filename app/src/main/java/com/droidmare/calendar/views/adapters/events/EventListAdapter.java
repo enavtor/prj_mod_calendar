@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
+import com.shtvsolution.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 

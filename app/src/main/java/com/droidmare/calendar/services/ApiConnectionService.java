@@ -1,20 +1,17 @@
 package com.droidmare.calendar.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.droidmare.R;
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.EventUtils;
-import com.droidmare.calendar.views.activities.DialogAddDescriptionActivity;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.database.publisher.EventsPublisher;
+import com.shtvsolution.common.services.CommonIntentService;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -27,7 +24,9 @@ import java.net.URL;
 
 //Service in charge of establishing a connection with the API in order to update the events declaration
 //@author Eduardo on 04/06/2018.
-public class ApiConnectionService extends IntentService {
+public class ApiConnectionService extends CommonIntentService {
+
+    private static final String TAG = ApiConnectionService.class.getCanonicalName();
 
     //A control variable to know if this service is running:
     public static boolean isCurrentlyRunning = false;
@@ -38,14 +37,6 @@ public class ApiConnectionService extends IntentService {
         mainActivityReference = new WeakReference<>(activity);
     }
 
-    //A reference to the main activity, so the views can be updated after deleting or modifying an event from the backend:
-    private static WeakReference<DialogAddDescriptionActivity> addDescriptionActivityReference;
-    public static void setAddDescriptionActivityReference(DialogAddDescriptionActivity activity) {
-        addDescriptionActivityReference = new WeakReference<>(activity);
-    }
-
-    private static final String TAG = ApiConnectionService.class.getCanonicalName();
-
     //API base URL:
     public static final String BASE_URL = "http://192.168.1.49:3000/";
     //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/";
@@ -53,13 +44,13 @@ public class ApiConnectionService extends IntentService {
     //Server connection timeout in milliseconds
     private static final int SERVER_TIMEOUT = 5000;
 
+    public static final String OPERATION_FIELD = "operation";
+
     //Server request methods
     public static final String REQUEST_METHOD_GET = "GET";
     public static final String REQUEST_METHOD_POST = "POST";
     public static final String REQUEST_METHOD_EDIT = "PUT";
     public static final String REQUEST_METHOD_DELETE = "DELETE";
-    public static final String REQUEST_METHOD_DELETE_ALL = "DELETE_ALL";
-    public static final String REQUEST_MEDICATION = "MEDICATION" ;
 
     //Content type property name
     private static final String CONTENT_TYPE_PROPERTY_NAME = "Content-Type";
@@ -69,30 +60,28 @@ public class ApiConnectionService extends IntentService {
 
     private SQLiteManager database;
 
-    private Intent dataIntent;
-
     private EventJsonObject eventJson;
 
     private EventListItem eventToSend;
 
     private static int responseCode;
 
-    public ApiConnectionService() {
-        super("ApiConnectionService");
-    }
+    public ApiConnectionService() { super(TAG); }
 
     @Override
     public void onHandleIntent(Intent dataIntent) {
 
-        database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
+        COMMON_TAG = TAG;
+
+        super.onHandleIntent(dataIntent);
+
+        database = new SQLiteManager(getApplicationContext(), SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
         String urlForPublishing = BASE_URL + "event";
 
-        this.dataIntent = dataIntent;
+        String operation = dataIntent.getStringExtra(OPERATION_FIELD);
 
-        String operation = this.dataIntent.getStringExtra("operation");
-
-        if (operation.equals(REQUEST_METHOD_POST) || operation.equals(REQUEST_METHOD_EDIT) || operation.equals(REQUEST_METHOD_DELETE)) {
+        if (!operation.equals(REQUEST_METHOD_GET)) {
             eventJson = EventJsonObject.createEventJson(dataIntent.getStringExtra(EventUtils.EVENT_JSON_FIELD));
             eventJson.put(EventUtils.EVENT_USER_FIELD, UserDataService.getUserId());
             eventToSend = EventUtils.makeEvent(getApplicationContext(), eventJson);
@@ -108,12 +97,6 @@ public class ApiConnectionService extends IntentService {
             case REQUEST_METHOD_DELETE:
                 deleteEvent(urlForPublishing);
                 break;
-            case REQUEST_METHOD_DELETE_ALL:
-                deleteAllEvents(urlForPublishing);
-                break;
-            case REQUEST_MEDICATION:
-                requestMedication();
-                break;
         }
 
         database.close();
@@ -121,74 +104,7 @@ public class ApiConnectionService extends IntentService {
         isCurrentlyRunning = false;
     }
 
-    private void requestMedication () {
-
-        String url = BASE_URL + "medication/" + UserDataService.getUserId();
-
-        if (addDescriptionActivityReference != null && addDescriptionActivityReference.get() != null)
-            addDescriptionActivityReference.get().initDialogList(formatMedicationResponse(sendRequest(null, url, REQUEST_METHOD_GET)));
-    }
-
-    private String formatMedicationResponse(String response) {
-
-        StringBuilder formattedMedication = new StringBuilder();
-
-        try{
-            JSONObject medicationJson = new JSONObject(response);
-            medicationJson = medicationJson.getJSONObject("health");
-            JSONArray medicationArray = medicationJson.getJSONArray("prescriptions");
-
-            for (int i = 0; i < medicationArray.length(); i++) {
-                JSONObject medication = medicationArray.getJSONObject(i);
-
-                String quantity = medication.getString("quantity");
-
-                if (quantity.equals("")) {
-                    quantity = medication.getString("activeSubstance");
-                    String[] quantityList = quantity.split("-");
-
-                    for (String auxQuantity : quantityList) {
-                        if (Integer.valueOf(auxQuantity) != 0) {
-                            quantity = auxQuantity;
-                            break;
-                        }
-                    }
-                }
-
-                String totalDose = medication.getString("dose");
-                String doseUnits = medication.getString("doseUnits");
-                String medicine = medication.getString("drugName");
-                String adminMode = medication.getString("administrationMode").toLowerCase();
-                String adminForm = medication.getString("administrationForm").toLowerCase();
-                String frequency = medication.getString("administrationFrequency").toLowerCase();
-
-                String medicationText = (
-                        "- " + getString(R.string.medicine_description_header) +
-                                quantity + " " + adminForm +
-                                getString(R.string.medicine_description_separator) + medicine + " " +
-                                totalDose + doseUnits + " " +
-                                adminMode + " " + frequency
-                );
-
-                if (formattedMedication.toString().equals("")) formattedMedication.append(medicationText);
-                else {
-                    String auxMedication = "\n" + medicationText;
-                    formattedMedication.append(auxMedication);
-                }
-            }
-
-        } catch (JSONException jse) {
-            Log.e(TAG, "formatMedicationResponse. JSONException: " + jse.getMessage());
-        }
-
-        return formattedMedication.toString();
-    }
-
-    /**
-     * Starts the request to the api for a post method
-     *
-     * @param urlForPublishing the API URL
-     */
+    //Starts the request to the api for a post operation:
     private void sendEvent(String urlForPublishing) {
 
         String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
@@ -205,7 +121,7 @@ public class ApiConnectionService extends IntentService {
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList, localEventId);
             }
         } catch (JSONException jsonException) {
-            Log.e(TAG, "sendPostEvent. JSONException: " + jsonException.getMessage());
+            Log.e(COMMON_TAG, "sendOperationRequest. JSONException: " + jsonException.getMessage());
         } finally {
             if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_POST);
@@ -215,11 +131,7 @@ public class ApiConnectionService extends IntentService {
         }
     }
 
-    /**
-     * Starts the request to the api for a post method
-     *
-     * @param urlForPublishing the API URL
-     */
+    //Starts the request to the api for a post operation:
     private void modifyEvent(String urlForPublishing) {
 
         String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_EDIT);
@@ -233,7 +145,7 @@ public class ApiConnectionService extends IntentService {
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }
         } catch (JSONException jsonException) {
-            Log.e(TAG, "modifyEvent. JSONException: " + jsonException.getMessage());
+            Log.e(COMMON_TAG, "modifyEvent. JSONException: " + jsonException.getMessage());
         } finally {
             if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_EDIT)) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_EDIT);
@@ -243,11 +155,7 @@ public class ApiConnectionService extends IntentService {
         }
     }
 
-    /**
-     * Starts the request to the api for a delete method
-     *
-     * @param urlForPublishing the API URL
-     */
+    //Starts the request to the api for a delete operation;
     private void deleteEvent(String urlForPublishing) {
 
         sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_DELETE);
@@ -266,35 +174,13 @@ public class ApiConnectionService extends IntentService {
         }
     }
 
-    /**
-     * Starts the request to the api for a delete method (deleting all the existing events)
-     *
-     * @param urlForPublishing the API URL
-     */
-    private void deleteAllEvents(String urlForPublishing) {
-
-        try {
-            for (String eventString : dataIntent.getStringArrayExtra("eventStrings")) {
-                JSONObject eventJsonObject = new JSONObject(eventString).getJSONObject("event");
-                eventJsonObject.put("eventId", eventJsonObject.getLong("eventApiId"));
-                sendRequest(eventJsonObject, urlForPublishing, REQUEST_METHOD_DELETE);
-            }
-        } catch (JSONException jse) {
-            Log.e(TAG, "deleteAllEvents. JSONException: " + jse.getMessage());
-        }
-    }
-
     private Context getContextToPublish() {
         if (mainActivityReference != null && mainActivityReference.get() != null)
             return mainActivityReference.get();
         else return this;
     }
 
-    /**
-     * Sends event requests to server
-     *
-     * @param json JSONObject with event information
-     */
+    //Sends event requests to server in order to perform the operation specified by requestedMethod on the API:
     public static String sendRequest(JSONObject json, String apiURL, String requestMethod) {
         URL serverUrl = null;
         HttpURLConnection connection = null;

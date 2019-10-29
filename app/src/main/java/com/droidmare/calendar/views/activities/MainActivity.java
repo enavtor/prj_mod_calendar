@@ -2,23 +2,15 @@ package com.droidmare.calendar.views.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.res.Resources;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.service.voice.AlwaysOnHotwordDetector;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventJsonObject;
@@ -31,26 +23,22 @@ import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.HomeKeyUtils;
 import com.droidmare.calendar.utils.PackageUtils;
-import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
 import com.droidmare.database.publisher.EventRetriever;
 import com.droidmare.database.publisher.EventsPublisher;
 import com.droidmare.reminders.model.Reminder;
+import com.shtvsolution.common.utils.ServiceUtils;
+import com.shtvsolution.common.utils.ToastUtils;
+import com.shtvsolution.common.views.activities.CommonMainActivity;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
-
-import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_DURATION;
-import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_SIZE;
 
 //Main activity declaration
 //@author Eduardo on 07/02/2018.
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends CommonMainActivity {
 
     //Accounts application package:
     private static final String ACCOUNTS_PACKAGE = "com.droidmare.accounts";
@@ -62,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Static attribute and method to know if the app is running or not:
     private static boolean dataReset = false;
-    public static void resetData() { dataReset = true; }
+    public static void dataWasReset() { dataReset = true; }
 
     //Values of the request codes for the activities that are started in this activity:
     private int DISPLAY_EVENTS_REQUEST = 0;
@@ -74,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Elements for handling the fragments:
     private CalendarFragment calendarFrag;
-
-    private RelativeLayout loadingLayout;
-
-    private BitmapDrawable defaultAvatar;
 
     private HomeKeyUtils homeKeyListener;
 
@@ -92,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        canonicalName = getClass().getCanonicalName();
+
         super.onCreate(savedInstanceState);
 
         isCreated = true;
@@ -108,11 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         homeKeyListener.startWatch();
 
-        setContentView(R.layout.activity_main);
         initMainActivity();
-
-        //The loading layout is initialized so it can be displayed or hidden when needed
-        loadingLayout = findViewById(R.id.layout_loading);
 
         //The api connection service needs tho have a reference to the MainActivity context so the views can be updated after modifying or deleting an event:
         ApiConnectionService.setMainActivityReference(this);
@@ -129,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         //The event retriever needs a reference to this activity in order to refresh its views:
         EventRetriever.setMainActivityReference(this);
 
-        if (!DateCheckerService.isInstantiated) startService(new Intent(getApplicationContext(), DateCheckerService.class));
+        if (!DateCheckerService.isInstantiated) ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), DateCheckerService.class));
         else DateCheckerService.setActivitiesDate();
     }
 
@@ -140,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             dataReset = false;
             setUserInformation();
             EventsPublisher.resetData(getApplicationContext());
-            startService(new Intent(getApplicationContext(), ApiSynchronizationService.class));
+            ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), ApiSynchronizationService.class));
         }
     }
 
@@ -317,14 +300,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(accountsIntent);
         }
 
-        else ToastUtils.makeCustomToast(context, getString(R.string.error_launching_accounts), DEFAULT_TOAST_SIZE, DEFAULT_TOAST_DURATION);
+        else ToastUtils.makeCustomToast(context, getString(R.string.error_launching_accounts));
     }
 
     @Override
     //This method will receive the results from the previous method:
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Resources res = getResources();
 
         //At this point there are not activities running besides from this one:
         runningActivityReference = null;
@@ -341,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             //This operation should be performed in the DialogNewEventActivity, but since CalendarFragment is not accessible from that activity, it is performed here:
             fragmentCreateNewEvent(data);
             //The loading layout will be displayed until the operation ends and the views are refreshed:
-            displayLoadingLayout(res.getString(R.string.loading_layout_create));
+            displayLoadingScreen(getString(R.string.loading_layout_create));
         }
 
         //When the new event dialog is dismissed the event fragment must be notified in order to reset the next focused position inside the event list:
@@ -356,9 +337,9 @@ public class MainActivity extends AppCompatActivity {
 
         //When the delete all events dialog returns a Ok result and the request was deleting a single event, the event to delete is deleted:
         else if (requestCode == DELETE_EVENT_REQUEST && resultCode == Activity.RESULT_OK) {
-            sendDeleteEvent(eventToDelete);
+            sendOperationRequest(eventToDelete, ApiConnectionService.REQUEST_METHOD_DELETE);
             //The loading layout will be displayed until the operation ends and the views are refreshed:
-            displayLoadingLayout(res.getString(R.string.loading_layout_delete_one));
+            displayLoadingScreen(getString(R.string.loading_layout_delete_one));
         }
     }
 
@@ -370,46 +351,17 @@ public class MainActivity extends AppCompatActivity {
         eventFrag.modifyEvent(data);
     }
 
-    //This method displays the loading layout by changing its visibility and sets the displayed text:
-    public void displayLoadingLayout(String displayedText) {
-        loadingLayout.setVisibility(View.VISIBLE);
-
-        TextView loadingText = findViewById(R.id.text_layout_loading);
-        loadingText.setText(displayedText);
-    }
-
-    //This method hides the loading layout by changing its visibility:
-    public void hideLoadingLayout() {
-        loadingLayout.setVisibility(View.GONE);
-    }
-
     //This method returns whether the loading layout is being displayed or not:
     private boolean isLoadingLayoutDisplayed() {
         return loadingLayout.getVisibility() == View.VISIBLE;
     }
 
-    //This method starts the api connection service so that the new event can be sent tho the API:
-    public void sendPostEvent(EventListItem event){
+    //This method starts the api connection service so that an specific operation, defined by the parameter operation, can be performed:
+    public void sendOperationRequest(EventListItem event, String operation) {
         Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
         dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
-        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_POST);
-        startService(dataIntent);
-    }
-
-    //This method starts the api connection service so that the new event can be sent tho the API:
-    public void sendEditEvent(EventListItem event){
-        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
-        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
-        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_EDIT);
-        startService(dataIntent);
-    }
-
-    //This method tells the API to delete an event:
-    public void sendDeleteEvent(EventListItem event) {
-        Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
-        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
-        dataIntent.putExtra("operation", ApiConnectionService.REQUEST_METHOD_DELETE);
-        startService(dataIntent);
+        dataIntent.putExtra(ApiConnectionService.OPERATION_FIELD, operation);
+        ServiceUtils.startService(getApplicationContext(), dataIntent);
     }
 
     //This method tells the event fragment to delete an event:
@@ -516,112 +468,46 @@ public class MainActivity extends AppCompatActivity {
 
     private void initMainActivity(){
 
-        String appVersionNumber = "";
+        includeLayout(R.id.center_element, R.layout.element_center);
 
-        try{
-            appVersionNumber = this.getPackageManager().getPackageInfo(this.getPackageName(),0).versionName;
-        }
-        catch(PackageManager.NameNotFoundException nfe){
-            Log.e("TAG", "onCreate. NameNotFoundException: " + nfe);
-        }
-
-        TextView appVersion = findViewById(R.id.version_number);
-        appVersion.append(appVersionNumber);
-
-        defaultAvatar = (BitmapDrawable) getDrawable(R.drawable.photo);
+        setIrButtonText(IR_RED, getString(R.string.launch_accounts_app));
+        setIrButtonText(IR_GREEN, getString(R.string.back_to_current));
+        setIrButtonText(IR_YELLOW, getString(R.string.show_all_events));
+        setIrButtonText(IR_BLUE, getString(R.string.new_event_button));
 
         setButtonsBehaviour();
-
-        //User information:
         setUserInformation();
-
-        //Calendar and events Layout:
         loadFragments();
     }
 
     //Method for setting the buttons behaviour:
     private void setButtonsBehaviour () {
 
-        findViewById(R.id.ir_delete_launch_accounts_layout).setOnClickListener(new View.OnClickListener() {
+        irRedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchAccountsApp();
             }
         });
 
-        findViewById(R.id.ir_move_to_current_layout).setOnClickListener(new View.OnClickListener() {
+        irGreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 returnToCurrent();
             }
         });
 
-        findViewById(R.id.ir_show_all_events_layout).setOnClickListener(new View.OnClickListener() {
+        irYellowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startDisplayEventsDialog();
             }
         });
 
-        findViewById(R.id.ir_add_new_event_layout).setOnClickListener(new View.OnClickListener() {
+        irBlueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startNewEventDialog();
-            }
-        });
-
-        //Virtual back Button:
-        findViewById(R.id.virtual_back_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_BACK));
-                dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_BACK));
-            }
-        });
-    }
-
-    //Method that configures the user information view:
-    public void setUserInformation () {
-        UserDataService.readSharedPrefs(MainActivity.this.getApplicationContext());
-
-        final ImageView avatar = findViewById(R.id.user_photo);
-        final TextView name = findViewById(R.id.user_name);
-        final TextView id = findViewById(R.id.user_id);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (UserDataService.getUserId() != null) {
-                    avatar.setImageBitmap(UserDataService.getDecodedAvatar());
-                    name.setText(UserDataService.getUserName());
-                    id.setText(UserDataService.getUserNickname());
-                }
-
-                else {
-                    avatar.setImageBitmap(defaultAvatar.getBitmap());
-                    name.setText(getString(R.string.no_user));
-                    id.setText(getString(R.string.no_id));
-                }
-            }
-        });
-    }
-
-    //Method for setting the date text displayed on the upper right corner of the application:
-    public void setDateText () {
-
-        final Calendar calendar = Calendar.getInstance();
-        long time =  calendar.getTimeInMillis();
-        Locale localeDate = Locale.getDefault();
-
-        SimpleDateFormat simpleDate = new SimpleDateFormat(getString(R.string.date),localeDate);
-        String date = simpleDate.format(time);
-
-        final String upperDate = date.substring(0,1).toUpperCase() + date.substring(1);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                TextView dateText = findViewById(R.id.txt_date);
-                dateText.setText(upperDate);
             }
         });
     }
@@ -632,7 +518,7 @@ public class MainActivity extends AppCompatActivity {
         calendarFrag = new CalendarFragment();
         eventFrag = new EventFragment();
 
-        FragmentTransaction fragTrans = getFragmentManager().beginTransaction();
+        FragmentTransaction fragTrans = getSupportFragmentManager().beginTransaction();
 
         fragTrans.add(R.id.left, calendarFrag, CalendarFragment.NAME);
         fragTrans.add(R.id.right, eventFrag, EventFragment.NAME);

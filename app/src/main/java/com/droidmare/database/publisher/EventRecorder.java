@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
+import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
@@ -112,7 +113,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
     //Method that indicates the main activity to send the new event to the API:
     private void sendEvent(EventListItem event){
         if (MainActivity.isCreated() && context instanceof MainActivity)
-            ((MainActivity)context).sendPostEvent(event);
+            ((MainActivity)context).sendOperationRequest(event, ApiConnectionService.REQUEST_METHOD_POST);
     }
 
     //Method for retrieving the current month's events and reloading the views:

@@ -17,9 +17,9 @@ import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.SortUtils;
-import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
 import com.droidmare.database.publisher.EventsPublisher;
+import com.shtvsolution.common.utils.ToastUtils;
 
 import java.util.ArrayList;
 

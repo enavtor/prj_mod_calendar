@@ -16,12 +16,11 @@ import com.droidmare.calendar.events.personal.PersonalEvent;
 import com.droidmare.calendar.events.personal.TextNoFeedbackEvent;
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
+import com.shtvsolution.common.utils.ToastUtils;
 
 import java.util.ArrayList;
 
 import static android.support.v4.content.ContextCompat.startActivity;
-import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_DURATION;
-import static com.droidmare.calendar.utils.ToastUtils.DEFAULT_TOAST_SIZE;
 
 //Utils for creating event objects and alarms
 //@author Eduardo on 08/02/2018.
@@ -220,8 +219,8 @@ public class EventUtils {
             boolean deleteAlarm = intent.getBooleanExtra("deleteAlarm", false);
 
             //The message will be different depending on the operation type:
-            if (deleteAlarm) ToastUtils.makeCustomToast(context, res.getString(R.string.error_deleting_alarm), DEFAULT_TOAST_SIZE, DEFAULT_TOAST_DURATION);
-            else ToastUtils.makeCustomToast(context, res.getString(R.string.error_setting_alarm), DEFAULT_TOAST_SIZE, DEFAULT_TOAST_DURATION);
+            if (deleteAlarm) ToastUtils.makeCustomToast(context, res.getString(R.string.error_deleting_alarm));
+            else ToastUtils.makeCustomToast(context, res.getString(R.string.error_setting_alarm));
         }
     }
 

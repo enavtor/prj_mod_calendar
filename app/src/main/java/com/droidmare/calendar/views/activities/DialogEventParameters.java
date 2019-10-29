@@ -29,14 +29,14 @@ import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.TypeListItem;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
-import com.droidmare.calendar.utils.ImageUtils;
 import com.droidmare.calendar.utils.SortUtils;
-import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.calendar.views.adapters.dialogs.RepTypeListsAdapter;
 import com.droidmare.calendar.views.adapters.events.EventCalendarAdapter;
 import com.droidmare.calendar.views.adapters.events.EventDayAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.PrevAlarmsListsAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.SelectionListAdapter;
+import com.shtvsolution.common.utils.ImageUtils;
+import com.shtvsolution.common.utils.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -143,9 +143,6 @@ public class DialogEventParameters extends AppCompatActivity{
     private LinearLayout nextMonth;
     private LinearLayout prevYear;
     private LinearLayout nextYear;
-
-    private LinearLayout addDescriptionButton;
-    private LinearLayout deleteDescriptionButton;
 
     private LinearLayout addAlarmButton;
     private LinearLayout customAlarmButton;
@@ -472,16 +469,7 @@ public class DialogEventParameters extends AppCompatActivity{
                 }
             }
 
-            //Behaviour of the focus when the down key is pressed when the description text box is focused:
-            else if (focusedView != null && focusedView.getId() == editDescription.getId() && event.getAction() == KeyEvent.ACTION_DOWN) {
-                //The focus will be relocated on the addDescription or deleteDescription only if the text can not be scrolled downwards:
-                if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN && !editDescription.canScrollVertically(+1)) {
-                    if (addDescriptionButton.getVisibility() == View.VISIBLE)
-                        addDescriptionButton.requestFocus();
-                    else deleteDescriptionButton.requestFocus();
-                    return true;
-                }
-            } else if (focusedView != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+            else if (focusedView != null && event.getAction() == KeyEvent.ACTION_DOWN) {
                 //If a view is focused, the parent is got so it can be checked if it is one of the list recycler views:
                 View focusedItemParent = (View) focusedView.getParent();
 
@@ -724,14 +712,6 @@ public class DialogEventParameters extends AppCompatActivity{
         nextMonth = findViewById(R.id.event_next_month);
         prevYear = findViewById(R.id.event_prev_year);
         nextYear = findViewById(R.id.event_next_year);
-
-        addDescriptionButton = findViewById(R.id.launch_default_descriptions_button);
-        deleteDescriptionButton = findViewById(R.id.delete_whole_description_button);
-
-        if (eventType != null && (eventType.equals(MEDICATION))) {
-            ((TextView)findViewById(R.id.default_descriptions_button_text)).setText(getString(R.string.description_add_medicine_button));
-            addDescriptionButton.setVisibility(View.VISIBLE);
-        }
 
         addAlarmButton = findViewById(R.id.add_alarm_button);
         customAlarmButton = findViewById(R.id.custom_alarm_button);
@@ -1312,23 +1292,6 @@ public class DialogEventParameters extends AppCompatActivity{
         });
 
         //Behaviour of the previous alarms layout clickable elements:
-        addDescriptionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent descriptionIntent = new Intent(getApplicationContext(), DialogAddDescriptionActivity.class);
-                descriptionIntent.putExtra("type", eventType);
-                startActivityForResult(descriptionIntent, REQUEST_DESCRIPTION_DIALOG);
-            }
-        });
-
-        deleteDescriptionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editDescription.setText("");
-            }
-        });
-
-        //Behaviour of the previous alarms layout clickable elements:
         addAlarmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1522,14 +1485,14 @@ public class DialogEventParameters extends AppCompatActivity{
                     addOrRemoveSelectedRepetitionValue(position - 1);
                 }
 
-                if (holder.selected) {
+                if (holder != null && holder.selected) {
                     holder.selected = false;
                     holder.selectedBackground.setVisibility(View.GONE);
                     holder.text.setTextColor(Color.BLACK);
                     holder.text.setTypeface(Typeface.DEFAULT);
                 }
 
-                else {
+                else if (holder != null) {
                     holder.selected = true;
                     holder.selectedBackground.setVisibility(View.VISIBLE);
                     holder.text.setTextColor(Color.WHITE);

@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Calendario y recordatorios</string>
-    <string name="action_settings">Ajustes</string>
-    <string name="ir_blue">Mostrar todos los eventos</string>
-    <string name="ir_green">Volver al día de hoy</string>
-    <string name="ir_red">TV(0)</string>
-    <string name="ir_yellow">Volver al día seleccionado</string>
-    <string name="layout_config">Ajustes</string>
-    <string name="layout_help">Ayuda</string>
-    <string name="layout_need_help">¿Necesita Ayuda?</string>
-    <string name="layout_status">Estado</string>
     <string name="layout_title">Calendario</string>
-    <string name="layout_title_240dp">Calendario@240</string>
-    <string name="layout_title_320dp">Calendario@320</string>
     <string name="date">EEEE, dd - MMMM - yyyy</string>
     <string name="new_event_button">Añadir evento</string>
     <string name="view_event_button">Ver</string>
@@ -20,37 +9,10 @@
     <string name="delete_event_button">Eliminar</string>
     <string name="dismiss_menu_button">Cancelar</string>
     <string name="accept_button">Aceptar</string>
-    <string name="not_installed_app">Aplicación no instalada</string>
-    <string name="status_title">Estado del dispositivo</string>
-    <string name="status_intro">El estado del dispositivo es el siguiente:</string>
     <string name="back_to_current">Volver a hoy</string>
-    <string name="back_to_selected">Volver a selección</string>
     <string name="show_all_events">Mostrar eventos</string>
     <string name="launch_accounts_app">Gestionar Cuenta</string>
     <string name="back">Volver</string>
-    <string name="status_wifi_enabled">Conexión WiFi habilitada</string>
-    <string name="status_wifi_disabled">Conexión WiFi deshabilitada</string>
-    <string name="status_ethernet_disabled">Conexión Ethernet deshabilitada</string>
-    <string name="status_ethernet_enabled">Conexión Ethernet habilitada</string>
-    <string name="status_bluetooth_disabled">Conexión bluetooth deshabilitada</string>
-    <string name="status_bluetooth_enabled">Conexión bluetooth habilitada</string>
-    <string name="status_3g_enabled">Conexión 3G habilitada</string>
-    <string name="status_3g_disabled">Conexión 3G deshabilitada</string>
-    <string name="status_camera_available">Cámara disponible</string>
-    <string name="status_camera_unavailable">Cámara no disponible</string>
-    <string name="status_servers_available">Conexión a los servidores disponible</string>
-    <string name="status_servers_unavailable">Conexión a los servidores no disponible</string>
-    <string name="status_stored_used_memory" formatted="false">Memoria utilizada: %1$s %%</string>
-    <string name="status_remaining_battery">Batería restante: %1$s %%</string>
-    <string name="checking_status">Comprobando estado de los servidores…</string>
-    <string name="exit_dialog_title">Salir de la aplicación</string>
-    <string name="exit_dialog_text">¿Realmente desea salir de la aplicación?</string>
-    <string name="exit_dialog_yes">Sí</string>
-    <string name="exit_dialog_no">No</string>
-    <string name="color_button_to_tv">Pulse rojo para volver a la TV</string>
-    <string name="color_button_to_banner">Pulse 0 para más información</string>
-    <string name="device_id">"Identificador del dispositivo: "</string>
-    <string name="app_version">"Versión de la aplicación: "</string>
     <string name="no_user">Usuario</string>
     <string name="no_id">ID</string>
 
@@ -89,12 +51,8 @@
     <string name="date_divider">\u0020de\u0020</string>
     <string name="date_divider_2">\u0020de\u0020</string>
 
-    <string name="appointment_event_name">cita</string>
-    <string name="alert_event_name">alarma</string>
-
     <string name="display_events_dialog_title">Seleccione un evento para ir a su día:</string>
     <string name="new_event_dialog_title">Seleccione el tipo del nuevo evento:</string>
-    <string name="new_measure_dialog_title">Seleccione el tipo de medida:</string>
     <string name="new_survey_dialog_title">Seleccione el tipo de encuesta:</string>
     <string name="new_personal_dialog_title">Seleccione el tipo de evento/alerta:</string>
 
@@ -105,11 +63,6 @@
     <string name="delete_events_negative">No</string>
 
     <string name="activity_event_title">Actividad física</string>
-    <string name="measure_event_title">Toma de medidas</string>
-    <string name="measure_event_hr_title">Toma de ritmo cardíaco</string>
-    <string name="measure_event_bp_title">Toma de presión sanguinea</string>
-    <string name="measure_event_bg_title">Toma de glucosa en sangre</string>
-    <string name="measure_event_xx_title">Toma de medida libre</string>
     <string name="doctor_event_title">Cita médica</string>
     <string name="medication_event_title">Toma de medicación</string>
     <string name="personal_event_title">Evento personal</string>
@@ -121,7 +74,6 @@
     <string name="textfeedback_event_title">Encuesta de acción</string>
 
     <string name="activity_reminder_title">Actividad física</string>
-    <string name="measure_reminder_title">Toma de medidas</string>
     <string name="doctor_reminder_title">Cita médica</string>
     <string name="medication_reminder_title">Medicación</string>
     <string name="personal_reminder_title">Cita Personal</string>
@@ -131,10 +83,7 @@
     <string name="textnofeedback_reminder_title">Alerta personal</string>
 
     <string name="activity_reminder_description">Pasea durante 30 minutos</string>
-    <string name="measure_reminder_hr_description">Tomate el ritmo cardíaco</string>
-    <string name="measure_reminder_bp_description">Tomate la presión sanguínea</string>
-    <string name="measure_reminder_bg_description">Tomate el nivel de glucosa en sangre</string>
-    <string name="measure_reminder_xx_description">Toma de medida libre:\u0020</string><!--\u0020 means a white space-->
+    <!--\u0020 means a white space-->
     <string name="doctor_reminder_description">Acude a tu centro de salud</string>
     <string name="medication_reminder_description">2 pastillas de Sintrom 1 mg</string>
     <string name="personal_reminder_description">Atiende tus asuntos personales</string>
@@ -262,29 +211,16 @@
     <string name="description_edit_hint">Ejemplo:\u0020</string><!--\u0020 means a white space-->
     <string name="description_delete_button">Borrar descripción</string>
 
-    <string name="dialog_add_medicine_title">Seleccione una o varias medicaciones pulsando OK:</string>
-    <string name="description_no_medication">No hay medicaciones disponibles</string>
-    <string name="description_add_medicine_button">Añadir medicación</string>
-    <string name="medicine_description_header">Tómese\u0020</string>
-    <string name="medicine_description_separator">\u0020de\u0020</string>
-
     <string name="follow_event_dialog_title">¿Desea ir al nuevo día seleccionado?</string>
     <string name="follow_event_affirmative">Sí, ir al nuevo día</string>
     <string name="follow_event_negative">No, seguir en actual</string>
 
-    <string name="original_date_title">Desde:</string>
-
-    <string name="loading_app">Cargando…</string>
-
     <string name="loading_layout_description">Cargando\u0020</string>
     <string name="loading_layout_events">eventos</string>
-    <string name="loading_layout_medication">medicación</string>
 
     <string name="loading_layout_create">Creando evento</string>
     <string name="loading_layout_modify">Modificando evento</string>
     <string name="loading_layout_delete_one">Borrando evento</string>
-    <string name="loading_layout_delete_all">Borrando eventos</string>
-    <string name="loading_layout_stand_by">Espere por favor…</string>
 
     <string name="today_date_legend_text">Fecha de hoy</string>
     <string name="start_date_legend_text">Fecha de inicio</string>
@@ -295,5 +231,4 @@
     <string name="error_launching_accounts">La aplicación de gestión de cuentas no está instalada!!!</string>
     <string name="error_setting_alarm">Alarma no establecida: la aplicación de recordatorios no está instalada.</string>
     <string name="error_deleting_alarm">Alarma no eliminada: la aplicación de recordatorios no está instalada.</string>
-    <string name="daten">EEEE dd MMM, yyyy</string>
 </resources>

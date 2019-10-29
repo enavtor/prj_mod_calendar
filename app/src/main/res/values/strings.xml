@@ -1,19 +1,6 @@
 <resources>
     <string name="app_name">Calendar and reminders</string>
     <string name="layout_title">Calendar</string>
-    <string name="layout_title_240dp">Calendar@240</string>
-    <string name="layout_title_320dp">Calendar@320</string>
-    <string name="layout_need_help">Need help?</string>
-    <string name="layout_config">Settings</string>
-    <string name="action_settings">Settings</string>
-    <string name="layout_status">Status</string>
-    <string name="layout_help">Help</string>
-    <string name="ir_red">TV(0)</string>
-    <string name="ir_green">Back to current day</string>
-    <string name="ir_yellow">Back to selected day</string>
-    <string name="ir_blue">Display all the events</string>
-    <string name="layout_id" translatable="false">0a0027000015</string>
-    <string name="layout_version" translatable="false">"V. "</string>
     <string name="date">EEEE dd MMMM, yyyy</string>
     <string name="new_event_button">Add event</string>
     <string name="view_event_button">View</string>
@@ -21,36 +8,10 @@
     <string name="delete_event_button">Delete</string>
     <string name="dismiss_menu_button">Cancel</string>
     <string name="accept_button">Accept</string>
-    <string name="not_installed_app">Application not installed</string>
-    <string name="status_title">Device status</string>
-    <string name="status_intro">Status of the device is next:</string>
     <string name="back_to_current">Back to current</string>
-    <string name="back_to_selected">Back to selected</string>
     <string name="show_all_events">Show events</string>
     <string name="launch_accounts_app">Manage account</string>
     <string name="back">Back</string>
-    <string name="status_wifi_enabled">WiFi connection enabled</string>
-    <string name="status_wifi_disabled">WiFi connection disabled</string>
-    <string name="status_ethernet_enabled">Ethernet connection enabled</string>
-    <string name="status_ethernet_disabled">Ethernet connection disabled</string>
-    <string name="status_bluetooth_enabled">Bluetooth connection enabled</string>
-    <string name="status_bluetooth_disabled">Bluetooth connection disabled</string>
-    <string name="status_3g_enabled">3G connection enabled</string>
-    <string name="status_3g_disabled">3G connection disabled</string>
-    <string name="status_camera_available">Camera available</string>
-    <string name="status_camera_unavailable">Camera unavailable</string>
-    <string name="status_servers_available">Servers connection available</string>
-    <string name="status_servers_unavailable">Servers connection unavailable</string>
-    <string name="status_stored_used_memory" formatted="false">Memory used: %1$s %%</string>
-    <string name="status_remaining_battery">Battery remaining: %1$s %%</string>
-    <string name="checking_status">Checking servers status…</string>
-    <string name="exit_dialog_title">Exit app</string>
-    <string name="exit_dialog_text">Do you want to close this app?</string>
-    <string name="exit_dialog_yes">Yes</string>
-    <string name="exit_dialog_no">No</string>
-    <string name="color_button_to_tv">Press red to return to TV</string>
-    <string name="color_button_to_banner">Press 0 for more information</string>
-    <string name="device_id">Device id:</string>
     <string name="no_user">User</string>
     <string name="no_id">ID</string>
 
@@ -89,12 +50,8 @@
     <string name="date_divider">\u0020</string>
     <string name="date_divider_2">\u0020of\u0020</string>
 
-    <string name="appointment_event_name">appointment</string>
-    <string name="alert_event_name">alarm</string>
-
     <string name="display_events_dialog_title">Select an event to go to its day:</string>
     <string name="new_event_dialog_title">Select the new event type:</string>
-    <string name="new_measure_dialog_title">Select the new measure type:</string>
     <string name="new_survey_dialog_title">Select the new survey type:</string>
     <string name="new_personal_dialog_title">Select the event/alert type:</string>
 
@@ -105,11 +62,6 @@
     <string name="delete_events_negative">No</string>
 
     <string name="activity_event_title">Physical activity</string>
-    <string name="measure_event_title">Measures capture</string>
-    <string name="measure_event_hr_title">Heart rate capture</string>
-    <string name="measure_event_bp_title">Blood pressure capture</string>
-    <string name="measure_event_bg_title">Blood glucose capture</string>
-    <string name="measure_event_xx_title">Free measure capture</string>
     <string name="doctor_event_title">Medical appointment</string>
     <string name="medication_event_title">Medication shot</string>
     <string name="personal_event_title">Personal event</string>
@@ -121,7 +73,6 @@
     <string name="textfeedback_event_title">Action survey</string>
 
     <string name="activity_reminder_title">Physical activity</string>
-    <string name="measure_reminder_title">Measures capture</string>
     <string name="doctor_reminder_title">Medical appointment</string>
     <string name="medication_reminder_title">Medication time</string>
     <string name="personal_reminder_title">Personal appointment</string>
@@ -131,10 +82,7 @@
     <string name="textnofeedback_reminder_title">Personal alert</string>
 
     <string name="activity_reminder_description">Walk for 30 minutes</string>
-    <string name="measure_reminder_hr_description">Capture your heart rate</string>
-    <string name="measure_reminder_bp_description">Capture your blood pressure</string>
-    <string name="measure_reminder_bg_description">Capture your blood glucose</string>
-    <string name="measure_reminder_xx_description">Free measure capture:\u0020</string><!--\u0020 means a white space-->
+    <!--\u0020 means a white space-->
     <string name="doctor_reminder_description">Go to your health center</string>
     <string name="medication_reminder_description">2 tablets of sintrom 1 mg</string>
     <string name="personal_reminder_description">Take care of your personal affairs</string>
@@ -262,29 +210,16 @@
     <string name="description_edit_hint">Example:\u0020</string><!--\u0020 means a white space-->
     <string name="description_delete_button">Delete description</string>
 
-    <string name="dialog_add_medicine_title">Select one or more medications by pressing OK:</string>
-    <string name="description_no_medication">There are not medications available</string>
-    <string name="description_add_medicine_button">Add medication</string>
-    <string name="medicine_description_header">Take\u0020</string>
-    <string name="medicine_description_separator">\u0020of\u0020</string>
-
     <string name="follow_event_dialog_title">Do you wish to go to the new selected day?</string>
     <string name="follow_event_affirmative">Yes, go to new day</string>
     <string name="follow_event_negative">No, stay on selected</string>
 
-    <string name="original_date_title">Since:</string>
-
-    <string name="loading_app">Loading…</string>
-
     <string name="loading_layout_description">Loading\u0020</string>
     <string name="loading_layout_events">events</string>
-    <string name="loading_layout_medication">medication</string>
 
     <string name="loading_layout_create">Creating event</string>
     <string name="loading_layout_modify">Modifying event</string>
     <string name="loading_layout_delete_one">Deleting event</string>
-    <string name="loading_layout_delete_all">Deleting events</string>
-    <string name="loading_layout_stand_by">Please stand by…</string>
 
     <string name="today_date_legend_text">Today date</string>
     <string name="start_date_legend_text">Start date</string>
@@ -295,6 +230,4 @@
     <string name="error_launching_accounts">The accounts manager application is not installed!!!</string>
     <string name="error_setting_alarm">Alarm not set: the reminders app is not installed.</string>
     <string name="error_deleting_alarm">Alarm not deleted: the reminders app is not installed.</string>
-    <string name="app_version">App version:</string>
-    <string name="daten">EEEE dd MMM, yyyy</string>
 </resources>

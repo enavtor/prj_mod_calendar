@@ -11,7 +11,7 @@
     </shape>
 </item>
 <item android:state_focused="false">
-    <shape xmlns:android="http://schemas.android.com/apk/res/android" android:padding="15dp" android:shape="rectangle">
+    <shape android:padding="15dp" android:shape="rectangle">
         <stroke android:color="@color/transparent"
             android:width="4dp" />
 

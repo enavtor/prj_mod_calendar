@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.droidmare.calendar.utils.ToastUtils;
 import com.droidmare.R;
+import com.shtvsolution.common.utils.ToastUtils;
 
 //Activity for displaying a dialog before performing a delete operation
 //@author Eduardo on 27/06/2018.

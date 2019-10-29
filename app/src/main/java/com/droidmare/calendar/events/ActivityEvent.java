@@ -5,7 +5,7 @@ import android.content.Context;
 import com.droidmare.R;
 import com.droidmare.reminders.model.Reminder;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.ImageUtils;
+import com.shtvsolution.common.utils.ImageUtils;
 
 //Model for an event item (of type activity) declaration
 //@author Eduardo on 27/02/2018.

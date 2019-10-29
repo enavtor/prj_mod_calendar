@@ -216,55 +216,6 @@
                 android:textSize="34sp"
                 android:textColorHint="@color/grey_medium"
                 android:textCursorDrawable="@drawable/parameters_text_cursor_color" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center">
-
-                <LinearLayout
-                    android:id="@+id/launch_default_descriptions_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/dialog_buttons_background"
-                    android:layout_marginEnd="50dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusDown="@id/display_current_parameters_button"
-                    android:padding="2dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/default_descriptions_button_text"
-                        android:layout_width="300dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:textColor="@color/white"
-                        android:textSize="27sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/delete_whole_description_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/dialog_buttons_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusDown="@id/display_current_parameters_button"
-                    android:padding="2dp">
-
-                    <TextView
-                        android:layout_width="300dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="2dp"
-                        android:text="@string/description_delete_button"
-                        android:textColor="@color/white"
-                        android:textSize="27sp" />
-                </LinearLayout>
-            </LinearLayout>
         </LinearLayout>
 
         <!--Event date selection layout-->

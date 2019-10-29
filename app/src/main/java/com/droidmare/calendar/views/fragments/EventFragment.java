@@ -1,6 +1,7 @@
 package com.droidmare.calendar.views.fragments;
 
-import android.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
 import com.droidmare.calendar.models.EventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
+import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
@@ -56,7 +58,7 @@ public class EventFragment extends Fragment {
     private EventListItem modifiedEvent;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_events, container, false);
 
@@ -167,7 +169,7 @@ public class EventFragment extends Fragment {
         //When an event is deleted or modified leaving the event list empty, the focus is relocated on the selected day:
         if (events.size() == 0 && deletedOrModified) {
             deletedOrModified = false;
-            ((MainActivity)fragmentContext).findViewById(R.id.ir_show_all_events).requestFocus();
+            ((MainActivity)fragmentContext).findViewById(R.id.ir_red_icon).requestFocus();
             ((MainActivity)fragmentContext).returnToSelected();
         }
         else if (deletedOrModified) deletedOrModified = false;
@@ -265,10 +267,10 @@ public class EventFragment extends Fragment {
             //The new alarm will have the same id than the old one and, therefore, will overwrite it:
             EventUtils.makeAlarm(fragmentContext, modifiedEvent);
 
-            ((MainActivity)fragmentContext).sendEditEvent(modifiedEvent);
+            ((MainActivity)fragmentContext).sendOperationRequest(modifiedEvent, ApiConnectionService.REQUEST_METHOD_EDIT);
 
             //The loading layout will be displayed until the operation ends and the views are refreshed, unless the operation was triggered by the synchronization service:
-            ((MainActivity)fragmentContext).displayLoadingLayout(getResources().getString(R.string.loading_layout_modify));
+            ((MainActivity)fragmentContext).displayLoadingScreen(getString(R.string.loading_layout_modify));
         }
         //Even if the event wasn't updated, the event menu must always be dismissed:
         else dismissEventMenu(false);
@@ -284,13 +286,10 @@ public class EventFragment extends Fragment {
         //if the event is going to stay in the selected date or if the event is not going to be displayed on that day any more:
         long eventStartDate = DateUtils.transformToMillis(0, 0, modifiedEvent.getEventDay(), modifiedEvent.getEventMonth(), modifiedEvent.getEventYear());
         if (modifiedEvent.getIntervalTime() == 0 ||
-                (
-                        DateUtils.isPrevious(modifiedEvent.getRepetitionStop(), DateUtils.getCurrentMillis()) &&
-                                modifiedEvent.getRepetitionStop() != -1
-                )
-                || eventStartDate > DateUtils.getCurrentMillis()
-                || !DateUtils.isSameDay(modifiedEvent.getNextRepetition(), currentDate)
-                || goAfterEventDay) {
+            DateUtils.isPrevious(modifiedEvent.getRepetitionStop(), DateUtils.getCurrentMillis()) && modifiedEvent.getRepetitionStop() != -1
+            || eventStartDate > DateUtils.getCurrentMillis()
+            || !DateUtils.isSameDay(modifiedEvent.getNextRepetition(), currentDate)
+            || goAfterEventDay) {
             //If the event is not going to be displayed on the selected day any more, the adapter must be notified so that the focus behaviour is appropriate
             //once the views have been refreshed and a new day is selected (in this case, if the next focused position is not set to -2, the focus will be
             //relocated on the first event as soon as a day with events is selected, which, indeed, is not the correct focus behaviour for that situation):

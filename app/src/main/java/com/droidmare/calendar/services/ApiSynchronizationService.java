@@ -3,6 +3,7 @@ package com.droidmare.calendar.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -15,6 +16,8 @@ import com.droidmare.calendar.utils.NetworkUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.database.publisher.EventsPublisher;
+import com.shtvsolution.common.services.CommonService;
+import com.shtvsolution.common.utils.ServiceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,9 +29,7 @@ import java.util.TimerTask;
 //Service that synchronizes the events between the STB and the API:
 //@author Eduardo on 08/11/2018.
 
-public class ApiSynchronizationService extends Service {
-
-    private static final String TAG = ApiSynchronizationService.class.getCanonicalName();
+public class ApiSynchronizationService extends CommonService {
 
     public static final String LOCAL_SYNC_OP_SAVE = "save";
     public static final String LOCAL_SYNC_OP_EDIT = "edit";
@@ -53,13 +54,15 @@ public class ApiSynchronizationService extends Service {
     @Override
     public void onCreate() {
 
+        TAG = getClass().getCanonicalName();
+
         super.onCreate();
 
         isRunning = true;
 
-        database = new SQLiteManager(this, SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
+        database = new SQLiteManager(getApplicationContext(), SQLiteManager.DATABASE_NAME, null, SQLiteManager.DATABASE_VERSION);
 
-        UserDataService.readSharedPrefs(this);
+        UserDataService.readSharedPrefs(getApplicationContext(), UserDataService.TAG);
 
         UserDataService.setSyncServiceReference(this);
 
@@ -311,7 +314,7 @@ public class ApiSynchronizationService extends Service {
         ApiConnectionService.isCurrentlyRunning = true;
         Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
         dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(localEvent).toString());
-        dataIntent.putExtra("operation", requestMethod);
-        startService(dataIntent);
+        dataIntent.putExtra(ApiConnectionService.OPERATION_FIELD, requestMethod);
+        ServiceUtils.startService(getApplicationContext(), dataIntent);
     }
 }

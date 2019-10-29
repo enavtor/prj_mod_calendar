@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.droidmare.R;
 import com.droidmare.calendar.services.ApiSynchronizationService;
+import com.shtvsolution.common.utils.ServiceUtils;
 
 //Splash activity declaration
 //@author Eduardo on 07/02/2018.
@@ -73,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
     private void waitAndOpen(){
         //If the api synchronization service is not running it must be started:
         if (!ApiSynchronizationService.isRunning())
-            startService(new Intent(getApplicationContext(), ApiSynchronizationService.class));
+            ServiceUtils.startService(getApplicationContext(), new Intent(getApplicationContext(), ApiSynchronizationService.class));
 
         //Now the MainActivity can be launched:
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

@@ -70,12 +70,6 @@ package="com.droidmare">
         </intent-filter>
     </activity>
 
-    <activity android:name=".calendar.views.activities.DialogAddDescriptionActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW"/>
-        </intent-filter>
-    </activity>
-
     <receiver android:name=".calendar.receivers.BootCompletedReceiver" android:enabled = "true">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -85,11 +79,6 @@ package="com.droidmare">
     <service
         android:name=".calendar.services.AlarmResetService"
         android:exported="false">
-    </service>
-
-    <service
-        android:name=".calendar.services.DataDeleterService"
-        android:exported="true">
     </service>
 
     <service
