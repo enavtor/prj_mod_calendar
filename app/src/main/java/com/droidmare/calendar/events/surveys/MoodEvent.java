@@ -5,7 +5,7 @@ import android.content.Context;
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.reminders.model.Reminder;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type mood) declaration
 //@author Eduardo on 27/02/2018.
@@ -23,7 +23,7 @@ public class MoodEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        reminderType = Reminder.ReminderType.MOOD_REMINDER;
+        eventType = Reminder.ReminderType.MOOD_REMINDER;
 
         eventTypeTitle = resources.getString(R.string.mood_reminder_title);
 

@@ -3,9 +3,9 @@ package com.droidmare.calendar.events;
 import android.content.Context;
 
 import com.droidmare.R;
-import com.droidmare.reminders.model.Reminder;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.calendar.models.EventListItem;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type activity) declaration
 //@author Eduardo on 27/02/2018.
@@ -23,7 +23,7 @@ public class ActivityEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        reminderType = Reminder.ReminderType.ACTIVITY_REMINDER;
+        eventType = ConstantValues.ACTIVITY_EVENT_TYPE;
 
         eventTypeTitle = resources.getString(R.string.activity_reminder_title);
 

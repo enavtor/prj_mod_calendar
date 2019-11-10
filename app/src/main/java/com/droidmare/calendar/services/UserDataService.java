@@ -3,7 +3,7 @@ package com.droidmare.calendar.services;
 import android.content.Intent;
 
 import com.droidmare.calendar.views.activities.MainActivity;
-import com.shtvsolution.common.services.CommonUserData;
+import com.droidmare.common.services.CommonUserData;
 
 import java.lang.ref.WeakReference;
 

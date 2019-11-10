@@ -1,23 +1,23 @@
 package com.droidmare.calendar.services;
 
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.OperationApplicationException;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.utils.NetworkUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.shtvsolution.common.services.CommonService;
-import com.shtvsolution.common.utils.ServiceUtils;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.services.CommonService;
+import com.droidmare.common.utils.ServiceUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -135,10 +135,10 @@ public class ApiSynchronizationService extends CommonService {
 
             for (int i = 0; i < numberOfRetrieved; i++) {
 
-                EventJsonObject eventJson = EventJsonObject.createEventJson(eventsJson.get(i).toString());
+                EventJsonObject eventJson = CalEventJsonObject.createEventJson(eventsJson.get(i).toString());
 
-                if (eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD) != 0 && eventJson.getLong(EventUtils.EVENT_START_DATE_FIELD) >= eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD))
-                    eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
+                if (eventJson.getInt(ConstantValues.EVENT_REP_INTERVAL_FIELD) != 0 && eventJson.getLong(ConstantValues.EVENT_START_DATE_FIELD) >= eventJson.getLong(ConstantValues.EVENT_REPETITION_STOP_FIELD))
+                    eventJson.put(ConstantValues.EVENT_REPETITION_STOP_FIELD, -1);
 
                 retrievedEvents[i] = EventUtils.makeEvent(getApplicationContext(), eventJson);
             }
@@ -313,7 +313,7 @@ public class ApiSynchronizationService extends CommonService {
     private void requestApiOperation(EventListItem localEvent, String requestMethod) {
         ApiConnectionService.isCurrentlyRunning = true;
         Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
-        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(localEvent).toString());
+        dataIntent.putExtra(ConstantValues.EVENT_JSON_FIELD, CalEventJsonObject.createEventJson(localEvent).toString());
         dataIntent.putExtra(ApiConnectionService.OPERATION_FIELD, requestMethod);
         ServiceUtils.startService(getApplicationContext(), dataIntent);
     }

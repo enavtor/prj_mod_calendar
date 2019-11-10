@@ -2,6 +2,7 @@ package com.droidmare.calendar.views.adapters.dialogs;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,15 +34,15 @@ public class TypeListAdapter extends RecyclerView.Adapter<TypeListAdapter.ViewHo
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public TypeListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public TypeListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_type_list, parent, false);
         return new TypeListAdapter.ViewHolder(view);
     }
 
     // binds the data to the view in each cell
     @Override
-    public void onBindViewHolder(TypeListAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TypeListAdapter.ViewHolder holder, int position) {
 
         TypeListItem item = arrayList.get(position);
 
@@ -50,18 +51,7 @@ public class TypeListAdapter extends RecyclerView.Adapter<TypeListAdapter.ViewHo
 
         holder.text.setText(typeText);
         holder.icon.setImageDrawable(typeIcon);
-
-        //When the survey event is selected, the hole recycler view changes, and the focus must be relocated on the first element:
-        if (item.getType().equals(TypeListItem.eventTypes.MOOD))
-            holder.itemView.requestFocus();
-
-        //When the personal event is selected, the hole recycler view changes, and the focus must be relocated on the first element:
-        else if (item.getType().equals(TypeListItem.eventTypes.PERSONAL))
-            holder.itemView.requestFocus();
-
-        //When the back button is pressed while the measure dialog is being shown, the hole recycler view changes, and the focus must be relocated on the first element:
-        else if (item.getType().equals(TypeListItem.eventTypes.ACTIVITY))
-            holder.itemView.requestFocus();
+        holder.itemView.requestFocus();
     }
 
     // total number of cells

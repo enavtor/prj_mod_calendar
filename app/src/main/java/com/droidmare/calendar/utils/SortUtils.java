@@ -3,6 +3,7 @@ package com.droidmare.calendar.utils;
 import android.util.Log;
 
 import com.droidmare.calendar.models.EventListItem;
+import com.droidmare.common.utils.DateUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

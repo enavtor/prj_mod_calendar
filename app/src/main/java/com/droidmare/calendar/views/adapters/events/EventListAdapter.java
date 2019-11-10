@@ -1,6 +1,7 @@
 package com.droidmare.calendar.views.adapters.events;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +13,9 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -94,15 +95,15 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_event_list, parent, false);
         return new ViewHolder(view);
     }
 
     // binds the data to the view in each cell
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         EventListItem eventItem = arrayList.get(position);
 

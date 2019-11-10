@@ -4,13 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.shtvsolution.common.services.CommonIntentService;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.services.CommonIntentService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -82,8 +84,8 @@ public class ApiConnectionService extends CommonIntentService {
         String operation = dataIntent.getStringExtra(OPERATION_FIELD);
 
         if (!operation.equals(REQUEST_METHOD_GET)) {
-            eventJson = EventJsonObject.createEventJson(dataIntent.getStringExtra(EventUtils.EVENT_JSON_FIELD));
-            eventJson.put(EventUtils.EVENT_USER_FIELD, UserDataService.getUserId());
+            eventJson = CalEventJsonObject.createEventJson(dataIntent.getStringExtra(ConstantValues.EVENT_JSON_FIELD));
+            eventJson.put(ConstantValues.EVENT_USER_FIELD, UserDataService.getUserId());
             eventToSend = EventUtils.makeEvent(getApplicationContext(), eventJson);
         }
 
@@ -115,8 +117,8 @@ public class ApiConnectionService extends CommonIntentService {
             if (!response.equals("") && responseCode == 200) {
                 JSONObject responseJson = new JSONObject(response);
                 eventToSend.setPendingOperation("");
-                eventToSend.setEventId(responseJson.getString(EventUtils.EVENT_ID_FIELD));
-                eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
+                eventToSend.setEventId(responseJson.getString(ConstantValues.EVENT_ID_FIELD));
+                eventToSend.setLastApiUpdate(responseJson.getLong(ConstantValues.EVENT_LAST_UPDATE_FIELD));
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList, localEventId);
             }
@@ -140,7 +142,7 @@ public class ApiConnectionService extends CommonIntentService {
             if (!response.equals("") && responseCode == 200) {
                 JSONObject responseJson = new JSONObject(response);
                 eventToSend.setPendingOperation("");
-                eventToSend.setLastApiUpdate(responseJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
+                eventToSend.setLastApiUpdate(responseJson.getLong(ConstantValues.EVENT_LAST_UPDATE_FIELD));
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
             }

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.droidmare.database.publisher.EventsPublisher;
-import com.shtvsolution.common.services.CommonIntentService;
+import com.droidmare.common.services.CommonIntentService;
 
 //Service that will reset all the alarms on device reboot for the stored events:
 //@author Eduardo on 14/11/2018.

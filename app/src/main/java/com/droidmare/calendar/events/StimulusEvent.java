@@ -5,7 +5,7 @@ import android.content.Context;
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.reminders.model.Reminder;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type stimulus) declaration
 //@author Eduardo on 18/03/2019.
@@ -23,7 +23,7 @@ public class StimulusEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        reminderType = Reminder.ReminderType.STIMULUS_REMINDER;
+        eventType = Reminder.ReminderType.STIMULUS_REMINDER;
 
         externalAppPackage = "mobi.stimulus.stimulustv";
         externalAppActivity = "mobi.stimulus.stimulustv.SplashActivity";

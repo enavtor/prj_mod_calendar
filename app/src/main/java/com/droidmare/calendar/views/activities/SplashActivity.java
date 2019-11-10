@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.droidmare.R;
 import com.droidmare.calendar.services.ApiSynchronizationService;
-import com.shtvsolution.common.utils.ServiceUtils;
+import com.droidmare.common.utils.ServiceUtils;
 
 //Splash activity declaration
 //@author Eduardo on 07/02/2018.

@@ -15,39 +15,7 @@
     <string name="no_user">User</string>
     <string name="no_id">ID</string>
 
-    <!--Date Utils strings-->
-
-    <string name="day_1_letter">M</string>
-    <string name="day_2_letter">T</string>
-    <string name="day_3_letter">W</string>
-    <string name="day_4_letter">T</string>
-    <string name="day_5_letter">F</string>
-    <string name="day_6_letter">S</string>
-    <string name="day_7_letter">S</string>
-
-    <string name="day_1_text">Monday</string>
-    <string name="day_2_text">Tuesday</string>
-    <string name="day_3_text">Wednesday</string>
-    <string name="day_4_text">Thursday</string>
-    <string name="day_5_text">Friday</string>
-    <string name="day_6_text">Saturday</string>
-    <string name="day_7_text">Sunday</string>
-
-    <string name="month_1_text">January</string>
-    <string name="month_2_text">February</string>
-    <string name="month_3_text">March</string>
-    <string name="month_4_text">April</string>
-    <string name="month_5_text">May</string>
-    <string name="month_6_text">June</string>
-    <string name="month_7_text">July</string>
-    <string name="month_8_text">August</string>
-    <string name="month_9_text">September</string>
-    <string name="month_10_text">October</string>
-    <string name="month_11_text">November</string>
-    <string name="month_12_text">December</string>
-
     <!--\u0020 means a white space-->
-    <string name="date_divider">\u0020</string>
     <string name="date_divider_2">\u0020of\u0020</string>
 
     <string name="display_events_dialog_title">Select an event to go to its day:</string>

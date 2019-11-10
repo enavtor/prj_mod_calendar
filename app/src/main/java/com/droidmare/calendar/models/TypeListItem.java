@@ -15,10 +15,7 @@ public class TypeListItem {
         PERSONAL_EVENT,
         PERSONAL,
         TEXTNOFEEDBACK,
-        STIMULUS,
-        SURVEY,
-        MOOD,
-        TEXTFEEDBACK,
+        STIMULUS
     }
 
     //Item's type:
@@ -33,15 +30,11 @@ public class TypeListItem {
     //The icon for the event type:
     private Drawable eventIcon;
 
-    //Whether or not the item must be instantly shown (without creating an alarm):
-    private boolean instantlyShown;
-
     public TypeListItem(eventTypes typeValue, String titleText, String descriptionText, Drawable icon){
         this.type = typeValue;
         this.typeTitle = titleText;
         this.typeDescription = descriptionText;
         this.eventIcon = icon;
-        instantlyShown = false;
     }
 
     public eventTypes getType() {
@@ -57,6 +50,4 @@ public class TypeListItem {
     public Drawable getEventIcon() {
         return eventIcon;
     }
-
-    public boolean isInstantlyShown() { return instantlyShown; }
 }

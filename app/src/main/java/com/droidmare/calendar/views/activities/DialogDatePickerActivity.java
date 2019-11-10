@@ -13,11 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.droidmare.R;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.views.adapters.datepicker.DatePickerCalendarAdapter;
 import com.droidmare.calendar.views.adapters.datepicker.DatePickerDayGridAdapter;
 import com.droidmare.calendar.views.adapters.datepicker.DatePickerTimeListAdapter;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 //Activity for selecting a custom date and time when creating/editing an event
 //@author Eduardo on 22/03/2019.

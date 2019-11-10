@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.utils.DateUtils;
 
 import java.util.ArrayList;
 

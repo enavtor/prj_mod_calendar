@@ -13,24 +13,24 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.droidmare.R;
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.DateCheckerService;
 import com.droidmare.calendar.services.UserDataService;
-import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventUtils;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.HomeKeyUtils;
 import com.droidmare.calendar.utils.PackageUtils;
 import com.droidmare.calendar.views.fragments.CalendarFragment;
 import com.droidmare.calendar.views.fragments.EventFragment;
 import com.droidmare.database.publisher.EventRetriever;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.droidmare.reminders.model.Reminder;
-import com.shtvsolution.common.utils.ServiceUtils;
-import com.shtvsolution.common.utils.ToastUtils;
-import com.shtvsolution.common.views.activities.CommonMainActivity;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.utils.ServiceUtils;
+import com.droidmare.common.utils.ToastUtils;
+import com.droidmare.common.views.activities.CommonMainActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -246,28 +246,28 @@ public class MainActivity extends CommonMainActivity {
     //This method starts a new event dialog, waiting for the result:
     public void startNewEventDialog() {
         Intent intent = new Intent(this, DialogNewEventActivity.class);
-        intent.putExtra(com.droidmare.calendar.utils.EventUtils.EVENT_MONTH_FIELD, calendarFrag.getSelectedMonth());
-        intent.putExtra(com.droidmare.calendar.utils.EventUtils.EVENT_YEAR_FIELD, calendarFrag.getSelectedYear());
+        intent.putExtra(ConstantValues.EVENT_MONTH_FIELD, calendarFrag.getSelectedMonth());
+        intent.putExtra(ConstantValues.EVENT_YEAR_FIELD, calendarFrag.getSelectedYear());
         startActivityForResult(intent, NEW_EVENT_REQUEST);
     }
 
     //This method starts a modify event dialog, waiting for the result:
     public void startModifyEventDialog(EventListItem selectedEvent, boolean onlyDisplayValues) {
 
-        EventJsonObject eventJson = EventJsonObject.createEventJson(selectedEvent);
+        EventJsonObject eventJson = CalEventJsonObject.createEventJson(selectedEvent);
 
-        Reminder.ReminderType eventType = selectedEvent.getReminderType();
+        String eventType = selectedEvent.getEventType();
 
         //Whether or not the selected event is an alarm:
-        boolean isAlarm = !(eventType.equals(Reminder.ReminderType.DOCTOR_REMINDER) || eventType.equals(Reminder.ReminderType.PERSONAL_REMINDER));
+        boolean isAlarm = !(eventType.equals(ConstantValues.DOCTOR_EVENT_TYPE) || eventType.equals(ConstantValues.PERSONAL_EVENT_TYPE));
 
         Intent intent = new Intent(getApplicationContext(), DialogEventParameters.class);
 
-        intent.putExtra(EventUtils.EVENT_JSON_FIELD, eventJson.toString());
+        intent.putExtra(ConstantValues.EVENT_JSON_FIELD, eventJson.toString());
 
         intent.putExtra("editingEvent", true);
         intent.putExtra("isAlarm", isAlarm);
-        intent.putExtra("type", eventType.toString().split("_")[0]);
+        intent.putExtra("type", eventType);
 
         if (onlyDisplayValues) {
             intent.putExtra("displayParameters", true);
@@ -359,7 +359,7 @@ public class MainActivity extends CommonMainActivity {
     //This method starts the api connection service so that an specific operation, defined by the parameter operation, can be performed:
     public void sendOperationRequest(EventListItem event, String operation) {
         Intent dataIntent = new Intent(getApplicationContext(), ApiConnectionService.class);
-        dataIntent.putExtra(EventUtils.EVENT_JSON_FIELD, EventJsonObject.createEventJson(event).toString());
+        dataIntent.putExtra(ConstantValues.EVENT_JSON_FIELD, CalEventJsonObject.createEventJson(event).toString());
         dataIntent.putExtra(ApiConnectionService.OPERATION_FIELD, operation);
         ServiceUtils.startService(getApplicationContext(), dataIntent);
     }
@@ -395,9 +395,14 @@ public class MainActivity extends CommonMainActivity {
     public void relocateFocusAfterSync(EventListItem localEvent, EventListItem retrievedEvent, String localSyncOp) {
 
         //A variable to know if the changes will affect the current day's event list is set:
-        boolean currentDayAffected = DateUtils.sameDate(localEvent);
+        boolean currentDayAffected = DateUtils.sameDate(localEvent.getEventDay(), localEvent.getEventMonth(), localEvent.getEventYear());
 
-        if (retrievedEvent != null) currentDayAffected = (DateUtils.sameDate(localEvent) || DateUtils.isSameDay(localEvent.getNextRepetition(), DateUtils.getCurrentMillis()));
+        if (retrievedEvent != null) {
+            currentDayAffected = (
+                DateUtils.sameDate(localEvent.getEventDay(), localEvent.getEventMonth(), localEvent.getEventYear())
+                || DateUtils.isSameDay(localEvent.getNextRepetition(), DateUtils.getCurrentMillis())
+            );
+        }
 
         //If there is an activity running (for example the event parameters dialog) and the modification is going
         //to affect the current selected day's event list it must be finished before getting the current focused view:

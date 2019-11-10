@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
 import com.droidmare.database.publisher.EventsPublisher;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -83,11 +83,13 @@ public class DialogDisplayEventsActivity extends AppCompatActivity {
 
         for (int i = 0; i < allEvents.size(); i++) {
             EventListItem event = allEvents.get(i);
-            event.calculateNextRepetition(currentDate);
-            long nextRepetition = event.getNextRepetition();
-            if (nextRepetition < currentDate && nextRepetition > 0) {
-                allEvents.remove(i--);
-            }
+
+            long originalStartDate = DateUtils.transformToMillis(event.getEventMinute(), event.getEventHour(), event.getEventDay(), event.getEventMonth(), event.getEventYear());
+            long nextRepetition = DateUtils.calculateNextRepetition(event.getRepetitionType(), currentDate, originalStartDate, event.getRepetitionStop(), event.getIntervalTime());
+
+            event.setNextRepetition(nextRepetition);
+
+            if (nextRepetition < currentDate && nextRepetition > 0) allEvents.remove(i--);
         }
 
         //Initialization of the event list:

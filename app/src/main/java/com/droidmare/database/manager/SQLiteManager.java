@@ -7,9 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.droidmare.calendar.models.EventJsonObject;
-import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventUtils;
+import com.droidmare.calendar.models.CalEventJsonObject;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
 
 import org.json.JSONException;
 
@@ -294,21 +295,21 @@ public class SQLiteManager extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
 
         try {
-            values.put(EVENT_ID_COLUMN, eventJson.getString(EventUtils.EVENT_ID_FIELD));
-            values.put(EVENT_TYPE_COLUMN, eventJson.getString(EventUtils.EVENT_TYPE_FIELD));
-            values.put(EVENT_HOUR_COLUMN, eventJson.getInt(EventUtils.EVENT_HOUR_FIELD));
-            values.put(EVENT_MINUTE_COLUMN, eventJson.getInt(EventUtils.EVENT_MINUTE_FIELD));
-            values.put(EVENT_DAY_COLUMN, eventJson.getInt(EventUtils.EVENT_DAY_FIELD));
-            values.put(EVENT_MONTH_COLUMN, eventJson.getInt(EventUtils.EVENT_MONTH_FIELD));
-            values.put(EVENT_YEAR_COLUMN, eventJson.getInt(EventUtils.EVENT_YEAR_FIELD));
-            values.put(EVENT_DESCRIPTION_COLUMN, eventJson.getString(EventUtils.EVENT_DESCRIPTION_FIELD));
-            values.put(EVENT_INTERVAL_COLUMN, eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD));
-            values.put(EVENT_REPETITION_STOP_COLUMN, eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD));
-            values.put(EVENT_TIMEOUT_COLUMN, eventJson.getLong(EventUtils.EVENT_TIMEOUT_FIELD));
-            values.put(EVENT_REP_TYPE_COLUMN, eventJson.getString(EventUtils.EVENT_REPETITION_TYPE_FIELD));
-            values.put(EVENT_PREV_ALARMS_COLUMN, eventJson.getString(EventUtils.EVENT_PREV_ALARMS_FIELD));
-            values.put(PENDING_OPERATION_COLUMN, eventJson.getString(EventUtils.EVENT_PENDING_OP_FIELD));
-            values.put(EVENT_LAST_UPDATE_COLUMN, eventJson.getLong(EventUtils.EVENT_LAST_UPDATE_FIELD));
+            values.put(EVENT_ID_COLUMN, eventJson.getString(ConstantValues.EVENT_ID_FIELD));
+            values.put(EVENT_TYPE_COLUMN, eventJson.getString(ConstantValues.EVENT_TYPE_FIELD));
+            values.put(EVENT_HOUR_COLUMN, eventJson.getInt(ConstantValues.EVENT_HOUR_FIELD));
+            values.put(EVENT_MINUTE_COLUMN, eventJson.getInt(ConstantValues.EVENT_MINUTE_FIELD));
+            values.put(EVENT_DAY_COLUMN, eventJson.getInt(ConstantValues.EVENT_DAY_FIELD));
+            values.put(EVENT_MONTH_COLUMN, eventJson.getInt(ConstantValues.EVENT_MONTH_FIELD));
+            values.put(EVENT_YEAR_COLUMN, eventJson.getInt(ConstantValues.EVENT_YEAR_FIELD));
+            values.put(EVENT_DESCRIPTION_COLUMN, eventJson.getString(ConstantValues.EVENT_DESCRIPTION_FIELD));
+            values.put(EVENT_INTERVAL_COLUMN, eventJson.getInt(ConstantValues.EVENT_REP_INTERVAL_FIELD));
+            values.put(EVENT_REPETITION_STOP_COLUMN, eventJson.getLong(ConstantValues.EVENT_REPETITION_STOP_FIELD));
+            values.put(EVENT_TIMEOUT_COLUMN, eventJson.getLong(ConstantValues.EVENT_TIMEOUT_FIELD));
+            values.put(EVENT_REP_TYPE_COLUMN, eventJson.getString(ConstantValues.EVENT_REPETITION_TYPE_FIELD));
+            values.put(EVENT_PREV_ALARMS_COLUMN, eventJson.getString(ConstantValues.EVENT_PREV_ALARMS_FIELD));
+            values.put(PENDING_OPERATION_COLUMN, eventJson.getString(ConstantValues.EVENT_PENDING_OP_FIELD));
+            values.put(EVENT_LAST_UPDATE_COLUMN, eventJson.getLong(ConstantValues.EVENT_LAST_UPDATE_FIELD));
         }
         catch (JSONException jse){
             Log.e(TAG,"getValuesFromJson. JSONException: " + jse.getMessage());
@@ -319,23 +320,23 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
     //Returns a Json object from a Cursor object:
     private EventJsonObject getJsonFromCursor(Cursor cursor) {
-        EventJsonObject auxJson = new EventJsonObject();
+        CalEventJsonObject auxJson = new CalEventJsonObject();
 
-        auxJson.put(EventUtils.EVENT_ID_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_ID_COLUMN)));
-        auxJson.put(EventUtils.EVENT_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_TYPE_COLUMN)));
-        auxJson.put(EventUtils.EVENT_HOUR_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_HOUR_COLUMN)));
-        auxJson.put(EventUtils.EVENT_MINUTE_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_MINUTE_COLUMN)));
-        auxJson.put(EventUtils.EVENT_DAY_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_DAY_COLUMN)));
-        auxJson.put(EventUtils.EVENT_MONTH_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_MONTH_COLUMN)));
-        auxJson.put(EventUtils.EVENT_YEAR_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_YEAR_COLUMN)));
-        auxJson.put(EventUtils.EVENT_DESCRIPTION_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_DESCRIPTION_COLUMN)));
-        auxJson.put(EventUtils.EVENT_REP_INTERVAL_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_INTERVAL_COLUMN)));
-        auxJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_REPETITION_STOP_COLUMN)));
-        auxJson.put(EventUtils.EVENT_TIMEOUT_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_TIMEOUT_COLUMN)));
-        auxJson.put(EventUtils.EVENT_REPETITION_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_REP_TYPE_COLUMN)));
-        auxJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_PREV_ALARMS_COLUMN)));
-        auxJson.put(EventUtils.EVENT_PENDING_OP_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(PENDING_OPERATION_COLUMN)));
-        auxJson.put(EventUtils.EVENT_LAST_UPDATE_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_LAST_UPDATE_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_ID_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_ID_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_TYPE_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_HOUR_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_HOUR_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_MINUTE_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_MINUTE_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_DAY_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_DAY_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_MONTH_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_MONTH_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_YEAR_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_YEAR_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_DESCRIPTION_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_DESCRIPTION_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_REP_INTERVAL_FIELD, cursor.getInt(cursor.getColumnIndexOrThrow(EVENT_INTERVAL_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_REPETITION_STOP_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_REPETITION_STOP_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_TIMEOUT_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_TIMEOUT_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_REPETITION_TYPE_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_REP_TYPE_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_PREV_ALARMS_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(EVENT_PREV_ALARMS_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_PENDING_OP_FIELD, cursor.getString(cursor.getColumnIndexOrThrow(PENDING_OPERATION_COLUMN)));
+        auxJson.put(ConstantValues.EVENT_LAST_UPDATE_FIELD, cursor.getLong(cursor.getColumnIndexOrThrow(EVENT_LAST_UPDATE_COLUMN)));
 
         return auxJson;
     }

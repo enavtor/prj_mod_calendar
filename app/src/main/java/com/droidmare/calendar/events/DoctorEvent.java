@@ -5,7 +5,7 @@ import android.content.Context;
 import com.droidmare.R;
 import com.droidmare.reminders.model.Reminder;
 import com.droidmare.calendar.models.EventListItem;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type doctor) declaration
 //@author Eduardo on 27/02/2018.
@@ -23,7 +23,7 @@ public class DoctorEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        reminderType = Reminder.ReminderType.DOCTOR_REMINDER;
+        eventType = Reminder.ReminderType.DOCTOR_REMINDER;
 
         eventTypeTitle = resources.getString(R.string.doctor_reminder_title);
 

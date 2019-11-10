@@ -16,11 +16,11 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.TypeListItem;
-import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventUtils;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.views.adapters.dialogs.TypeListAdapter;
-import com.shtvsolution.common.utils.ImageUtils;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.utils.ImageUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -32,9 +32,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
 
     //List of items for the type list adapter:
     private ArrayList<TypeListItem> eventTypes;
-
-    //List of items for the type list adapter when the survey event is selected:
-    private ArrayList<TypeListItem> surveyTypes;
 
     //List of items for the type list adapter when the personal event is selected:
     private ArrayList<TypeListItem> personalTypes;
@@ -138,7 +135,7 @@ public class DialogNewEventActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                data.putExtra(EventUtils.EVENT_TYPE_FIELD, eventType.toString());
+                data.putExtra(ConstantValues.EVENT_TYPE_FIELD, eventType.toString());
                 setResult(Activity.RESULT_OK, data);
                 finish();
             }
@@ -160,16 +157,8 @@ public class DialogNewEventActivity extends AppCompatActivity{
                 selectedItem = typeAdapter.getEventTypeItem(position);
                 eventType = selectedItem.getType();
 
-                //If the selected item is of type SURVEY, the type list elements visibility must change:
-                if (eventType.equals(TypeListItem.eventTypes.SURVEY)) {
-                    showingSecondaryDialog = true;
-                    //The dialog title and elements are changed:
-                    dialogTitle.setText(R.string.new_survey_dialog_title);
-                    typeAdapter.changeElementsVisibility(surveyTypes);
-                }
-
                 //If the selected item is of type PERSONAL, the type list elements visibility must change:
-                else if (eventType.equals(TypeListItem.eventTypes.PERSONAL_EVENT)) {
+                if (eventType.equals(TypeListItem.eventTypes.PERSONAL_EVENT)) {
                     showingSecondaryDialog = true;
                     //The dialog title and elements are changed:
                     dialogTitle.setText(R.string.new_personal_dialog_title);
@@ -178,8 +167,7 @@ public class DialogNewEventActivity extends AppCompatActivity{
 
                 //If it is a different event, an event setter dialog is created so the user can select the alarm time and the description text:
                 else {
-                    if (eventType.equals(TypeListItem.eventTypes.MOOD) || eventType.equals(TypeListItem.eventTypes.STIMULUS))
-                        hasDefaultDescription = true;
+                    hasDefaultDescription = eventType.equals(TypeListItem.eventTypes.STIMULUS);
                     startNewEventSetter();
                 }
             }
@@ -199,8 +187,8 @@ public class DialogNewEventActivity extends AppCompatActivity{
 
         Intent parentActivityIntent = getIntent();
 
-        intent.putExtra(EventUtils.EVENT_MONTH_FIELD, parentActivityIntent.getIntExtra(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth));
-        intent.putExtra(EventUtils.EVENT_YEAR_FIELD, parentActivityIntent.getIntExtra(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear));
+        intent.putExtra(ConstantValues.EVENT_MONTH_FIELD, parentActivityIntent.getIntExtra(ConstantValues.EVENT_MONTH_FIELD, DateUtils.currentMonth));
+        intent.putExtra(ConstantValues.EVENT_YEAR_FIELD, parentActivityIntent.getIntExtra(ConstantValues.EVENT_YEAR_FIELD, DateUtils.currentYear));
 
         intent.putExtra("hasDefaultDescription", hasDefaultDescription);
         intent.putExtra("defaultDescription", selectedItem.getTypeDescription());
@@ -229,7 +217,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
     private void initEventTypes () {
 
         this.eventTypes = new ArrayList<>();
-        this.surveyTypes = new ArrayList<>();
         this.personalTypes = new ArrayList<>();
 
         Resources res = getResources();
@@ -290,26 +277,6 @@ public class DialogNewEventActivity extends AppCompatActivity{
                     icon = ImageUtils.getImageFromAssets(this, "stimulus_icon.png");
                     item = new TypeListItem(type, title, description, icon);
                     this.eventTypes.add(item);
-                    break;
-                case SURVEY:
-                    title = res.getString(R.string.survey_event_title);
-                    icon = ImageUtils.getImageFromAssets(this, "survey_icon.png");
-                    item = new TypeListItem(type, title, null, icon);
-                    this.eventTypes.add(item);
-                    break;
-                case MOOD:
-                    title = res.getString(R.string.mood_event_title);
-                    description  = res.getString(R.string.mood_reminder_description);
-                    icon = ImageUtils.getImageFromAssets(this, "mood_icon.png");
-                    item = new TypeListItem(type, title, description, icon);
-                    this.surveyTypes.add(item);
-                    break;
-                case TEXTFEEDBACK:
-                    title = res.getString(R.string.textfeedback_event_title);
-                    description = res.getString(R.string.textfeedback_reminder_description);
-                    icon = ImageUtils.getImageFromAssets(this, "textfeedback_icon.png");
-                    item = new TypeListItem(type, title, description, icon);
-                    this.surveyTypes.add(item);
                     break;
             }
         }

@@ -14,10 +14,12 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.events.EventListAdapter;
@@ -178,8 +180,8 @@ public class EventFragment extends Fragment {
     //Function for creating a new event:
     public void createNewEvent(Intent data) {
 
-        EventJsonObject eventJson = EventJsonObject.createEventJson(data.getStringExtra(EventUtils.EVENT_JSON_FIELD));
-        eventJson.put(EventUtils.EVENT_TYPE_FIELD, data.getStringExtra(EventUtils.EVENT_TYPE_FIELD));
+        EventJsonObject eventJson = CalEventJsonObject.createEventJson(data.getStringExtra(ConstantValues.EVENT_JSON_FIELD));
+        eventJson.put(ConstantValues.EVENT_TYPE_FIELD, data.getStringExtra(ConstantValues.EVENT_TYPE_FIELD));
 
         //The event is created and added to the selected day:
         EventListItem event = EventUtils.makeEvent(fragmentContext, eventJson);
@@ -192,7 +194,7 @@ public class EventFragment extends Fragment {
         //Only when the new date is different from the previous one, the corresponding day is selected so that the selected item's background inside the calendar doesn't blink.
         //This happens due to the fact that when a new item is selected, the previously selected day's background is reset, so if the previously selected day is the same as the
         //new one, the background will blink:
-        if (DateUtils.notSameDate(event)) {
+        if (DateUtils.notSameDate(event.getEventDay(), event.getEventMonth(), event.getEventYear())) {
 
             DateUtils.currentDay = event.getEventDay();
             DateUtils.currentMonth = event.getEventMonth();
@@ -254,7 +256,7 @@ public class EventFragment extends Fragment {
         modifiedEvent = originalEvent;
 
         //The update only happens if at least one parameter was modified:
-        if (modifiedEvent.updateEventParams(EventJsonObject.createEventJson(data.getStringExtra(EventUtils.EVENT_JSON_FIELD))) || goAfterEventDay) {
+        if (modifiedEvent.updateEventParams(CalEventJsonObject.createEventJson(data.getStringExtra(ConstantValues.EVENT_JSON_FIELD))) || goAfterEventDay) {
 
             //After modifying the event the views will go to the modified event's new date based on the value of the extra "goAfterEventDay":
             if (goAfterEventDay) updateDateParams(modifiedEvent, false);
@@ -262,10 +264,13 @@ public class EventFragment extends Fragment {
             //If the event is the only one in the list and at least its day was changed, the next focused position is set to -2 so the adapter can know it (this is due to the fact that when the last
             //event in the list is modified changing its date (which results on an empty event list), the behaviour of the application regarding the focus relocation is annoyingly buggy, so the way
             //the focus behaves in this situation is set in the MainActivity's dispatchKeyEvent function based on the value of the adapter's nextFocusedPosition variable):
-            if ((getNumberOfEvents() == 1 && DateUtils.notSameDate(modifiedEvent)) || goAfterEventDay) setFocusBehaviourAfterEdit();
+            if ((getNumberOfEvents() == 1 && DateUtils.notSameDate(modifiedEvent.getEventDay(), modifiedEvent.getEventMonth(), modifiedEvent.getEventYear())) || goAfterEventDay) setFocusBehaviourAfterEdit();
 
             //The new alarm will have the same id than the old one and, therefore, will overwrite it:
             EventUtils.makeAlarm(fragmentContext, modifiedEvent);
+
+            //The pending operation must be reset since the event is going to be sent to the api because it was manually edited and not because it has a pending operation:
+            if (!modifiedEvent.getPendingOperation().equals("")) modifiedEvent.setPendingOperation("");
 
             ((MainActivity)fragmentContext).sendOperationRequest(modifiedEvent, ApiConnectionService.REQUEST_METHOD_EDIT);
 
@@ -278,8 +283,12 @@ public class EventFragment extends Fragment {
 
     //Method that checks and decides if the event is going to be displayed on the current day after updating the event list and acts consequently:
     private void setFocusBehaviourAfterEdit() {
+
         long currentDate = DateUtils.getCurrentMillis();
-        modifiedEvent.calculateNextRepetition(currentDate);
+        long originalStartDate = DateUtils.transformToMillis(modifiedEvent.getEventMinute(), modifiedEvent.getEventHour(), modifiedEvent.getEventDay(), modifiedEvent.getEventMonth(), modifiedEvent.getEventYear());
+        long nextRepetition = DateUtils.calculateNextRepetition(modifiedEvent.getRepetitionType(), currentDate, originalStartDate, modifiedEvent.getRepetitionStop(), modifiedEvent.getIntervalTime());
+
+        modifiedEvent.setNextRepetition(nextRepetition);
 
         //Since an event can be modified and still being displayed in the selected day (as long as it has a repetition),
         //the start and stop dates, as well as the next repetition for the current date must be checked in order to determine
@@ -338,7 +347,7 @@ public class EventFragment extends Fragment {
         //If the event is the only one in the list and at least its day was changed, the next focused position is set to -2 so the adapter can know it (this is due to the fact that when the last
         //event in the list is modified changing its date (which results on an empty event list), the behaviour of the application regarding the focus relocation is annoyingly buggy, so the way
         //the focus behaves in this situation is set in the MainActivity's dispatchKeyEvent function based on the value of the adapter's nextFocusedPosition variable):
-        if (getNumberOfEvents() == 1 && DateUtils.notSameDate(retrievedEvent)) {
+        if (getNumberOfEvents() == 1 && DateUtils.notSameDate(retrievedEvent.getEventDay(), retrievedEvent.getEventMonth(), retrievedEvent.getEventYear())) {
 
             //Since an event can be modified and still being displayed in the selected day (as long as it has a repetition),
             //the start and stop dates must be checked in order to determine if the event is going to stay in the selected or not:

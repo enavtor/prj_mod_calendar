@@ -4,12 +4,13 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.database.manager.SQLiteManager;
+import com.droidmare.common.models.EventJsonObject;
 
 //Event recorder (for storing events) declaration
 //@author Eduardo on 07/03/2018.
@@ -82,7 +83,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
         for (EventListItem event: events) {
 
             if (event != null) {
-                EventJsonObject eventJson = EventJsonObject.createEventJson(event);
+                EventJsonObject eventJson = CalEventJsonObject.createEventJson(event);
 
                 //If the event has no id, the id is assigned after storing it in the database
                 if (operationType.equals(EventsPublisher.operationType.CREATE_EVENT)) {

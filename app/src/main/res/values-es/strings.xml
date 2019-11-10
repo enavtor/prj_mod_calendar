@@ -16,39 +16,7 @@
     <string name="no_user">Usuario</string>
     <string name="no_id">ID</string>
 
-    <!--Date Utils strings-->
-
-    <string name="day_1_letter">L</string>
-    <string name="day_2_letter">M</string>
-    <string name="day_3_letter">M</string>
-    <string name="day_4_letter">J</string>
-    <string name="day_5_letter">V</string>
-    <string name="day_6_letter">S</string>
-    <string name="day_7_letter">D</string>
-
-    <string name="day_1_text">Lunes</string>
-    <string name="day_2_text">Martes</string>
-    <string name="day_3_text">Miercoles</string>
-    <string name="day_4_text">Jueves</string>
-    <string name="day_5_text">Viernes</string>
-    <string name="day_6_text">Sabado</string>
-    <string name="day_7_text">Domingo</string>
-
-    <string name="month_1_text">Enero</string>
-    <string name="month_2_text">Febrero</string>
-    <string name="month_3_text">Marzo</string>
-    <string name="month_4_text">Abril</string>
-    <string name="month_5_text">Mayo</string>
-    <string name="month_6_text">Junio</string>
-    <string name="month_7_text">Julio</string>
-    <string name="month_8_text">Agosto</string>
-    <string name="month_9_text">Septiembre</string>
-    <string name="month_10_text">Octubre</string>
-    <string name="month_11_text">Noviembre</string>
-    <string name="month_12_text">Diciembre</string>
-
     <!--\u0020 means a white space-->
-    <string name="date_divider">\u0020de\u0020</string>
     <string name="date_divider_2">\u0020de\u0020</string>
 
     <string name="display_events_dialog_title">Seleccione un evento para ir a su día:</string>

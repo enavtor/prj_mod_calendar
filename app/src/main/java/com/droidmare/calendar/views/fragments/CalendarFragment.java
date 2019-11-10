@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.calendar.utils.DateUtils;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
 import com.droidmare.calendar.views.adapters.calendar.CalendarGridAdapter;
@@ -339,9 +339,9 @@ public class CalendarFragment extends Fragment {
                             long actualCurrentDate = DateUtils.getTodayMillis();
 
                             if (DateUtils.isSameDay(currentDayDate, actualCurrentDate))
-                                event.calculateNextRepetition(actualCurrentDate);
+                                event.setNextRepetition(DateUtils.calculateNextRepetition(event.getRepetitionType(), actualCurrentDate, originalStartDate, repetitionStopMillis, event.getIntervalTime()));
 
-                            else event.calculateNextRepetition(currentDayDate);
+                            else event.setNextRepetition(DateUtils.calculateNextRepetition(event.getRepetitionType(), currentDayDate, originalStartDate, repetitionStopMillis, event.getIntervalTime()));
 
                             long eventNextRepetition = event.getNextRepetition();
 

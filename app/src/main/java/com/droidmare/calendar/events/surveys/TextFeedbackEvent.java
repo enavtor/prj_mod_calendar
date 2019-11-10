@@ -5,7 +5,7 @@ import android.content.Context;
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.reminders.model.Reminder;
-import com.shtvsolution.common.utils.ImageUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type text feedback) declaration
 //@author Eduardo on 7/05/2018.
@@ -23,7 +23,7 @@ public class TextFeedbackEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        reminderType = Reminder.ReminderType.TEXTFEEDBACK_REMINDER;
+        eventType = Reminder.ReminderType.TEXTFEEDBACK_REMINDER;
 
         eventTypeTitle = resources.getString(R.string.textfeedback_reminder_title);
 

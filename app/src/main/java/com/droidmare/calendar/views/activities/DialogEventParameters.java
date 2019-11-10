@@ -25,18 +25,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidmare.R;
-import com.droidmare.calendar.models.EventJsonObject;
+import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.TypeListItem;
-import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventUtils;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
 import com.droidmare.calendar.utils.SortUtils;
 import com.droidmare.calendar.views.adapters.dialogs.RepTypeListsAdapter;
 import com.droidmare.calendar.views.adapters.events.EventCalendarAdapter;
 import com.droidmare.calendar.views.adapters.events.EventDayAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.PrevAlarmsListsAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.SelectionListAdapter;
-import com.shtvsolution.common.utils.ImageUtils;
-import com.shtvsolution.common.utils.ToastUtils;
+import com.droidmare.common.models.ConstantValues;
+import com.droidmare.common.utils.ImageUtils;
+import com.droidmare.common.utils.ToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -306,7 +307,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
         selectedUnit = MINUTE_UNIT;
 
-        selectedRepType = EventUtils.ALTERNATE_REPETITION;
+        selectedRepType = ConstantValues.ALTERNATE_REPETITION;
 
         selectedRepTypeConfig = new ArrayList<>();
 
@@ -556,28 +557,28 @@ public class DialogEventParameters extends AppCompatActivity{
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        EventJsonObject receivedEventJson = EventJsonObject.createEventJson(getIntent().getStringExtra(EventUtils.EVENT_JSON_FIELD));
+        EventJsonObject receivedEventJson = CalEventJsonObject.createEventJson(getIntent().getStringExtra(ConstantValues.EVENT_JSON_FIELD));
 
-        originalYear = eventYear = receivedEventJson.getInt(EventUtils.EVENT_YEAR_FIELD, DateUtils.currentYear);
-        originalMonth = eventMonth = receivedEventJson.getInt(EventUtils.EVENT_MONTH_FIELD, DateUtils.currentMonth);
-        originalDay = eventDay = receivedEventJson.getInt(EventUtils.EVENT_DAY_FIELD, DateUtils.currentDay);
+        originalYear = eventYear = receivedEventJson.getInt(ConstantValues.EVENT_YEAR_FIELD, DateUtils.currentYear);
+        originalMonth = eventMonth = receivedEventJson.getInt(ConstantValues.EVENT_MONTH_FIELD, DateUtils.currentMonth);
+        originalDay = eventDay = receivedEventJson.getInt(ConstantValues.EVENT_DAY_FIELD, DateUtils.currentDay);
 
-        originalHour = eventHour = receivedEventJson.getInt(EventUtils.EVENT_HOUR_FIELD, calendar.get(Calendar.HOUR_OF_DAY));
-        originalMinute = eventMinute = receivedEventJson.getInt(EventUtils.EVENT_MINUTE_FIELD, calendar.get(Calendar.MINUTE));
+        originalHour = eventHour = receivedEventJson.getInt(ConstantValues.EVENT_HOUR_FIELD, calendar.get(Calendar.HOUR_OF_DAY));
+        originalMinute = eventMinute = receivedEventJson.getInt(ConstantValues.EVENT_MINUTE_FIELD, calendar.get(Calendar.MINUTE));
 
         previousAlarms = receivedEventJson.getPreviousAlarmsArray();
 
         repetitionType = receivedEventJson.getRepetitionTypeJson();
 
-        repetitionInterval = receivedEventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
+        repetitionInterval = receivedEventJson.getInt(ConstantValues.EVENT_REP_INTERVAL_FIELD, 0);
 
         alternateRepetitionValue = 1;
 
-        selectedStopDate = receivedEventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
+        selectedStopDate = receivedEventJson.getLong(ConstantValues.EVENT_REPETITION_STOP_FIELD, -1);
 
         if (selectedStopDate != -1) repStopDaysDuration = 0;
 
-        selectedDescription = receivedEventJson.getString(EventUtils.EVENT_DESCRIPTION_FIELD, "");
+        selectedDescription = receivedEventJson.getString(ConstantValues.EVENT_DESCRIPTION_FIELD, "");
 
         hasRepetition = false;
     }
@@ -1380,22 +1381,22 @@ public class DialogEventParameters extends AppCompatActivity{
 
                         selectedRepType = position;
 
-                        if (position != EventUtils.DAILY_REPETITION && position != EventUtils.ANNUAL_REPETITION) {
+                        if (position != ConstantValues.DAILY_REPETITION && position != ConstantValues.ANNUAL_REPETITION) {
                             repTypeListLayout.setVisibility(View.GONE);
                             repetitionTypeLayouts[position - 1].setVisibility(View.VISIBLE);
                             repetitionTypeLayouts[position - 1].requestFocus();
                             subLevelDisplayed();
 
-                            if (position == EventUtils.ALTERNATE_REPETITION)
+                            if (position == ConstantValues.ALTERNATE_REPETITION)
                                 dialogTitle.setText(getString(R.string.rep_type_alternate_title));
 
                             else {
                                 dialogTitle.setText(getString(R.string.rep_type_weekly_monthly_title));
 
-                                if (position == EventUtils.WEEKLY_REPETITION)
+                                if (position == ConstantValues.WEEKLY_REPETITION)
                                     resetWeeklyRepetitionList();
 
-                                else if (position == EventUtils.MONTHLY_REPETITION)
+                                else if (position == ConstantValues.MONTHLY_REPETITION)
                                     resetMonthlyRepetitionList();
                             }
                         }
@@ -1475,7 +1476,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
                 RepTypeListsAdapter.ViewHolder holder;
 
-                if (selectedRepType == EventUtils.WEEKLY_REPETITION) {
+                if (selectedRepType == ConstantValues.WEEKLY_REPETITION) {
                     holder = (RepTypeListsAdapter.ViewHolder) weeklyRepetitionList.findViewHolderForAdapterPosition(position);
                     addOrRemoveSelectedRepetitionValue(position + 1);
                 }
@@ -1733,7 +1734,7 @@ public class DialogEventParameters extends AppCompatActivity{
     //Method that changes the necessary visibilities to display the special intervals layout for medication alarms:
     private void displaySpecialIntervals() {
         resetWeeklyRepetitionList();
-        selectedRepType = EventUtils.WEEKLY_REPETITION;
+        selectedRepType = ConstantValues.WEEKLY_REPETITION;
         displayingSpecialIntervals = true;
         weeklyRepTypeLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.med_alternate_rep_type_layout).setVisibility(View.GONE);
@@ -1742,7 +1743,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
     //Method that reverts the dialog views when the special intervals for medication alarms are being displayed:
     private void hideAndRevertSpecialIntervals() {
-        selectedRepType = EventUtils.ALTERNATE_REPETITION;
+        selectedRepType = ConstantValues.ALTERNATE_REPETITION;
         displayingSpecialIntervals = false;
         weeklyRepTypeLayout.setVisibility(View.GONE);
         findViewById(R.id.med_alternate_rep_type_layout).setVisibility(View.VISIBLE);
@@ -1816,18 +1817,18 @@ public class DialogEventParameters extends AppCompatActivity{
         subLevelHidden();
 
         //The repetition config list and values are reset (if needed):
-        if (selectedRepType > EventUtils.DAILY_REPETITION) {
+        if (selectedRepType > ConstantValues.DAILY_REPETITION) {
 
             selectedRepTypeConfig = new ArrayList<>();
 
-            if (selectedRepType == EventUtils.ALTERNATE_REPETITION) {
+            if (selectedRepType == ConstantValues.ALTERNATE_REPETITION) {
                 alternateRepetitionValue = 1;
                 setViewText(alternateIntervalText, alternateRepetitionValue);
             }
 
-            else if (selectedRepType == EventUtils.WEEKLY_REPETITION) weeklyRepetitionListAdapter.notifyDataSetChanged();
+            else if (selectedRepType == ConstantValues.WEEKLY_REPETITION) weeklyRepetitionListAdapter.notifyDataSetChanged();
 
-            else if (selectedRepType == EventUtils.MONTHLY_REPETITION) monthlyRepetitionGridAdapter.notifyDataSetChanged();
+            else if (selectedRepType == ConstantValues.MONTHLY_REPETITION) monthlyRepetitionGridAdapter.notifyDataSetChanged();
 
             repetitionTypeButtons[selectedRepType].requestFocus();
 
@@ -1909,12 +1910,12 @@ public class DialogEventParameters extends AppCompatActivity{
 
         boolean isDailyOrAnnual = false;
 
-        if (selectedRepType == EventUtils.DAILY_REPETITION || selectedRepType == EventUtils.ANNUAL_REPETITION) {
+        if (selectedRepType == ConstantValues.DAILY_REPETITION || selectedRepType == ConstantValues.ANNUAL_REPETITION) {
             isDailyOrAnnual = true;
             selectedRepTypeConfig = new ArrayList<>();
         }
 
-        else if (selectedRepType == EventUtils.ALTERNATE_REPETITION) {
+        else if (selectedRepType == ConstantValues.ALTERNATE_REPETITION) {
             selectedRepTypeConfig = new ArrayList<>();
             selectedRepTypeConfig.add(alternateRepetitionValue);
         }
@@ -1941,24 +1942,24 @@ public class DialogEventParameters extends AppCompatActivity{
 
         try {
             selectedRepType = repetitionType.getInt("type");
-            selectedRepTypeConfig = EventUtils.getRepetitionConfigArray(repetitionType.getString("config"));
+            selectedRepTypeConfig = EventJsonObject.getRepetitionConfigArray(repetitionType.getString("config"));
         } catch (JSONException jse) {
             Log.e(TAG, "setRepDescriptionText. JSONException: " + jse.getMessage());
         }
 
         switch (selectedRepType) {
-            case EventUtils.DAILY_REPETITION:
+            case ConstantValues.DAILY_REPETITION:
                 type = getString(R.string.rep_type_description_daily);
                 if (repetitionInterval == 1) config = getString(R.string.rep_config_description_daily_1, repetitionInterval);
                 else config = getString(R.string.rep_config_description_daily_2, repetitionInterval);
                 break;
-            case EventUtils.ALTERNATE_REPETITION:
+            case ConstantValues.ALTERNATE_REPETITION:
                 type = getString(R.string.rep_type_description_alternate);
                 int alternateInterval = selectedRepTypeConfig.get(0);
                 if (alternateInterval == 1) config = getString(R.string.rep_config_description_alternate_1, selectedRepTypeConfig.get(0));
                 else config = getString(R.string.rep_config_description_alternate_2, selectedRepTypeConfig.get(0));
                 break;
-            case EventUtils.WEEKLY_REPETITION:
+            case ConstantValues.WEEKLY_REPETITION:
                 type = getString(R.string.rep_type_description_weekly);
 
                 StringBuilder subConfig = new StringBuilder();
@@ -1978,7 +1979,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
                 config = getString(R.string.rep_config_description_weekly) + subConfig.toString();
                 break;
-            case EventUtils.MONTHLY_REPETITION:
+            case ConstantValues.MONTHLY_REPETITION:
                 type = getString(R.string.rep_type_description_monthly);
 
                 String repetitionDays = selectedRepTypeConfig.toString();
@@ -1992,7 +1993,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
                 config = getString(R.string.rep_config_desc_monthly_header) + repetitionDays + getString(R.string.rep_config_desc_monthly_tail);
                 break;
-            case EventUtils.ANNUAL_REPETITION:
+            case ConstantValues.ANNUAL_REPETITION:
                 type = getString(R.string.rep_type_description_annual);
                 String repDate = eventDay + getString(R.string.date_divider_2) + DateUtils.getMonth(eventMonth) + ".";
                 config = getString(R.string.rep_config_desc_annual_header) + repDate + getString(R.string.rep_config_desc_annual_tail);
@@ -2532,27 +2533,27 @@ public class DialogEventParameters extends AppCompatActivity{
 
         Intent returnIntent = new Intent();
 
-        EventJsonObject eventJson = new EventJsonObject();
+        CalEventJsonObject eventJson = new CalEventJsonObject();
 
-        eventJson.put(EventUtils.EVENT_HOUR_FIELD, eventHour);
-        eventJson.put(EventUtils.EVENT_MINUTE_FIELD, eventMinute);
-        eventJson.put(EventUtils.EVENT_DAY_FIELD, eventDay);
-        eventJson.put(EventUtils.EVENT_MONTH_FIELD, eventMonth);
-        eventJson.put(EventUtils.EVENT_YEAR_FIELD, eventYear);
+        eventJson.put(ConstantValues.EVENT_HOUR_FIELD, eventHour);
+        eventJson.put(ConstantValues.EVENT_MINUTE_FIELD, eventMinute);
+        eventJson.put(ConstantValues.EVENT_DAY_FIELD, eventDay);
+        eventJson.put(ConstantValues.EVENT_MONTH_FIELD, eventMonth);
+        eventJson.put(ConstantValues.EVENT_YEAR_FIELD, eventYear);
 
-        eventJson.put(EventUtils.EVENT_DESCRIPTION_FIELD, selectedDescription);
+        eventJson.put(ConstantValues.EVENT_DESCRIPTION_FIELD, selectedDescription);
 
         if (previousAlarms.length() > 0)
-            eventJson.put(EventUtils.EVENT_PREV_ALARMS_FIELD, previousAlarms.toString());
+            eventJson.put(ConstantValues.EVENT_PREV_ALARMS_FIELD, previousAlarms.toString());
 
         //The interval and repetition stop values are sent only when there is a repetition interval:
         if (repetitionInterval != 0) {
-            eventJson.put(EventUtils.EVENT_REP_INTERVAL_FIELD, repetitionInterval);
-            eventJson.put(EventUtils.EVENT_REPETITION_TYPE_FIELD, repetitionType.toString());
-            eventJson.put(EventUtils.EVENT_REPETITION_STOP_FIELD, selectedStopDate);
+            eventJson.put(ConstantValues.EVENT_REP_INTERVAL_FIELD, repetitionInterval);
+            eventJson.put(ConstantValues.EVENT_REPETITION_TYPE_FIELD, repetitionType.toString());
+            eventJson.put(ConstantValues.EVENT_REPETITION_STOP_FIELD, selectedStopDate);
         }
 
-        returnIntent.putExtra(EventUtils.EVENT_JSON_FIELD, eventJson.toString());
+        returnIntent.putExtra(ConstantValues.EVENT_JSON_FIELD, eventJson.toString());
         returnIntent.putExtra("goAfterEvent", goAfterEvent);
 
         setResult(Activity.RESULT_OK, returnIntent);

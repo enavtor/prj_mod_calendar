@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.droidmare.calendar.services.ApiSynchronizationService;
 import com.droidmare.calendar.services.AlarmResetService;
-import com.shtvsolution.common.utils.ServiceUtils;
+import com.droidmare.common.utils.ServiceUtils;
 
 //A broadcast receiver for boot completed event
 //@author Eduardo on 14/11/2018.

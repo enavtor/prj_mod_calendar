@@ -4,16 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.droidmare.calendar.utils.DateUtils;
-import com.droidmare.calendar.utils.EventUtils;
-import com.droidmare.reminders.model.Reminder;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.droidmare.common.models.EventJsonObject;
+import com.droidmare.common.utils.DateUtils;
+import com.droidmare.common.models.ConstantValues;
 
 //Model for an event item (item inside the event list) declaration
 //@author Eduardo on 13/02/2018.
@@ -26,7 +20,7 @@ public abstract class EventListItem {
     protected String eventId;
 
     //The type of the reminder:
-    protected Reminder.ReminderType reminderType;
+    protected String eventType;
 
     //The event type title:
     protected String eventTypeTitle;
@@ -85,9 +79,6 @@ public abstract class EventListItem {
     //The UTC date of the last update in the API for the event:
     protected long lastApiUpdate;
 
-    //A byte array of the reminder:
-    private byte[] reminderBytes;
-
     //The resources of the application:
     protected Resources resources;
 
@@ -106,7 +97,7 @@ public abstract class EventListItem {
     public EventListItem (){
         //The id will be set once the event is stored in the database:
         this.eventId = "";
-        this.reminderType = null;
+        this.eventType = null;
         this.titleText = null;
         this.descriptionText = null;
         this.eventIcon = null;
@@ -242,9 +233,7 @@ public abstract class EventListItem {
 
     public Drawable getEventIcon() { return eventIcon; }
 
-    public byte[] getReminderBytes() { return reminderBytes; }
-
-    public Reminder.ReminderType getReminderType() { return reminderType; }
+    public String getEventType() { return eventType; }
 
     public int getEventHour() { return eventHour; }
 
@@ -259,6 +248,8 @@ public abstract class EventListItem {
     public int getIntervalTime() { return intervalTime; }
 
     public String getRepetitionType() { return repetitionType; }
+
+    public void setNextRepetition(long nextRepetition) { this.nextRepetition = nextRepetition; }
 
     //Method that returns the event's next repetition (if nextRepetition value is equals to -1, this method returns the start date millis):
     public long getNextRepetition() {
@@ -326,17 +317,17 @@ public abstract class EventListItem {
 
         boolean eventUpdated = false;
 
-        int newEventHour = eventJson.getInt(EventUtils.EVENT_HOUR_FIELD, -1);
-        int newEventMinute = eventJson.getInt(EventUtils.EVENT_MINUTE_FIELD, -1);
+        int newEventHour = eventJson.getInt(ConstantValues.EVENT_HOUR_FIELD, -1);
+        int newEventMinute = eventJson.getInt(ConstantValues.EVENT_MINUTE_FIELD, -1);
 
-        int newIntervalTime = eventJson.getInt(EventUtils.EVENT_REP_INTERVAL_FIELD, 0);
-        long newRepetitionStop = eventJson.getLong(EventUtils.EVENT_REPETITION_STOP_FIELD, -1);
+        int newIntervalTime = eventJson.getInt(ConstantValues.EVENT_REP_INTERVAL_FIELD, 0);
+        long newRepetitionStop = eventJson.getLong(ConstantValues.EVENT_REPETITION_STOP_FIELD, -1);
 
-        int newEventDay = eventJson.getInt(EventUtils.EVENT_DAY_FIELD, -1);
-        int newEventMonth = eventJson.getInt(EventUtils.EVENT_MONTH_FIELD, -1);
-        int newEventYear = eventJson.getInt(EventUtils.EVENT_YEAR_FIELD, -1);
+        int newEventDay = eventJson.getInt(ConstantValues.EVENT_DAY_FIELD, -1);
+        int newEventMonth = eventJson.getInt(ConstantValues.EVENT_MONTH_FIELD, -1);
+        int newEventYear = eventJson.getInt(ConstantValues.EVENT_YEAR_FIELD, -1);
 
-        String newDescriptionText = eventJson.getString(EventUtils.EVENT_DESCRIPTION_FIELD, "");
+        String newDescriptionText = eventJson.getString(ConstantValues.EVENT_DESCRIPTION_FIELD, "");
 
         String newPreviousAlarms = eventJson.getPreviousAlarmsArray().toString();
 
@@ -398,43 +389,23 @@ public abstract class EventListItem {
     }
 
     //Function for creating a reminder for an event:
-    public void createNewReminder() {
+    public String createNewReminder() {
 
-        //Additional options such as i the repetition interval, its type, etc.
-        Bundle additionalOptions = new Bundle();
-
-        additionalOptions.putInt("intervalTime", intervalTime);
-        additionalOptions.putLong("repetitionStop", repetitionStop);
-        additionalOptions.putLong("timeOut", reminderTimeOut);
-        additionalOptions.putString("repetitionType", repetitionType);
-        additionalOptions.putString("previousAlarms", previousAlarms);
+        EventJsonObject eventJson = CalEventJsonObject.createEventJson(this);
 
         //When an external app must be opened, the package and activity are included in the additional options bundle:
-        if (this.externalAppPackage != null) {
-            additionalOptions.putString("package", externalAppPackage);
-            additionalOptions.putString("activity", externalAppActivity);
+        if (externalAppPackage != null) {
+            eventJson.put(ConstantValues.PACKAGE_NAME, externalAppPackage);
+            eventJson.put(ConstantValues.ACTIVITY_NAME, externalAppActivity);
         }
 
-        //Creation of the reminder:
-        Reminder newReminder = new Reminder(
-                eventId,
-                reminderType,
-                eventDay,
-                eventMonth,
-                eventYear,
-                eventHour,
-                eventMinute,
-                descriptionText,
-                additionalOptions);
-
-        //The reminder must be transformed into a byte array so it can be sent to the reminders module:
-        reminderBytes = newReminder.marshall();
+        return eventJson.toString();
     }
 
     //Function for transforming an event into a String:
     public String eventToString () {
 
-        String type = "Event_Type: " + reminderType;
+        String type = "Event_Type: " + eventType;
         String id = "Event_Id: " + eventId;
         String date = "Event_Date: " + getDateText(true, false);
         String description = "Event_Description: " + descriptionText;
@@ -464,51 +435,6 @@ public abstract class EventListItem {
         String SPACE = "  ,,  ";
 
         return type + SPACE + id + SPACE  + date + SPACE + description + SPACE + prevAlarms + SPACE + repetition + SPACE + stop + SPACE + getLastApiUpdate();
-    }
-
-    //Function that works out the next repetition for an event (only if the event has a repetition):
-    public void calculateNextRepetition (long currentDate) {
-
-        if (intervalTime != 0) {
-
-            int repType = -1;
-            ArrayList<Integer> repConfig = new ArrayList<>();
-
-            int[] auxDateArray = {eventMinute, eventHour, eventDay, eventMonth, eventYear};
-            long eventDateMillis = DateUtils.getMillisFromArray(auxDateArray);
-
-            JSONObject repTypeAux;
-
-            //First thing that must be done is to retrieve the repetition type and config:
-            try {
-                repTypeAux = new JSONObject(repetitionType);
-                repType = repTypeAux.getInt("type");
-                repConfig = EventUtils.getRepetitionConfigArray(repTypeAux.getString("config"));
-            } catch (JSONException jse) {
-                Log.e(TAG, "calculateNextRepetition. JSONException: " + jse.getMessage());
-            }
-
-            //Log.e("CalculateNextRepetition", "Event: " + eventId + " -- " + repTypeAux.toString());
-
-            //Now the calculation is performed based on the repetition type and the interval:
-            switch (repType) {
-                case EventUtils.DAILY_REPETITION:
-                    nextRepetition = DateUtils.getNextDailyRepetition(currentDate, eventDateMillis, repetitionStop, intervalTime);
-                    break;
-                case EventUtils.ALTERNATE_REPETITION:
-                    nextRepetition = DateUtils.getNextAlternateRepetition(currentDate, eventDateMillis, repetitionStop, repConfig, intervalTime);
-                    break;
-                case EventUtils.WEEKLY_REPETITION:
-                    nextRepetition = DateUtils.getNextWeeklyRepetition(currentDate, eventDateMillis, repetitionStop, repConfig, intervalTime);
-                    break;
-                case EventUtils.MONTHLY_REPETITION:
-                    nextRepetition = DateUtils.getNextMonthlyRepetition(currentDate, eventDateMillis, repetitionStop, repConfig, intervalTime);
-                    break;
-                case EventUtils.ANNUAL_REPETITION:
-                    nextRepetition = DateUtils.getNextAnnualRepetition(currentDate, eventDateMillis, repetitionStop, intervalTime);
-                    break;
-            }
-        }
     }
 
     //Function for defining a new event:
