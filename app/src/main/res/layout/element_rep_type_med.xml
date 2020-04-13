@@ -12,7 +12,7 @@
             android:id="@+id/alternate_values_layouts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/dpi_40dp"
             android:orientation="vertical"
             android:scaleX="1.9"
             android:scaleY="1.9">
@@ -20,7 +20,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="@dimen/dpi_10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -32,21 +32,21 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/minus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/med_alternate_interval_text"
-                    android:layout_width="220dp"
+                    android:layout_width="@dimen/dpi_220dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textAlignment="center"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/dpi_30sp" />
 
                 <LinearLayout
                     android:id="@+id/med_alternate_interval_increase"
@@ -56,10 +56,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
             </LinearLayout>
@@ -78,21 +78,22 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
+
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/minus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/med_alternate_hours_text"
-                    android:layout_width="220dp"
+                    android:layout_width="@dimen/dpi_220dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textAlignment="center"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/dpi_30sp" />
 
                 <LinearLayout
                     android:id="@+id/med_alternate_hours_increase"
@@ -102,10 +103,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
             </LinearLayout>
@@ -116,12 +117,12 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/alternate_values_layouts"
             android:layout_centerInParent="true"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="@dimen/dpi_80dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/med_special_interval_buttons"
-                android:layout_width="100dp"
+                android:layout_width="@dimen/dpi_100dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/edition_elements_background"
                 android:clickable="true"
@@ -129,22 +130,22 @@
                 android:nextFocusLeft="@id/prev_step_button"
                 android:nextFocusDown="@id/display_current_parameters_button"
                 android:nextFocusRight="@id/next_step_button"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:gravity="center">
 
                 <LinearLayout
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/dpi_22dp"
+                    android:layout_height="@dimen/dpi_22dp"
                     android:background="@drawable/plus_symbol_black" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="@dimen/dpi_15dp"
                 android:gravity="center"
                 android:text="@string/parameters_special_interval"
-                android:textSize="40sp"
+                android:textSize="@dimen/dpi_40sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
     </RelativeLayout>
@@ -170,7 +171,7 @@
                 android:layout_height="wrap_content"/>
 
             <RelativeLayout
-                android:layout_width="1dp"
+                android:layout_width="@dimen/dpi_1dp"
                 android:layout_height="match_parent"
                 android:background="@color/grey_light_darker" />
         </LinearLayout>

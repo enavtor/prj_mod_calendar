@@ -6,10 +6,10 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="450dp"
+        android:layout_width="@dimen/dpi_450dp"
         android:layout_height="wrap_content"
-        android:paddingTop="9dp"
-        android:paddingBottom="12dp"
+        android:paddingTop="@dimen/dpi_9dp"
+        android:paddingBottom="@dimen/dpi_12dp"
         android:scaleY="1.5"
         android:scaleX="1.5"
         android:layout_centerInParent="true"
@@ -23,13 +23,13 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/black"
-            android:textSize="25sp"/>
+            android:textSize="@dimen/dpi_25sp"/>
 
         <RelativeLayout
-            android:layout_width="400dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
-            android:layout_height="1dp"
+            android:layout_width="@dimen/dpi_400dp"
+            android:layout_marginTop="@dimen/dpi_7dp"
+            android:layout_marginBottom="@dimen/dpi_7dp"
+            android:layout_height="@dimen/dpi_1dp"
             android:background="@drawable/date_picker_separator"/>
 
         <LinearLayout
@@ -39,12 +39,12 @@
             android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="25dp"
+                android:layout_width="@dimen/dpi_25dp"
                 android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
+                    android:layout_height="@dimen/dpi_130dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/content_indication_prev"
                     android:backgroundTint="@color/grey_medium"
@@ -53,8 +53,8 @@
 
             <RelativeLayout
                 android:id="@+id/calendar_sub_container"
-                android:layout_width="380dp"
-                android:layout_height="225dp">
+                android:layout_width="@dimen/dpi_380dp"
+                android:layout_height="@dimen/dpi_225dp">
 
                 <include
                     layout="@layout/element_calendar"
@@ -63,12 +63,12 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:layout_width="25dp"
+                android:layout_width="@dimen/dpi_25dp"
                 android:layout_height="match_parent">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="130dp"
+                    android:layout_height="@dimen/dpi_130dp"
                     android:layout_centerInParent="true"
                     android:background="@drawable/content_indication_next"
                     android:backgroundTint="@color/grey_medium"
@@ -79,7 +79,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="@dimen/dpi_20dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -89,52 +89,52 @@
                 android:gravity="center">
 
                 <RelativeLayout
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_width="@dimen/dpi_20dp"
+                    android:layout_height="@dimen/dpi_20dp"
+                    android:layout_marginEnd="@dimen/dpi_10dp"
                     android:background="@drawable/date_picker_focus_today"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/today_date_legend_text"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/dpi_18sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="@dimen/dpi_20dp"
                 android:orientation="horizontal"
                 android:gravity="center">
 
                 <RelativeLayout
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_width="@dimen/dpi_20dp"
+                    android:layout_height="@dimen/dpi_20dp"
+                    android:layout_marginEnd="@dimen/dpi_10dp"
                     android:background="@drawable/date_picker_focus_start"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/start_date_legend_text"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/dpi_18sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
         </LinearLayout>
 
         <RelativeLayout
-            android:layout_width="400dp"
-            android:layout_height="1dp"
+            android:layout_width="@dimen/dpi_400dp"
+            android:layout_height="@dimen/dpi_1dp"
             android:background="@drawable/date_picker_separator"/>
 
         <LinearLayout
             android:id="@+id/date_picker_full_footer"
-            android:layout_width="350dp"
+            android:layout_width="@dimen/dpi_350dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dpi_10dp"
             android:gravity="center">
 
             <RelativeLayout
@@ -147,20 +147,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <!--LinearLayout
-                    android:layout_width="2dp"
-                    android:layout_height="110dp"
-                    android:layout_centerInParent="true"
-                    android:layout_alignParentStart="true"
-                    android:background="@drawable/datepicker_time_mask"/>
-
-                <LinearLayout
-                    android:layout_width="2dp"
-                    android:layout_height="110dp"
-                    android:layout_centerInParent="true"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/datepicker_time_mask"/-->
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -169,24 +155,24 @@
 
                 <RelativeLayout
                     android:id="@+id/time_result_separator"
-                    android:layout_width="1dp"
-                    android:layout_height="115dp"
-                    android:layout_marginStart="35dp"
+                    android:layout_width="@dimen/dpi_1dp"
+                    android:layout_height="@dimen/dpi_115dp"
+                    android:layout_marginStart="@dimen/dpi_35dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/date_picker_separator"/>
 
                 <TextView
                     android:id="@+id/date_text"
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/dpi_150dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginTop="@dimen/dpi_4dp"
+                    android:layout_marginEnd="@dimen/dpi_4dp"
                     android:layout_alignParentEnd="true"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dpi_2dp"
                     android:background="@drawable/date_picker_date_background"
                     android:textColor="@color/grey_dark"
-                    android:textSize="@dimen/fragment_item_text_size" />
+                    android:textSize="@dimen/dpi_20sp" />
 
                 <LinearLayout
                     android:id="@+id/accept_button"
@@ -199,17 +185,17 @@
                     android:focusable="true"
                     android:nextFocusDown="@id/accept_button"
                     android:nextFocusRight="@id/accept_button"
-                    android:padding="4dp">
+                    android:padding="@dimen/dpi_4dp">
 
                     <TextView
-                        android:layout_width="150dp"
+                        android:layout_width="@dimen/dpi_150dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/date_picker_buttons_background"
                         android:gravity="center"
-                        android:padding="12dp"
+                        android:padding="@dimen/dpi_12dp"
                         android:text="@string/accept_button"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/fragment_item_text_size" />
+                        android:textSize="@dimen/dpi_20sp" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
@@ -218,20 +204,20 @@
             android:id="@+id/date_picker_short_footer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dpi_10dp"
             android:gravity="center"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/date_text_short"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/dpi_150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="@dimen/dpi_20dp"
                 android:gravity="center"
-                android:padding="12dp"
+                android:padding="@dimen/dpi_12dp"
                 android:background="@drawable/date_picker_date_background"
                 android:textColor="@color/grey_dark"
-                android:textSize="@dimen/fragment_item_text_size" />
+                android:textSize="@dimen/dpi_20sp" />
 
             <LinearLayout
                 android:id="@+id/accept_button_short"
@@ -242,17 +228,17 @@
                 android:focusable="true"
                 android:nextFocusDown="@id/accept_button_short"
                 android:nextFocusRight="@id/accept_button_short"
-                android:padding="4dp">
+                android:padding="@dimen/dpi_4dp">
 
                 <TextView
-                    android:layout_width="150dp"
+                    android:layout_width="@dimen/dpi_150dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/date_picker_buttons_background"
                     android:gravity="center"
-                    android:padding="12dp"
+                    android:padding="@dimen/dpi_12dp"
                     android:text="@string/accept_button"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/fragment_item_text_size" />
+                    android:textSize="@dimen/dpi_20sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -2,20 +2,20 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="oval">
-            <stroke android:width="2dp"
+            <stroke android:width="@dimen/dpi_2dp"
                 android:color="@color/ir_blue" />
             <solid
                 android:color="@color/focus_lighter"/>
-            <size android:width="20dp"
-                android:height="20dp"/>
+            <size android:width="@dimen/dpi_20dp"
+                android:height="@dimen/dpi_20dp"/>
         </shape>
     </item>
     <item android:state_focused="false" >
         <shape android:shape="oval">
-            <stroke android:width="2dp"
+            <stroke android:width="@dimen/dpi_2dp"
                 android:color="@color/ir_blue" />
-            <size android:width="20dp"
-                android:height="20dp"/>
+            <size android:width="@dimen/dpi_20dp"
+                android:height="@dimen/dpi_20dp"/>
         </shape>
     </item>
 </selector>

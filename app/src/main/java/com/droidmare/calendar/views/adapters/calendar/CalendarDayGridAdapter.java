@@ -1,6 +1,7 @@
 package com.droidmare.calendar.views.adapters.calendar;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,15 +30,15 @@ public class CalendarDayGridAdapter extends RecyclerView.Adapter<CalendarDayGrid
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public CalendarDayGridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public CalendarDayGridAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_day_grid_date_picker, parent, false);
         return new CalendarDayGridAdapter.ViewHolder(view);
     }
 
     // binds the data to the text view in each cell
     @Override
-    public void onBindViewHolder(CalendarDayGridAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CalendarDayGridAdapter.ViewHolder holder, int position) {
 
         String dayText = arrayList.get(position);
 

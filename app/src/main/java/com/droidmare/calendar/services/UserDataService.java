@@ -9,6 +9,7 @@ import java.lang.ref.WeakReference;
 
 //User data receiver service declaration
 //@author Eduardo on 22/05/2018.
+
 public class UserDataService extends CommonUserData {
 
     public static final String TAG = UserDataService.class.getCanonicalName();

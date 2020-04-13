@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="1dp"
+    android:padding="@dimen/dpi_1dp"
     android:background="@drawable/grid_item_divider">
 
     <TextView
@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:textSize="28sp"
+        android:textSize="@dimen/dpi_28sp"
         android:textColor="@color/black"/>
 </LinearLayout>

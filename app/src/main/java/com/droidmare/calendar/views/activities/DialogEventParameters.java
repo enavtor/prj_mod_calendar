@@ -36,7 +36,6 @@ import com.droidmare.calendar.views.adapters.events.EventDayAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.PrevAlarmsListsAdapter;
 import com.droidmare.calendar.views.adapters.dialogs.SelectionListAdapter;
 import com.droidmare.common.models.ConstantValues;
-import com.droidmare.common.utils.ImageUtils;
 import com.droidmare.common.utils.ToastUtils;
 
 import org.json.JSONArray;
@@ -207,14 +206,14 @@ public class DialogEventParameters extends AppCompatActivity{
     private LinearLayout followAffirmative;
     private LinearLayout followNegative;
 
-    //RecyclerViews, adapters and arrays for the selection lists:
-    private ArrayList<String> hoursArray;
-    private ArrayList<String> minutesArray;
-
+    //RecyclerViews and adapters for the selection lists:
     private RelativeLayout timeDivisorFocus;
 
     private RecyclerView eventHourList;
     private RecyclerView eventMinuteList;
+
+    private SelectionListAdapter minutesListAdapter;
+    private SelectionListAdapter hoursListAdapter;
 
     //Listener for handling on calendar grid items clicks:
     private EventCalendarAdapter.ItemClickListener calendarGridListener;
@@ -353,7 +352,7 @@ public class DialogEventParameters extends AppCompatActivity{
             dayGrid.setFocusable(false);
             dayGrid.setAdapter(dayAdapter);
 
-            //Initialization of the calendar grid (for the current selected repetition stop month):
+            //Initialization of the calendar grid (for the event start day):
             RecyclerView calendarGrid = findViewById(R.id.event_calendar_grid);
             calendarGrid.setLayoutManager(new GridLayoutManager(this, 7));
             calendarGrid.setHasFixedSize(true);
@@ -475,58 +474,15 @@ public class DialogEventParameters extends AppCompatActivity{
                 View focusedItemParent = (View) focusedView.getParent();
 
                 if (isSelectionList(focusedItemParent.getId())) {
-                    //If, indeed, the parent is one of the selection list recycler views, the adapter and the linear manager are got:
-                    RecyclerView.Adapter adapter = ((RecyclerView) focusedItemParent).getAdapter();
-                    LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) focusedItemParent).getLayoutManager();
-                    //Depending on the pressed key the list scrolls upwards or downwards:
+
+                    //Depending on the pressed key the list scrolls upwards or downwards (the list does not really scroll but its values are updated):
                     if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-                        //When the d-pad up key is pressed, the list must scroll downwards, keeping the focus on the central element:
-                        int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
-                        int lastVisibleItemIndex = layoutManager.findLastCompletelyVisibleItemPosition();
-
-                        int focusOffset = ((lastVisibleItemIndex - firstVisibleItemIndex) / 2) - 1;
-
-                        if (firstVisibleItemIndex > 0) {
-
-                            //The text color and style must be changed, since the middle elements' color is black and their style is bold, and the rest of elements' are grey by default:
-                            SelectionListAdapter.ViewHolder holder = ((SelectionListAdapter.ViewHolder) ((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + 1));
-                            holder.notCenteredHolder();
-
-                            ((RecyclerView) focusedItemParent).scrollToPosition(firstVisibleItemIndex - 1);
-                            holder = ((SelectionListAdapter.ViewHolder) ((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + focusOffset));
-
-                            holder.itemView.requestFocus();
-                            holder.centeredHolder();
-
-                            //Now the corresponding variable values must be updated based on the new centered element value:
-                            updateListParameter(focusedItemParent.getId(), holder);
-                        }
-
+                        decreaseListParameter(focusedItemParent.getId());
                         return true;
-                    } else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-                        //When the d-pad down key is pressed, the list must scroll upwards, keeping the focus on the central element:
-                        int totalItemCount = adapter.getItemCount();
-                        int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
-                        int lastVisibleItemIndex = layoutManager.findLastCompletelyVisibleItemPosition();
+                    }
 
-                        int focusOffset = ((lastVisibleItemIndex - firstVisibleItemIndex) / 2) - 1;
-
-                        if (lastVisibleItemIndex < totalItemCount - 1) {
-
-                            //The text color and style must be changed, since the middle elements' color is black and their style is bold and the rest of elements' are grey by default:
-                            SelectionListAdapter.ViewHolder holder = ((SelectionListAdapter.ViewHolder) ((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + 1));
-                            holder.notCenteredHolder();
-
-                            ((RecyclerView) focusedItemParent).scrollToPosition(lastVisibleItemIndex + 1);
-                            holder = ((SelectionListAdapter.ViewHolder) ((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(lastVisibleItemIndex - focusOffset));
-
-                            holder.itemView.requestFocus();
-                            holder.centeredHolder();
-
-                            //Now the corresponding variable values must be updated based on the new centered element value:
-                            updateListParameter(focusedItemParent.getId(), holder);
-                        }
-
+                    else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
+                        increaseListParameter(focusedItemParent.getId());
                         return true;
                     }
                 }
@@ -541,14 +497,50 @@ public class DialogEventParameters extends AppCompatActivity{
         return focusedViewId == eventHourList.getId() || focusedViewId == eventMinuteList.getId();
     }
 
-    //Method that updates the necessary variables and the stop day selection list elements when needed:
-    private void updateListParameter(int listId, SelectionListAdapter.ViewHolder holder) {
+    //Method that increases the current start minute or hour depending on the focused list:
+    private void increaseListParameter(int listId) {
 
-        if (listId == eventHourList.getId())
-            eventHour = holder.getItemValue();
+        if (listId == eventHourList.getId() && eventHour < 23) {
+            eventHour++;
+            hoursListAdapter.updateItems(getUpdatedHoursListParameter());
+        }
 
-        else if (listId == eventMinuteList.getId())
-            eventMinute = holder.getItemValue();
+        else if (listId == eventMinuteList.getId() && eventMinute < 59) {
+            eventMinute++;
+            minutesListAdapter.updateItems(getUpdatedMinutesListParameter());
+        }
+    }
+
+    //Method that decreases the current start minute or hour depending on the focused list:
+    private void decreaseListParameter(int listId) {
+
+        if (listId == eventHourList.getId() && eventHour > 0) {
+            eventHour--;
+            hoursListAdapter.updateItems(getUpdatedHoursListParameter());
+        }
+
+        else if (listId == eventMinuteList.getId() && eventMinute > 0) {
+            eventMinute--;
+            minutesListAdapter.updateItems(getUpdatedMinutesListParameter());
+        }
+    }
+
+    //Method that generates a new array for the hours list depending on the value of the current start hour:
+    private String[] getUpdatedHoursListParameter() {
+        if (eventHour == 0) return new String[] {"", DateUtils.formatTimeString(eventHour), DateUtils.formatTimeString(eventHour + 1)};
+
+        else if (eventHour == 23) return new String[] {DateUtils.formatTimeString(eventHour - 1), DateUtils.formatTimeString(eventHour), ""};
+
+        else return new String[] {DateUtils.formatTimeString(eventHour - 1), DateUtils.formatTimeString(eventHour), DateUtils.formatTimeString(eventHour + 1)};
+    }
+
+    //Method that generates a new array for the minutes list depending on the value of the current start minute:
+    private String[] getUpdatedMinutesListParameter() {
+        if (eventMinute == 0) return new String[] {"", DateUtils.formatTimeString(eventMinute), DateUtils.formatTimeString(eventMinute + 1)};
+
+        else if (eventMinute == 59) return new String[] {DateUtils.formatTimeString(eventMinute - 1), DateUtils.formatTimeString(eventMinute), ""};
+
+        else return new String[] {DateUtils.formatTimeString(eventMinute - 1), DateUtils.formatTimeString(eventMinute), DateUtils.formatTimeString(eventMinute + 1)};
     }
 
     //Method that assigns values to the variables based on the contents within the received intent:
@@ -809,8 +801,6 @@ public class DialogEventParameters extends AppCompatActivity{
 
     //Method that initializes the recycler views for the selection of the event's hour and minute:
     private void initializeEventSelectionLists() {
-        //Initialization of the array lists for each adapter:
-        initializeEventSelectionArrayLists();
 
         //Initialization of time divisor and focus layout:
         timeDivisorFocus = findViewById(R.id.time_selection_div_focus);
@@ -826,12 +816,10 @@ public class DialogEventParameters extends AppCompatActivity{
         eventHourList.getRecycledViewPool().setMaxRecycledViews(0, 0);
         eventHourList.setHasFixedSize(true);
 
-        SelectionListAdapter eventHourListAdapter = new SelectionListAdapter(this, SelectionListAdapter.TYPE_HOUR, hoursArray);
+        hoursListAdapter = new SelectionListAdapter(this, SelectionListAdapter.TYPE_HOUR, getUpdatedHoursListParameter());
 
         eventHourList.setFocusable(false);
-        eventHourList.setAdapter(eventHourListAdapter);
-        //The list is scrolled so the central hour is the current one:
-        eventHourList.scrollToPosition(eventHour);
+        eventHourList.setAdapter(hoursListAdapter);
 
         //Initialization of the minutes list:
         eventMinuteList = findViewById(R.id.event_minute_list);
@@ -841,33 +829,10 @@ public class DialogEventParameters extends AppCompatActivity{
         eventMinuteList.getRecycledViewPool().setMaxRecycledViews(0, 0);
         eventMinuteList.setHasFixedSize(true);
 
-        SelectionListAdapter eventMinuteListAdapter = new SelectionListAdapter(this, SelectionListAdapter.TYPE_MINUTE, minutesArray);
+        minutesListAdapter = new SelectionListAdapter(this, SelectionListAdapter.TYPE_MINUTE, getUpdatedMinutesListParameter());
 
         eventMinuteList.setFocusable(false);
-        eventMinuteList.setAdapter(eventMinuteListAdapter);
-        //The list is scrolled so the central minute is the current one:
-        eventMinuteList.scrollToPosition(eventMinute);
-    }
-
-    //Method for initializing the element arrays for each event selection list:
-    private void initializeEventSelectionArrayLists() {
-        //Hours array list initialization:
-        hoursArray = new ArrayList<>();
-        hoursArray.add("");
-
-        for (int hour = 0; hour < 24; hour++)
-            hoursArray.add(DateUtils.formatTimeString(hour));
-
-        hoursArray.add("");
-
-        //Minutes array list initialization:
-        minutesArray = new ArrayList<>();
-        minutesArray.add("");
-
-        for (int minute = 0; minute < 60; minute++)
-            minutesArray.add(DateUtils.formatTimeString(minute));
-
-        minutesArray.add("");
+        eventMinuteList.setAdapter(minutesListAdapter);
     }
 
     //Method that initializes all the previous alarms layout lists:
@@ -1629,10 +1594,10 @@ public class DialogEventParameters extends AppCompatActivity{
                 String messageHeader = getString(R.string.parameters_custom_date_error_header) + "\n";
                 String messagePrevAlarmDate = getString(R.string.parameters_custom_date_header) + prevAlarmDate + "\n";
                 String messageEventDate = getString(R.string.parameters_event_date_header) + eventDate;
-                ToastUtils.makeCustomToast(getApplicationContext(), messageHeader + messagePrevAlarmDate + messageEventDate, ToastUtils.DEFAULT_TOAST_SIZE, 10);
+                ToastUtils.makeCustomToast(getApplicationContext(), messageHeader + messagePrevAlarmDate + messageEventDate, 10);
             }
 
-            else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_error_creating_prev_alarm), ToastUtils.DEFAULT_TOAST_SIZE, 10);
+            else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_error_creating_prev_alarm), 10);
         }
 
         if (requestCode == REQUEST_CUSTOM_STOP_DATE_PICKER && resultCode == RESULT_OK) {
@@ -1647,7 +1612,7 @@ public class DialogEventParameters extends AppCompatActivity{
                 setViewText(repetitionStopDaysText, repStopDaysDuration);
             }
 
-            else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_stop_date_error), ToastUtils.DEFAULT_TOAST_SIZE, 10);
+            else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_stop_date_error), 10);
         }
 
         else if (requestCode == REQUEST_DELETE_DIALOG && resultCode == RESULT_OK) {
@@ -1690,7 +1655,7 @@ public class DialogEventParameters extends AppCompatActivity{
             String messageCurrentDate = getString(R.string.parameters_today_date_header) + currentDateText;
             String message = messageHeader + messageCurrentDate;
 
-            ToastUtils.makeCustomToast(getApplicationContext(), message, ToastUtils.DEFAULT_TOAST_SIZE, 10);
+            ToastUtils.makeCustomToast(getApplicationContext(), message, 10);
         }
 
         return dateNotPrevious;
@@ -1725,7 +1690,7 @@ public class DialogEventParameters extends AppCompatActivity{
             String messageCurrentDate = getString(R.string.parameters_today_date_header) + currentDateText + currentTimeText;
             String message = messageHeader + messageCurrentDate;
 
-            ToastUtils.makeCustomToast(getApplicationContext(), message, ToastUtils.DEFAULT_TOAST_SIZE, 15);
+            ToastUtils.makeCustomToast(getApplicationContext(), message, 15);
         }
 
         return timeNotPrevious;
@@ -1776,7 +1741,7 @@ public class DialogEventParameters extends AppCompatActivity{
             for (int i = 0; i < previousAlarms.length(); i++) {
                 try {
                     previousAlarmsLayouts[i].setVisibility(View.VISIBLE);
-                    previousAlarmsLayouts[i].setText(prevAlarmHeader + (i + 1) + ": " + (previousAlarms.getJSONObject(i)).getString("Alarm"));
+                    previousAlarmsLayouts[i].setText(prevAlarmHeader + (i + 1) + ": " + (previousAlarms.getJSONObject(i)).getString(ConstantValues.PREV_ALARMS_ALARM_FIELD));
                 } catch (JSONException jse) {
                     Log.e(TAG, "setPreviousAlarmsText. JSONException: " + jse.getMessage());
                 }
@@ -1867,7 +1832,7 @@ public class DialogEventParameters extends AppCompatActivity{
         if (prevAlarmDate != null && !DateUtils.fullDateIsPrevious(prevAlarmDate, DateUtils.getTodayFormattedDate()))
             createPrevAlarm(prevAlarmDate);
 
-        else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_error_creating_prev_alarm), ToastUtils.DEFAULT_TOAST_SIZE, 10);
+        else ToastUtils.makeCustomToast(getApplicationContext(), getString(R.string.parameters_error_creating_prev_alarm), 10);
     }
 
     //Method that encapsulates the creation of a early alarm:
@@ -2073,7 +2038,7 @@ public class DialogEventParameters extends AppCompatActivity{
 
                     currentDescription.setMovementMethod(new ScrollingMovementMethod());
                     currentDescription.setFocusable(true);
-                    int padding = ImageUtils.transformDipToPix(getApplicationContext(), 8);
+                    int padding = getResources().getDimensionPixelSize(R.dimen.dpi_8dp);
                     currentDescription.setPadding(padding, padding, padding, padding);
                 }
 
@@ -2081,7 +2046,7 @@ public class DialogEventParameters extends AppCompatActivity{
                     LinearLayout descriptionContainer = findViewById(R.id.current_desc_container);
                     descriptionContainer.setBackground(null);
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) descriptionContainer.getLayoutParams();
-                    int marginTop = ImageUtils.transformDipToPix(getApplicationContext(), 10);
+                    int marginTop =  getResources().getDimensionPixelSize(R.dimen.dpi_10dp);
                     params.setMargins(params.leftMargin, marginTop, params.rightMargin, params.bottomMargin);
 
                     currentDescription.setMovementMethod(null);

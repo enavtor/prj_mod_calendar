@@ -11,41 +11,41 @@
         <LinearLayout
             android:id="@+id/add_alarm_layout"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/dpi_60dp"
             android:layout_centerHorizontal="true"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/add_alarm_button"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/dpi_80dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/edition_elements_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:nextFocusRight="@id/next_step_button"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:gravity="center">
 
                 <LinearLayout
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/dpi_22dp"
+                    android:layout_height="@dimen/dpi_22dp"
                     android:background="@drawable/plus_symbol_black" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="@dimen/dpi_15dp"
                 android:gravity="center"
                 android:text="@string/parameters_add_prev_alarm"
-                android:textSize="35sp"
+                android:textSize="@dimen/dpi_35sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/add_alarm_layout"
             android:orientation="vertical">
@@ -54,64 +54,64 @@
                 android:id="@+id/prev_alarm_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:background="@drawable/text_item_background"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/prev_step_button"
-                android:textSize="32sp"
+                android:textSize="@dimen/dpi_32sp"
                 android:textColor="@color/black"
-                android:padding="5dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
+                android:padding="@dimen/dpi_5dp"
+                android:paddingStart="@dimen/dpi_15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/prev_alarm_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:background="@drawable/text_item_background"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/prev_step_button"
-                android:textSize="32sp"
+                android:textSize="@dimen/dpi_32sp"
                 android:textColor="@color/black"
-                android:padding="5dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
+                android:padding="@dimen/dpi_5dp"
+                android:paddingStart="@dimen/dpi_15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/prev_alarm_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:background="@drawable/text_item_background"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/prev_step_button"
-                android:textSize="32sp"
+                android:textSize="@dimen/dpi_32sp"
                 android:textColor="@color/black"
-                android:padding="5dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
+                android:padding="@dimen/dpi_5dp"
+                android:paddingStart="@dimen/dpi_15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/prev_alarm_4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:background="@drawable/text_item_background"
                 android:focusable="true"
                 android:clickable="true"
                 android:nextFocusLeft="@id/prev_step_button"
-                android:textSize="32sp"
+                android:textSize="@dimen/dpi_32sp"
                 android:textColor="@color/black"
-                android:padding="5dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
+                android:padding="@dimen/dpi_5dp"
+                android:paddingStart="@dimen/dpi_15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:visibility="gone"/>
         </LinearLayout>
     </RelativeLayout>
@@ -126,8 +126,8 @@
 
         <RelativeLayout
             android:id="@+id/prev_alarm_unit_layout"
-            android:layout_width="250dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/dpi_250dp"
+            android:layout_height="@dimen/dpi_80dp"
             android:background="@color/grey_lighter">
 
             <TextView
@@ -137,17 +137,17 @@
                 android:gravity="center"
                 android:background="@drawable/text_box_focus"
                 android:paddingStart="0dp"
-                android:paddingEnd="15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:focusable="true"
                 android:clickable="true"
-                android:textSize="30sp"
+                android:textSize="@dimen/dpi_30sp"
                 android:textColor="@color/black"/>
 
             <RelativeLayout
-                android:layout_width="20dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="@dimen/dpi_20dp"
+                android:layout_height="@dimen/dpi_44dp"
+                android:layout_marginTop="@dimen/dpi_19dp"
+                android:layout_marginEnd="@dimen/dpi_8dp"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/content_indication_down"
                 android:backgroundTint="@color/grey_medium"
@@ -158,7 +158,7 @@
             android:id="@+id/unit_selection_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
             android:layout_below="@id/prev_alarm_unit_layout"
             android:layout_alignStart="@id/prev_alarm_unit_layout"
             android:orientation="vertical"
@@ -166,36 +166,36 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/unit_selection_list"
-                android:layout_width="220dp"
-                android:layout_height="150dp"
+                android:layout_width="@dimen/dpi_220dp"
+                android:layout_height="@dimen/dpi_150dp"
                 android:background="@drawable/list_box_background"/>
 
             <LinearLayout
                 android:id="@+id/dismiss_unit_selection_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="@dimen/dpi_2dp"
                 android:background="@drawable/dialog_buttons_background"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="2dp">
+                android:padding="@dimen/dpi_2dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dpi_2dp"
                     android:text="@string/dismiss_menu_button"
                     android:textColor="@color/white"
-                    android:textSize="27sp" />
+                    android:textSize="@dimen/dpi_27sp" />
             </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/prev_alarm_value_layout"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="20dp"
+            android:layout_width="@dimen/dpi_100dp"
+            android:layout_height="@dimen/dpi_80dp"
+            android:layout_marginStart="@dimen/dpi_20dp"
             android:layout_toEndOf="@id/prev_alarm_unit_layout"
             android:background="@color/grey_lighter">
 
@@ -206,17 +206,17 @@
                 android:gravity="center"
                 android:background="@drawable/text_box_focus"
                 android:paddingStart="0dp"
-                android:paddingEnd="15dp"
+                android:paddingEnd="@dimen/dpi_15dp"
                 android:focusable="true"
                 android:clickable="true"
-                android:textSize="30sp"
+                android:textSize="@dimen/dpi_30sp"
                 android:textColor="@color/black"/>
 
             <RelativeLayout
-                android:layout_width="20dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="@dimen/dpi_20dp"
+                android:layout_height="@dimen/dpi_44dp"
+                android:layout_marginTop="@dimen/dpi_19dp"
+                android:layout_marginEnd="@dimen/dpi_8dp"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/content_indication_down"
                 android:backgroundTint="@color/grey_medium"
@@ -227,7 +227,7 @@
             android:id="@+id/value_selection_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/dpi_5dp"
             android:layout_below="@id/prev_alarm_value_layout"
             android:layout_alignEnd="@id/prev_alarm_value_layout"
             android:orientation="vertical"
@@ -235,63 +235,63 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/value_selection_list"
-                android:layout_width="130dp"
-                android:layout_height="150dp"
+                android:layout_width="@dimen/dpi_130dp"
+                android:layout_height="@dimen/dpi_150dp"
                 android:background="@drawable/list_box_background"/>
 
             <LinearLayout
                 android:id="@+id/dismiss_value_selection_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="@dimen/dpi_2dp"
                 android:background="@drawable/dialog_buttons_background"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="2dp">
+                android:padding="@dimen/dpi_2dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:padding="2dp"
+                    android:padding="@dimen/dpi_2dp"
                     android:text="@string/dismiss_menu_button"
                     android:textColor="@color/white"
-                    android:textSize="27sp" />
+                    android:textSize="@dimen/dpi_27sp" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/prev_alarm_custom_layout"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginTop="30dp"
+            android:layout_height="@dimen/dpi_60dp"
+            android:layout_marginTop="@dimen/dpi_30dp"
             android:layout_below="@id/unit_selection_layout"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/custom_alarm_button"
-                android:layout_width="80dp"
+                android:layout_width="@dimen/dpi_80dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/edition_elements_background"
                 android:clickable="true"
                 android:focusable="true"
                 android:nextFocusRight="@id/next_step_button"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:gravity="center">
 
                 <LinearLayout
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="@dimen/dpi_22dp"
+                    android:layout_height="@dimen/dpi_22dp"
                     android:background="@drawable/plus_symbol_black" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
+                android:layout_marginStart="@dimen/dpi_15dp"
                 android:gravity="center"
                 android:text="@string/parameters_select_custom_date"
-                android:textSize="30sp"
+                android:textSize="@dimen/dpi_30sp"
                 android:textColor="@color/black"/>
         </LinearLayout>
     </RelativeLayout>

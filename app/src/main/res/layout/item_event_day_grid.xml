@@ -8,9 +8,9 @@
     <TextView
         android:id="@+id/day_text"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginBottom="2dp"
+        android:layout_height="@dimen/dpi_32dp"
+        android:layout_marginBottom="@dimen/dpi_2dp"
         android:textAlignment="center"
-        android:textSize="26sp"
+        android:textSize="@dimen/dpi_26sp"
         android:textColor="@color/white"/>
 </LinearLayout>

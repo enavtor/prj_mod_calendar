@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.reminders.model.Reminder;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type stimulus) declaration
@@ -23,7 +23,7 @@ public class StimulusEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        eventType = Reminder.ReminderType.STIMULUS_REMINDER;
+        eventType = ConstantValues.STIMULUS_EVENT_TYPE;
 
         externalAppPackage = "mobi.stimulus.stimulustv";
         externalAppActivity = "mobi.stimulus.stimulustv.SplashActivity";

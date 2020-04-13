@@ -107,11 +107,9 @@ public class DialogDatePickerActivity extends AppCompatActivity {
         minutesList.getRecycledViewPool().setMaxRecycledViews(0, 0);
         minutesList.setHasFixedSize(true);
 
-        minutesListAdapter = new DatePickerTimeListAdapter(this, minute + 1, 62);
+        minutesListAdapter = new DatePickerTimeListAdapter(this, getUpdatedMinutesListParameter());
         minutesList.setFocusable(false);
         minutesList.setAdapter(minutesListAdapter);
-        //The list is scrolled so the central minute is the current one:
-        minutesList.scrollToPosition(minute);
 
         //Initialization of the hours list:
         hoursList = findViewById(R.id.hours_list);
@@ -120,12 +118,10 @@ public class DialogDatePickerActivity extends AppCompatActivity {
         hoursList.getRecycledViewPool().setMaxRecycledViews(0, 0);
         hoursList.setHasFixedSize(true);
 
-        hoursListAdapter = new DatePickerTimeListAdapter(this, hour + 1, 26);
+        hoursListAdapter = new DatePickerTimeListAdapter(this, getUpdatedHoursListParameter());
 
         hoursList.setFocusable(false);
         hoursList.setAdapter(hoursListAdapter);
-        //The list is scrolled so the central hour is the current one:
-        hoursList.scrollToPosition(hour);
     }
 
     //Navigation along the recycler views is set as follows to avoid some Android bugs:
@@ -141,34 +137,11 @@ public class DialogDatePickerActivity extends AppCompatActivity {
             View focusedItemParent = (View)focusedView.getParent();
 
             if (focusedItemParent.getId() == minutesList.getId() || focusedItemParent.getId() == hoursList.getId()) {
-                //If, indeed, the parent is one of the time list recycler views, the adapter and the linear manager are got:
-                RecyclerView.Adapter adapter = ((RecyclerView) focusedItemParent).getAdapter();
-                LinearLayoutManager layoutManager = (LinearLayoutManager) ((RecyclerView) focusedItemParent).getLayoutManager();
+
                 //Depending on the pressed key the list scrolls upwards or downwards:
                 if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-                    //When the d-pad up key is pressed, the list must scroll downwards, keeping the focus on the central element:
-                    int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
-                    int lastVisibleItemIndex = layoutManager.findLastCompletelyVisibleItemPosition();
-
-                    int focusOffset = ((lastVisibleItemIndex - firstVisibleItemIndex) / 2) - 1;
-
-                    if (firstVisibleItemIndex > 0) {
-
-                        //The text color and style must be changed, since the middle elements' color is black and their style is bold, and the rest of elements' are grey by default:
-                        DatePickerTimeListAdapter.ViewHolder holder = ((DatePickerTimeListAdapter.ViewHolder)((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + 1));
-                        holder.notCenteredHolder();
-
-                        ((RecyclerView) focusedItemParent).scrollToPosition(firstVisibleItemIndex - 1);
-                        holder = ((DatePickerTimeListAdapter.ViewHolder)((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + focusOffset));
-
-                        holder.itemView.requestFocus();
-                        holder.centeredHolder();
-
-                        if (focusedItemParent.getId() == hoursList.getId()) hour = holder.getItemValue();
-                        else if (focusedItemParent.getId() == minutesList.getId()) minute = holder.getItemValue();
-
-                        refreshDateText();
-                    }
+                    if (focusedItemParent.getId() == hoursList.getId() && hour != 0 || focusedItemParent.getId() == minutesList.getId() && minute != 0)
+                        decreaseListParameter(focusedItemParent.getId());
 
                     //When the first visible element is the first one in the list, the focus must return to the calendar grid:
                     else {
@@ -183,33 +156,10 @@ public class DialogDatePickerActivity extends AppCompatActivity {
                     return true;
                 }
                 else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-                    //When the d-pad down key is pressed, the list must scroll upwards, keeping the focus on the central element:
-                    int totalItemCount = adapter.getItemCount();
-                    int firstVisibleItemIndex = layoutManager.findFirstCompletelyVisibleItemPosition();
-                    int lastVisibleItemIndex = layoutManager.findLastCompletelyVisibleItemPosition();
-
-                    int focusOffset = ((lastVisibleItemIndex - firstVisibleItemIndex) / 2) - 1;
-
-                    if (lastVisibleItemIndex < totalItemCount - 1) {
-
-                        //The text color and style must be changed, since the middle elements' color is black and their style is bold, and the rest of elements' are grey by default:
-                        DatePickerTimeListAdapter.ViewHolder holder = ((DatePickerTimeListAdapter.ViewHolder)((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(firstVisibleItemIndex + 1));
-                        holder.notCenteredHolder();
-
-                        ((RecyclerView) focusedItemParent).scrollToPosition(lastVisibleItemIndex + 1);
-                        holder = ((DatePickerTimeListAdapter.ViewHolder)((RecyclerView) focusedItemParent).findViewHolderForAdapterPosition(lastVisibleItemIndex - focusOffset));
-
-                        holder.itemView.requestFocus();
-                        holder.centeredHolder();
-
-                        if (focusedItemParent.getId() == hoursList.getId()) hour = holder.getItemValue();
-                        else if (focusedItemParent.getId() == minutesList.getId()) minute = holder.getItemValue();
-
-                        refreshDateText();
-                    }
-
+                    increaseListParameter(focusedItemParent.getId());
                     return true;
                 }
+
                 //When the focused view parent is the hours list, pressing the left key will have no effect at all:
                 else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT && focusedItemParent.getId() == hoursList.getId()) return true;
             }
@@ -323,6 +273,56 @@ public class DialogDatePickerActivity extends AppCompatActivity {
                 refreshDateText();
             }
         };
+    }
+
+    //Method that increases the current start minute or hour depending on the focused list:
+    private void increaseListParameter(int listId) {
+
+        if (listId == hoursList.getId() && hour < 23) {
+            hour++;
+            hoursListAdapter.updateItems(getUpdatedHoursListParameter());
+        }
+
+        else if (listId == minutesList.getId() && minute < 59) {
+            minute++;
+            minutesListAdapter.updateItems(getUpdatedMinutesListParameter());
+        }
+
+        refreshDateText();
+    }
+
+    //Method that decreases the current start minute or hour depending on the focused list:
+    private void decreaseListParameter(int listId) {
+
+        if (listId == hoursList.getId() && hour > 0) {
+            hour--;
+            hoursListAdapter.updateItems(getUpdatedHoursListParameter());
+        }
+
+        else if (listId == minutesList.getId() && minute > 0) {
+            minute--;
+            minutesListAdapter.updateItems(getUpdatedMinutesListParameter());
+        }
+
+        refreshDateText();
+    }
+
+    //Method that generates a new array for the hours list depending on the value of the current start hour:
+    private String[] getUpdatedHoursListParameter() {
+        if (hour == 0) return new String[] {"", DateUtils.formatTimeString(hour), DateUtils.formatTimeString(hour + 1)};
+
+        else if (hour == 23) return new String[] {DateUtils.formatTimeString(hour - 1), DateUtils.formatTimeString(hour), ""};
+
+        else return new String[] {DateUtils.formatTimeString(hour - 1), DateUtils.formatTimeString(hour), DateUtils.formatTimeString(hour + 1)};
+    }
+
+    //Method that generates a new array for the minutes list depending on the value of the current start minute:
+    private String[] getUpdatedMinutesListParameter() {
+        if (minute == 0) return new String[] {"", DateUtils.formatTimeString(minute), DateUtils.formatTimeString(minute + 1)};
+
+        else if (minute == 59) return new String[] {DateUtils.formatTimeString(minute - 1), DateUtils.formatTimeString(minute), ""};
+
+        else return new String[] {DateUtils.formatTimeString(minute - 1), DateUtils.formatTimeString(minute), DateUtils.formatTimeString(minute + 1)};
     }
 
     //Method for refreshing the date text:

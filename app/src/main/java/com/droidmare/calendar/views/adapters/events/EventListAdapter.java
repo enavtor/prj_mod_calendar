@@ -1,6 +1,7 @@
 package com.droidmare.calendar.views.adapters.events;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -184,7 +185,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
                         focusedViewPosition = getAdapterPosition();
                         if (focusedViewPosition == 0) {
                             RecyclerView eventList = (RecyclerView) itemView.getParent();
-                            if (eventList != null) eventList.scrollBy(0, -ImageUtils.transformDipToPix(context, 3));
+                            if (eventList != null) eventList.scrollBy(0, -1 * context.getResources().getDimensionPixelSize(R.dimen.dpi_3dp));
                         }
                     }
 
@@ -288,8 +289,10 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.View
 
         private void setFirstEventMargins() {
 
-            int topMargin = ImageUtils.transformDipToPix(context, 3);
-            int lateralMargin = ImageUtils.transformDipToPix(context, 8);
+            Resources res = context.getResources();
+
+            int topMargin = res.getDimensionPixelSize(R.dimen.dpi_3dp);
+            int lateralMargin = res.getDimensionPixelSize(R.dimen.dpi_8dp);
 
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
             params.setMargins(lateralMargin, topMargin, lateralMargin, 0);

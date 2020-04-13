@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/new_event_dialog"
         android:layout_height="wrap_content"
-        android:layout_width="500dp"
+        android:layout_width="@dimen/dpi_500dp"
         android:orientation="vertical"
         android:background="@color/grey_lighter">
 
@@ -16,21 +16,21 @@
             android:id="@+id/new_event_dialog_title"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:padding="5dp"
+            android:paddingStart="@dimen/dpi_10dp"
+            android:paddingEnd="@dimen/dpi_10dp"
+            android:padding="@dimen/dpi_5dp"
             android:gravity="start"
             android:background="@color/headers_background"
             android:text="@string/new_event_dialog_title"
-            android:textSize="30sp"
+            android:textSize="@dimen/dpi_30sp"
             android:textColor="@color/white"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/event_type_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"/>
+            android:layout_marginTop="@dimen/dpi_3dp"
+            android:layout_marginBottom="@dimen/dpi_3dp"/>
     </LinearLayout>
 
 </RelativeLayout>

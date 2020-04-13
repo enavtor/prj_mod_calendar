@@ -23,67 +23,67 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
     private static final String TAG = SQLiteManager.class.getCanonicalName();
 
-    /** Database name */
+    //Database name:
     public static final String DATABASE_NAME = "event.sqlite";
 
-    /** Database version */
+    //Database version:
     public static final int DATABASE_VERSION = 1;
 
-    /** Events table */
+    //Events table:
     private static final String EVENTS_TABLE = "events";
 
-    /** Events local id column */
+    //Events local id column:
     private static final String EVENT_LOCAL_ID_COLUMN = "_id";
 
-    /** Events actual id column */
+    //Events actual id column:
     private static final String EVENT_ID_COLUMN = "id";
 
-    /** Events type column */
+    //Events type column:
     private static final String EVENT_TYPE_COLUMN = "type";
 
-    /** Events hour column */
+    //Events hour column:
     private static final String EVENT_HOUR_COLUMN = "hour";
 
-    /** Events minute column */
+    //Events minute column:
     private static final String EVENT_MINUTE_COLUMN = "minute";
 
-    /** Events day column */
+    //Events day column:
     private static final String EVENT_DAY_COLUMN = "day";
 
-    /** Events month column */
+    //Events month column:
     private static final String EVENT_MONTH_COLUMN = "month";
 
-    /** Events year column */
+    //Events year column:
     private static final String EVENT_YEAR_COLUMN = "year";
 
-    /** Events description */
+    //Events description:
     private static final String EVENT_DESCRIPTION_COLUMN = "description";
 
-    /** Events interval time field */
+    //Events interval time field:
     private static final String EVENT_INTERVAL_COLUMN = "interval";
 
-    /** Events repetition stop field */
+    //Events repetition stop field:
     private static final String EVENT_REPETITION_STOP_COLUMN = "stop";
 
-    /** Events time out field */
+    //Events time out field:
     private static final String EVENT_TIMEOUT_COLUMN = "timeOut";
 
-    /** Events repetition type field */
+    //Events repetition type field:
     private static final String EVENT_REP_TYPE_COLUMN = "repType";
 
-    /** Events previous alarms field */
+    //Events previous alarms field:
     private static final String EVENT_PREV_ALARMS_COLUMN = "prevAlarms";
 
-    /** Events pending operation type */
+    //Events pending operation type:
     private static final String PENDING_OPERATION_COLUMN= "pendingOperation";
 
-    /** Events last api update field */
+    //Events last api update field:
     private static final String EVENT_LAST_UPDATE_COLUMN= "lastUpdate";
 
-    /** SQL query for deleting table */
+    //SQL query for deleting table:
     private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + EVENTS_TABLE;
 
-    /** SQL query for creating table */
+    //SQL query for creating table:
     private static final String SQL_CREATE_TABLE = "create table " +
         EVENTS_TABLE + " ("+
         EVENT_LOCAL_ID_COLUMN +" integer primary key autoincrement," +
@@ -140,7 +140,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
         String selection = EVENT_ID_COLUMN + " = ?";
 
-        if (splitId[0].equals("LocalId")) {
+        if (splitId[0].equals(ConstantValues.LOCAL_ID_HEAD.replace(":", ""))) {
             selection = EVENT_LOCAL_ID_COLUMN + " = ?";
             id = splitId[1];
         }
@@ -152,7 +152,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
         database.close();
     }
 
-    //Gets the events for a particular month and year (if month value is equal to -1 then gets all the stored events):
+    //Gets the events for a particular month and year (if month value is equal to -1 then it returns all the stored events):
     public EventJsonObject[] getEvents(int month, int year, boolean getRepetitiveEvents, boolean resynchronizing, boolean displayAll){
 
         EventJsonObject[] jsonArray = null;
@@ -164,22 +164,23 @@ public class SQLiteManager extends SQLiteOpenHelper{
 
         if (!resynchronizing) {
             //Those events that were deleted from the database but not from the API are restored in the database with the value "DELETE" in the field PENDING_OPERATION_COLUMN:
-            selection = PENDING_OPERATION_COLUMN + " <> ? " + " AND ";
+            selection = PENDING_OPERATION_COLUMN + " <> ? ";
             auxSelectionArgs = "DELETE" + ARGS_SEPARATOR;
 
             //Get only specific month and year events:
             if (month != -1) {
                 if (!getRepetitiveEvents) {
-                    selection += EVENT_MONTH_COLUMN + " = ? " + " AND " + EVENT_YEAR_COLUMN + " = ? " + " AND " + EVENT_INTERVAL_COLUMN + " = ? ";
+                    selection += " AND " + EVENT_MONTH_COLUMN + " = ? " + " AND " + EVENT_YEAR_COLUMN + " = ? " + " AND " + EVENT_INTERVAL_COLUMN + " = ? ";
                     auxSelectionArgs += month + ARGS_SEPARATOR + year + ARGS_SEPARATOR + 0;
                 }
                 else {
-                    selection +=  EVENT_INTERVAL_COLUMN + " > ? " + " AND ( " + EVENT_REPETITION_STOP_COLUMN + " >= ? " + " OR " + EVENT_REPETITION_STOP_COLUMN + " = ? ) ";
+                    selection +=  " AND " + EVENT_INTERVAL_COLUMN + " > ? " + " AND ( " + EVENT_REPETITION_STOP_COLUMN + " >= ? " + " OR " + EVENT_REPETITION_STOP_COLUMN + " = ? ) ";
                     auxSelectionArgs += 0 + ARGS_SEPARATOR + DateUtils.transformToMillis(0, 0, 1, month, year) + ARGS_SEPARATOR + -1;
                 }
             }
-            //Get all the events:
-            else if (displayAll) selection +=  EVENT_INTERVAL_COLUMN + " <> 0 " + " OR " + getNotOutOfDateSelection();
+
+            //Get all the events (except form those whose date has already passed and have not a repetition):
+            else if (displayAll) selection += " AND " + EVENT_INTERVAL_COLUMN + " <> 0 " + " OR " + getNotOutOfDateSelection();
         }
 
         SQLiteDatabase database = this.getReadableDatabase();
@@ -220,6 +221,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
         return jsonArray;
     }
 
+    //Method that returns the condition that must be met for an event to be extracted from the database when not outdated events are required:
     private String getNotOutOfDateSelection() {
 
         int minute, hour, day, month, year;
@@ -232,6 +234,7 @@ public class SQLiteManager extends SQLiteOpenHelper{
         month = calendar.get(Calendar.MONTH);
         year = calendar.get(Calendar.YEAR);
 
+        //This condition is constructed here and not in the method that requires it due to its length:
         return (
             EVENT_YEAR_COLUMN + " > " + year + " OR " +
             EVENT_YEAR_COLUMN + " = " + year + " AND " + EVENT_MONTH_COLUMN + " > " + month + " OR " +

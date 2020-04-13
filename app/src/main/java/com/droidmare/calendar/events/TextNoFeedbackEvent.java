@@ -1,10 +1,10 @@
-package com.droidmare.calendar.events.personal;
+package com.droidmare.calendar.events;
 
 import android.content.Context;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.reminders.model.Reminder;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type text feedback) declaration
@@ -23,7 +23,7 @@ public class TextNoFeedbackEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        eventType = Reminder.ReminderType.TEXTNOFEEDBACK_REMINDER;
+        eventType = ConstantValues.TEXTNOFEEDBACK_EVENT_TYPE;
 
         eventTypeTitle = resources.getString(R.string.textnofeedback_reminder_title);
 

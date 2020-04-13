@@ -149,7 +149,7 @@ public class EventRetriever extends AsyncTask<String,Void,Void>{
 
         //When the database has not events, the value of eventArray will be null, so not alarms can be reset:
         if (eventArray != null && opType == EventsPublisher.operationType.RESET_ALARMS)
-            com.droidmare.calendar.utils.EventUtils.sendMultipleReminders(context, eventArray, false);
+            EventUtils.sendMultipleReminders(context, eventArray, false);
     }
 }
 

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 
 //Utils for managing packages inside the device
 //@author Eduardo on 20/10/2019.
+
 public class PackageUtils {
 
     public static Intent getLaunchIntent(Context context, String packageName) {

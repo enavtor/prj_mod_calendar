@@ -7,8 +7,8 @@ android {
         applicationId "com.droidmare.calendar"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 110
-        versionName "1.1.0"
+        versionCode 111
+        versionName "1.1.1"
         archivesBaseName = "$archivesBaseName-$versionName"
     }
     signingConfigs {
@@ -35,7 +35,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation project(':libCommons')
 }

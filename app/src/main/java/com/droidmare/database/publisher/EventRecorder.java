@@ -3,12 +3,14 @@ package com.droidmare.database.publisher;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.droidmare.calendar.models.CalEventJsonObject;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.calendar.services.ApiConnectionService;
 import com.droidmare.calendar.utils.EventUtils;
 import com.droidmare.calendar.views.activities.MainActivity;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.database.manager.SQLiteManager;
 import com.droidmare.common.models.EventJsonObject;
 
@@ -87,7 +89,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
 
                 //If the event has no id, the id is assigned after storing it in the database
                 if (operationType.equals(EventsPublisher.operationType.CREATE_EVENT)) {
-                    String eventLocalId = "LocalId:" + database.addEvent(eventJson);
+                    String eventLocalId = ConstantValues.LOCAL_ID_HEAD + database.addEvent(eventJson);
                     if (event.getEventId().equals("")) {
                         event.setEventId(eventLocalId);
                         if (events.length == 1) newEvent = event;
@@ -102,9 +104,7 @@ class EventRecorder extends AsyncTask<EventListItem,Object,Void>{
                 }
 
                 //Depending on the length of the events array, the operation is storing a new event or a set of events received from the API:
-                if (events.length == 1) EventUtils.makeAlarm(context, event);
-
-                else eventItemArray[index++] = event;
+                if (events.length != 1) eventItemArray[index++] = event;
             }
         }
 

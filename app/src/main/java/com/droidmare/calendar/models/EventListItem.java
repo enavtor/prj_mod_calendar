@@ -14,8 +14,6 @@ import com.droidmare.common.models.ConstantValues;
 
 public abstract class EventListItem {
 
-    private static final String TAG = EventListItem.class.getCanonicalName();
-
     //The id that the item has inside the database:
     protected String eventId;
 
@@ -263,9 +261,9 @@ public abstract class EventListItem {
 
     public long getRepetitionStop() { return repetitionStop; }
 
-    public long getReminderTimeOut() { return reminderTimeOut; }
+    long getReminderTimeOut() { return reminderTimeOut; }
 
-    public String getPreviousAlarms() { return previousAlarms; }
+    String getPreviousAlarms() { return previousAlarms; }
 
     public String getPendingOperation() {return pendingOperation; }
 
@@ -283,7 +281,7 @@ public abstract class EventListItem {
 
     protected void notAnAlarm() { isAlarm = false; }
 
-    public boolean isAlarm() { return isAlarm; }
+    boolean isAlarm() { return isAlarm; }
 
     public void referenceOriginalEvent(EventListItem originalEvent) {
         this.originalEvent = originalEvent;

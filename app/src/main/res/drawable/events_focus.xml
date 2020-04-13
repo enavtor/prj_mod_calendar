@@ -6,9 +6,9 @@
 
         <shape android:shape="rectangle">
 
-            <stroke android:color="@color/focus_medium" android:width="5dp" />
+            <stroke android:color="@color/focus_medium" android:width="@dimen/dpi_5dp" />
 
-            <corners android:radius="1dp"/>
+            <corners android:radius="@dimen/dpi_1dp"/>
 
             <solid android:color="@color/white_transparent" />
         </shape>
@@ -18,9 +18,9 @@
 
         <shape android:shape="rectangle">
 
-            <stroke android:color="@color/transparent" android:width="10dp" />
+            <stroke android:color="@color/transparent" android:width="@dimen/dpi_10dp" />
 
-            <corners android:radius="1dp"/>
+            <corners android:radius="@dimen/dpi_1dp"/>
 
             <solid android:color="@color/white_transparent" />
         </shape>

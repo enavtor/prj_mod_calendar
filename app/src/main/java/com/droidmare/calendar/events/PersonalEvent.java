@@ -1,40 +1,42 @@
-package com.droidmare.calendar.events.surveys;
+package com.droidmare.calendar.events;
 
 import android.content.Context;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.reminders.model.Reminder;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.utils.ImageUtils;
 
-//Model for an event item (of type mood) declaration
+//Model for an event item (of type personal) declaration
 //@author Eduardo on 27/02/2018.
 
-public class MoodEvent extends EventListItem {
+public class PersonalEvent extends EventListItem {
 
-    public MoodEvent(Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
+    public PersonalEvent(Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
         super(cont, id, hour, minute, day, month, year, description, interval, repetitionType, stop, timeOut, prevAlarms, pendingOp, lastUpdate);
     }
 
-    private MoodEvent(Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
+    private PersonalEvent(Context cont, String id, int hour, int minute, int day, int month, int year, String description, int interval, String repetitionType, long nextRepetition, long stop, long timeOut, String prevAlarms, String pendingOp, long lastUpdate){
         super(cont, id, hour, minute, day, month, year, description, interval, repetitionType, nextRepetition, stop, timeOut, prevAlarms, pendingOp, lastUpdate);
     }
 
     @Override
     public void setNewEvent() {
 
-        eventType = Reminder.ReminderType.MOOD_REMINDER;
+        eventType = ConstantValues.PERSONAL_EVENT_TYPE;
 
-        eventTypeTitle = resources.getString(R.string.mood_reminder_title);
+        eventTypeTitle = resources.getString(R.string.personal_reminder_title);
+
+        notAnAlarm();
 
         setTitleText();
 
-        eventIcon = ImageUtils.getImageFromAssets(context, "mood_icon.png");
+        eventIcon = ImageUtils.getImageFromAssets(context, "personal_icon.png");
     }
 
     @Override
-    public MoodEvent getEventCopy (){
-        return new MoodEvent (
+    public PersonalEvent getEventCopy (){
+        PersonalEvent event = new PersonalEvent (
             this.context,
             this.eventId,
             this.eventHour,
@@ -52,5 +54,8 @@ public class MoodEvent extends EventListItem {
             this.pendingOperation,
             this.lastApiUpdate
         );
+
+        event.notAnAlarm();
+        return event;
     }
 }

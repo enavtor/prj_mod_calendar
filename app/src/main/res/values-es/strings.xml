@@ -87,8 +87,8 @@
 
     <string name="parameters_dialog_title">Valores seleccionados:</string>
     <string name="parameters_event_title">Valores del evento:</string>
-    <string name="parameters_event_date">Fecha de início:\u0020</string>
-    <string name="parameters_event_time">Hora de início:\u0020</string>
+    <string name="parameters_event_date">Fecha de inicio:\u0020</string>
+    <string name="parameters_event_time">Hora de inicio:\u0020</string>
     <string name="parameters_prev_alarms">Alarmas previas:\u0020</string>
     <string name="parameters_event_description">Descripción:\u0020</string>
     <string name="parameters_repetition_title">Valores de la repetición:</string>
@@ -167,7 +167,7 @@
 
     <string name="parameters_custom_stop_date">Fecha personalizada</string>
     <string name="parameters_rep_stop_description">El último día será:\u0020</string>
-    <string name="parameters_stop_date_error">La fecha de finalización tiene que ser igual o posterior a la de início!!!</string>
+    <string name="parameters_stop_date_error">La fecha de finalización tiene que ser igual o posterior a la de inicio!!!</string>
 
     <string name="check_box_affirmative">Si</string>
     <string name="check_box_negative">No</string>

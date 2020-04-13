@@ -4,28 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="start"
-    android:layout_marginLeft="3dp"
-    android:layout_marginRight="3dp"
+    android:layout_marginLeft="@dimen/dpi_3dp"
+    android:layout_marginRight="@dimen/dpi_3dp"
     android:background="@drawable/events_focus"
     android:clickable="true"
     android:focusable="true"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="@dimen/dpi_10dp">
 
     <ImageView
         android:id="@+id/event_type_icon"
-        android:layout_width="45dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="5dp"
+        android:layout_width="@dimen/dpi_45dp"
+        android:layout_height="@dimen/dpi_55dp"
+        android:layout_marginStart="@dimen/dpi_5dp"
         android:contentDescription="@string/app_name" />
 
     <TextView
         android:id="@+id/event_type_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="@dimen/dpi_15dp"
         android:gravity="center_vertical"
         android:textColor="@color/grey_medium"
-        android:textSize="25sp" />
+        android:textSize="@dimen/dpi_25sp" />
 </LinearLayout>
 

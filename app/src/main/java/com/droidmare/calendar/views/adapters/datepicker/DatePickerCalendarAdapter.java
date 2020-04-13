@@ -1,8 +1,10 @@
 package com.droidmare.calendar.views.adapters.datepicker;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.common.utils.DateUtils;
+import com.droidmare.common.utils.ImageUtils;
 
 import java.util.ArrayList;
 
@@ -21,8 +24,8 @@ import java.util.ArrayList;
 
 public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCalendarAdapter.ViewHolder> {
 
-    private final int DEFAULT_DAY_SIZE_SP = 17;
-    private final int SELECTED_DAY_SIZE_SP = 19;
+    private int DEFAULT_DAY_SIZE_SP;
+    private int SELECTED_DAY_SIZE_SP;
 
     private ArrayList<Integer> itemList;
 
@@ -54,6 +57,7 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
 
     // data is passed into the constructor
     public DatePickerCalendarAdapter(Context context, int day, int month, int year, ItemClickListener listener) {
+
         this.mInflater = LayoutInflater.from(context);
         this.res = context.getResources();
         selectedPosition = -1;
@@ -62,10 +66,17 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
         updateItemList(month, year);
         selectedPosition = itemList.indexOf(day);
         todayDateArray = DateUtils.transformFromMillis(DateUtils.getTodayMillis());
+
+        Resources res = context.getResources();
+
+        DEFAULT_DAY_SIZE_SP = ImageUtils.scalePixelValue(context, res.getDimensionPixelSize(R.dimen.dpi_11sp));
+        SELECTED_DAY_SIZE_SP = ImageUtils.scalePixelValue(context, res.getDimensionPixelSize(R.dimen.dpi_13sp));
+
         setClickListener(listener);
     }
 
     // updates the adapter items based on the given parameters:
+    @SuppressLint("SetTextI18n")
     public void updateAdapterItems(int month, int year) {
 
         updateItemList(month, year);
@@ -142,8 +153,8 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_calendar_grid_date_picker, parent, false);
         ViewHolder holder = new ViewHolder(view);
         viewList.add(holder);
@@ -152,7 +163,8 @@ public class DatePickerCalendarAdapter extends RecyclerView.Adapter<DatePickerCa
 
     // binds the data to the view in each cell
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    @SuppressLint({"SetTextI18n", "RecyclerView"})
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Integer day = itemList.get(position);
 

@@ -40,8 +40,7 @@ public class ApiConnectionService extends CommonIntentService {
     }
 
     //API base URL:
-    public static final String BASE_URL = "http://192.168.1.49:3000/";
-    //public static final String BASE_URL = "http://droidmare-api.localtunnel.me:3000/";
+    public static final String BASE_URL = "http://droidmareapi.ddns.net:5006/";
 
     //Server connection timeout in milliseconds
     private static final int SERVER_TIMEOUT = 5000;
@@ -111,6 +110,7 @@ public class ApiConnectionService extends CommonIntentService {
 
         String response = sendRequest(eventJson, urlForPublishing, REQUEST_METHOD_POST);
 
+        //The local id is stored here so it can be used to update the event once this method's execution finishes:
         String localEventId = eventToSend.getEventId();
 
         try {
@@ -130,6 +130,9 @@ public class ApiConnectionService extends CommonIntentService {
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList, localEventId);
             }
+
+            //Now the alarm associated with this event can be created:
+            EventUtils.makeAlarm(getApplicationContext(), eventToSend);
         }
     }
 
@@ -149,7 +152,7 @@ public class ApiConnectionService extends CommonIntentService {
         } catch (JSONException jsonException) {
             Log.e(COMMON_TAG, "modifyEvent. JSONException: " + jsonException.getMessage());
         } finally {
-            if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_EDIT)) {
+            if (responseCode != 200 && eventToSend.getPendingOperation().equals("")) {
                 eventToSend.setPendingOperation(REQUEST_METHOD_EDIT);
                 EventListItem[] eventList = {eventToSend};
                 EventsPublisher.modifyEvent(getContextToPublish(), eventList);
@@ -165,7 +168,13 @@ public class ApiConnectionService extends CommonIntentService {
         if (responseCode == 200) {
             if (mainActivityReference != null && mainActivityReference.get() != null && (eventToSend.getPendingOperation().equals("") || eventToSend.getPendingOperation().equals(REQUEST_METHOD_POST)))
                 mainActivityReference.get().deleteEvent(eventToSend);
-            else database.deleteSingleEvent(eventToSend.getEventId());
+
+            else {
+                database.deleteSingleEvent(eventToSend.getEventId());
+
+                //The event alarm must always be deleted:
+                EventUtils.deleteAlarm (getContextToPublish(), eventToSend);
+            }
         }
 
         if (responseCode != 200 && !eventToSend.getPendingOperation().equals(REQUEST_METHOD_DELETE)) {
@@ -173,6 +182,9 @@ public class ApiConnectionService extends CommonIntentService {
             EventListItem[] eventList = {eventToSend};
             mainActivityReference.get().relocateFocusAfterDelete();
             EventsPublisher.modifyEvent(getContextToPublish(), eventList);
+
+            //The event alarm must always be deleted:
+            EventUtils.deleteAlarm (getContextToPublish(), eventToSend);
         }
     }
 

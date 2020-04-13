@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -424,22 +425,32 @@ public class MainActivity extends CommonMainActivity {
                 if (currentFocusedParent != null) currentFocusedParent = (View) currentFocusedParent.getParent();
             }
 
-            //If, indeed, the final parent of the current focused view is the event list, the focus may need to be relocated:
-            if (currentFocusedParent != null && findViewById(R.id.event_list) != null && currentFocusedParent.getId() == findViewById(R.id.event_list).getId()) {
+            //In some cases, when the user preforms a log out and immediately after performs a log in, a null pointer exception
+            //may occur when executing findViewById(R.id.event_list), reason why the following code is wrapped inside a try-catch:
+            if (currentFocusedParent != null) try {
 
-                //The position of the current focused event is obtained:
-                int currentFocusedEvent = eventFrag.getAdapter().getCurrentFocusedPosition();
+                View eventList = findViewById(R.id.event_list);
 
-                //If an event was deleted in the API and the focus is located on the deleted event's day list, the focus must be relocated:
-                if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_DELETE) && currentDayAffected)
-                    eventFrag.setNextFocusedAfterSyncDelete(currentFocusedEvent);
+                //If, indeed, the final parent of the current focused view is the event list, the focus may need to be relocated:
+                if (eventList != null && currentFocusedParent.getId() == eventList.getId()) {
 
-                    //If an event was modified in the API and the focus is located on the modified event's day list or in a day that falls inside the event repetition, the focus must be relocated:
-                else if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_EDIT) && currentDayAffected)
-                    eventFrag.setNextFocusedAfterSyncEdit(currentFocusedEvent, retrievedEvent);
+                    //The position of the current focused event is obtained:
+                    int currentFocusedEvent = eventFrag.getAdapter().getCurrentFocusedPosition();
 
-                    //If the operation was creating an event in the API or, the deleted or modified event's day is not the currently selected one, the focus stays where it is:
-                else eventFrag.getAdapter().setNextFocusedPosition(currentFocusedEvent);
+                    //If an event was deleted in the API and the focus is located on the deleted event's day list, the focus must be relocated:
+                    if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_DELETE) && currentDayAffected)
+                        eventFrag.setNextFocusedAfterSyncDelete(currentFocusedEvent);
+
+                        //If an event was modified in the API and the focus is located on the modified event's day list or in a day that falls inside the event repetition, the focus must be relocated:
+                    else if (localSyncOp.equals(ApiSynchronizationService.LOCAL_SYNC_OP_EDIT) && currentDayAffected)
+                        eventFrag.setNextFocusedAfterSyncEdit(currentFocusedEvent, retrievedEvent);
+
+                        //If the operation was creating an event in the API or, the deleted or modified event's day is not the currently selected one, the focus stays where it is:
+                    else eventFrag.getAdapter().setNextFocusedPosition(currentFocusedEvent);
+                }
+
+            } catch (NullPointerException npExc) {
+                Log.e(canonicalName, "relocateFocusAfterSync. NullPointerException: " + npExc.getMessage());
             }
         }
     }

@@ -2,9 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <stroke android:color="@color/focus_medium" android:width="5dp" />
+            <stroke android:color="@color/focus_medium" android:width="@dimen/dpi_5dp" />
             <corners
-                android:radius="1dp"/>
+                android:radius="@dimen/dpi_1dp"/>
         </shape>
     </item>
     <item android:state_focused="false"

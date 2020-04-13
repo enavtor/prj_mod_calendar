@@ -25,7 +25,7 @@ public class EventsPublisher {
         new EventRecorder(context, operationType.CREATE_EVENT).execute(eventList);
     }
 
-    //Modifies the event stored inside eventList (the difference with the previous function is that the event inside eventList will have an id):
+    //Modifies the event stored inside eventList:
     public static void modifyEvent(Context context, EventListItem[] eventList) {
         new EventRecorder(context, operationType.EDIT_EVENT).execute(eventList);
     }

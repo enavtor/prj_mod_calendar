@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone">
+
         <include
             layout="@layout/element_dialog_follow_event"
             android:layout_width="wrap_content"
@@ -23,17 +24,18 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:visibility="gone">
+
         <include
             layout="@layout/element_event_parameters"
-            android:layout_width="910dp"
+            android:layout_width="@dimen/dpi_910dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <!--Event parameters dialog container-->
     <RelativeLayout
         android:id="@+id/event_parameters_dialog"
-        android:layout_width="850dp"
-        android:layout_height="470dp"
+        android:layout_width="@dimen/dpi_850dp"
+        android:layout_height="@dimen/dpi_470dp"
         android:layout_centerInParent="true"
         android:background="@color/grey_lighter">
 
@@ -44,15 +46,15 @@
             android:layout_alignParentTop="true"
             android:background="@color/headers_background"
             android:gravity="start"
-            android:paddingStart="10dp"
+            android:paddingStart="@dimen/dpi_10dp"
             android:paddingEnd="0dp"
-            android:paddingTop="3dp"
-            android:paddingBottom="5dp"
+            android:paddingTop="@dimen/dpi_3dp"
+            android:paddingBottom="@dimen/dpi_5dp"
             android:textColor="@color/white"
-            android:textSize="37sp" />
+            android:textSize="@dimen/dpi_37sp" />
 
         <RelativeLayout
-            android:layout_width="45dp"
+            android:layout_width="@dimen/dpi_45dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/event_parameters_title"
             android:layout_above="@id/prev_next_step_buttons"
@@ -60,7 +62,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/dpi_150dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/content_indication_prev"
                 android:backgroundTint="@color/grey_medium"
@@ -68,7 +70,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="45dp"
+            android:layout_width="@dimen/dpi_45dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/event_parameters_title"
             android:layout_above="@id/prev_next_step_buttons"
@@ -76,7 +78,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/dpi_150dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/content_indication_next"
                 android:backgroundTint="@color/grey_medium"
@@ -89,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:padding="10dp">
+            android:padding="@dimen/dpi_10dp">
 
             <RelativeLayout
                 android:id="@+id/prev_step_button"
@@ -99,14 +101,14 @@
                 android:background="@drawable/calendar_focus"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="8dp">
+                android:padding="@dimen/dpi_8dp">
 
                 <ImageView
                     android:id="@+id/ir_prev_step_button"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_marginTop="@dimen/dpi_3dp"
+                    android:layout_marginStart="@dimen/dpi_5dp"
+                    android:layout_width="@dimen/dpi_30dp"
+                    android:layout_height="@dimen/dpi_30dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/back_arrow" />
 
@@ -115,13 +117,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/ir_prev_step_button"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
+                    android:layout_marginEnd="@dimen/dpi_5dp"
                     android:layout_centerInParent="true"
                     android:fontFamily="sans-serif-light"
                     android:text="@string/back"
                     android:textColor="@color/black"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/dpi_25sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -132,16 +134,16 @@
                 android:background="@drawable/calendar_focus"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="8dp">
+                android:padding="@dimen/dpi_8dp">
 
                 <ImageView
                     android:id="@+id/ir_display_current_parameters_button"
                     android:focusable="true"
                     android:clickable="true"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="30dp"
-                    android:layout_height="22dp"
+                    android:layout_marginTop="@dimen/dpi_3dp"
+                    android:layout_marginStart="@dimen/dpi_5dp"
+                    android:layout_width="@dimen/dpi_30dp"
+                    android:layout_height="@dimen/dpi_22dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/ir_yellow_button" />
 
@@ -149,13 +151,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/ir_display_current_parameters_button"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
+                    android:layout_marginEnd="@dimen/dpi_5dp"
                     android:layout_centerInParent="true"
                     android:fontFamily="sans-serif-light"
                     android:text="@string/event_parameters_current"
                     android:textColor="@color/black"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/dpi_25sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -166,14 +168,14 @@
                 android:background="@drawable/calendar_focus"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="8dp">
+                android:padding="@dimen/dpi_8dp">
 
                 <ImageView
                     android:id="@+id/ir_next_step_button"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_width="30dp"
-                    android:layout_height="22dp"
+                    android:layout_marginTop="@dimen/dpi_3dp"
+                    android:layout_marginStart="@dimen/dpi_5dp"
+                    android:layout_width="@dimen/dpi_30dp"
+                    android:layout_height="@dimen/dpi_22dp"
                     android:layout_centerVertical="true"
                     android:background="@drawable/ir_blue_button" />
 
@@ -182,13 +184,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/ir_next_step_button"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
+                    android:layout_marginEnd="@dimen/dpi_5dp"
                     android:layout_centerInParent="true"
                     android:fontFamily="sans-serif-light"
                     android:text="@string/event_parameters_next"
                     android:textColor="@color/black"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/dpi_25sp" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -204,16 +206,16 @@
 
             <EditText
                 android:id="@+id/event_description_text_box"
-                android:layout_width="740dp"
-                android:layout_height="260dp"
-                android:layout_marginTop="20dp"
+                android:layout_width="@dimen/dpi_740dp"
+                android:layout_height="@dimen/dpi_260dp"
+                android:layout_marginTop="@dimen/dpi_20dp"
                 android:background="@drawable/edition_elements_background"
                 android:gravity="start"
-                android:padding="8dp"
+                android:padding="@dimen/dpi_8dp"
                 android:nextFocusLeft="@id/prev_step_button"
                 android:nextFocusRight="@id/next_step_button"
                 android:textColor="@color/black"
-                android:textSize="34sp"
+                android:textSize="@dimen/dpi_34sp"
                 android:textColorHint="@color/grey_medium"
                 android:textCursorDrawable="@drawable/parameters_text_cursor_color" />
         </LinearLayout>
@@ -231,7 +233,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -248,10 +250,11 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:nextFocusLeft="@id/prev_step_button"
-                        android:padding="6dp">
+                        android:padding="@dimen/dpi_6dp">
+
                         <LinearLayout
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/dpi_20dp"
+                            android:layout_height="@dimen/dpi_20dp"
                             android:background="@drawable/button_prev_black"
                             android:gravity="center_vertical"
                             android:orientation="vertical" />
@@ -259,11 +262,11 @@
 
                     <TextView
                         android:id="@+id/event_month_text"
-                        android:layout_width="160dp"
+                        android:layout_width="@dimen/dpi_160dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textColor="@color/black"
-                        android:textSize="28sp" />
+                        android:textSize="@dimen/dpi_28sp" />
 
                     <LinearLayout
                         android:id="@+id/event_next_month"
@@ -272,10 +275,11 @@
                         android:background="@drawable/calendar_focus"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="6dp">
+                        android:padding="@dimen/dpi_6dp">
+
                         <LinearLayout
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/dpi_20dp"
+                            android:layout_height="@dimen/dpi_20dp"
                             android:background="@drawable/button_next_black"
                             android:gravity="center_vertical"
                             android:orientation="vertical" />
@@ -285,7 +289,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
+                    android:layout_marginStart="@dimen/dpi_40dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -302,10 +306,11 @@
                             android:background="@drawable/calendar_focus"
                             android:clickable="true"
                             android:focusable="true"
-                            android:padding="6dp">
+                            android:padding="@dimen/dpi_6dp">
+
                             <LinearLayout
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="@dimen/dpi_20dp"
+                                android:layout_height="@dimen/dpi_20dp"
                                 android:background="@drawable/button_prev_black"
                                 android:gravity="center_vertical"
                                 android:orientation="vertical" />
@@ -313,11 +318,11 @@
 
                         <TextView
                             android:id="@+id/event_year_text"
-                            android:layout_width="160dp"
+                            android:layout_width="@dimen/dpi_160dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:textColor="@color/black"
-                            android:textSize="28sp" />
+                            android:textSize="@dimen/dpi_28sp" />
 
                         <LinearLayout
                             android:id="@+id/event_next_year"
@@ -327,10 +332,11 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:nextFocusRight="@id/next_step_button"
-                            android:padding="6dp">
+                            android:padding="@dimen/dpi_6dp">
+
                             <LinearLayout
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
+                                android:layout_width="@dimen/dpi_20dp"
+                                android:layout_height="@dimen/dpi_20dp"
                                 android:background="@drawable/button_next_black"
                                 android:gravity="center_vertical"
                                 android:orientation="vertical" />
@@ -340,19 +346,19 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:layout_width="500dp"
+                android:layout_width="@dimen/dpi_500dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginBottom="11.6dp">
+                android:layout_marginTop="@dimen/dpi_3dp"
+                android:layout_marginLeft="@dimen/dpi_12dp"
+                android:layout_marginRight="@dimen/dpi_12dp"
+                android:layout_marginBottom="@dimen/dpi_dec_11.6dp">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/event_calendar_day_grid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="0.1dp"
-                    android:paddingRight="0.1dp"
+                    android:paddingLeft="@dimen/dpi_dec_0.1dp"
+                    android:paddingRight="@dimen/dpi_dec_0.1dp"
                     android:background="@drawable/parameters_grid_item_divider"/>
 
                 <android.support.v7.widget.RecyclerView
@@ -360,45 +366,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/event_calendar_day_grid"
-                    android:paddingLeft="0.1dp"
-                    android:paddingRight="0.1dp"
-                    android:paddingBottom="0.1dp"
+                    android:paddingLeft="@dimen/dpi_dec_0.1dp"
+                    android:paddingRight="@dimen/dpi_dec_0.1dp"
+                    android:paddingBottom="@dimen/dpi_dec_0.1dp"
                     android:background="@drawable/parameters_grid_item_divider"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="34dp"
+                    android:layout_height="@dimen/dpi_34dp"
                     android:layout_below="@id/event_calendar_grid"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/dpi_4dp"
                     android:layout_centerInParent="true"
                     android:orientation="horizontal"
                     android:gravity="center">
 
                     <RelativeLayout
-                        android:layout_width="50dp"
+                        android:layout_width="@dimen/dpi_50dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/dpi_10dp"
                         android:background="@drawable/grid_item_selected"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="30dp"
+                        android:layout_marginEnd="@dimen/dpi_30dp"
                         android:text="@string/selected_date_legend_text"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/dpi_24sp"
                         android:textColor="@color/black"/>
 
                     <RelativeLayout
-                        android:layout_width="50dp"
+                        android:layout_width="@dimen/dpi_50dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="@dimen/dpi_10dp"
                         android:background="@drawable/today_background_frame"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="@string/today_date_legend_text"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/dpi_24sp"
                         android:textColor="@color/black"/>
                 </LinearLayout>
             </RelativeLayout>
@@ -421,15 +427,15 @@
                 android:layout_height="match_parent">
 
                 <RelativeLayout
-                    android:layout_width="50dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/dpi_50dp"
+                    android:layout_height="@dimen/dpi_150dp"
                     android:layout_centerInParent="true"
                     android:layout_toStartOf="@id/time_separator">
 
                     <RelativeLayout
                         android:id="@+id/hours_list_up"
-                        android:layout_width="40dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dpi_40dp"
+                        android:layout_height="@dimen/dpi_20dp"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentTop="true"
                         android:background="@drawable/content_indication_up"
@@ -440,13 +446,13 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/event_hour_list"
                         android:layout_width="match_parent"
-                        android:layout_height="118dp"
+                        android:layout_height="@dimen/dpi_118dp"
                         android:layout_centerInParent="true"/>
 
                     <RelativeLayout
                         android:id="@+id/hours_list_down"
-                        android:layout_width="40dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dpi_40dp"
+                        android:layout_height="@dimen/dpi_20dp"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentBottom="true"
                         android:background="@drawable/content_indication_down"
@@ -457,26 +463,26 @@
 
                 <TextView
                     android:id="@+id/time_separator"
-                    android:layout_width="30dp"
+                    android:layout_width="@dimen/dpi_30dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="@dimen/dpi_2dp"
                     android:layout_centerInParent="true"
                     android:text=":"
                     android:textAlignment="center"
                     android:textStyle="bold"
                     android:textColor="@color/black"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/dpi_30sp" />
 
                 <RelativeLayout
-                    android:layout_width="50dp"
-                    android:layout_height="150dp"
+                    android:layout_width="@dimen/dpi_50dp"
+                    android:layout_height="@dimen/dpi_150dp"
                     android:layout_centerInParent="true"
                     android:layout_toEndOf="@id/time_separator">
 
                     <RelativeLayout
                         android:id="@+id/minutes_list_up"
-                        android:layout_width="40dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dpi_40dp"
+                        android:layout_height="@dimen/dpi_20dp"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentTop="true"
                         android:background="@drawable/content_indication_up"
@@ -487,13 +493,13 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/event_minute_list"
                         android:layout_width="match_parent"
-                        android:layout_height="118dp"
+                        android:layout_height="@dimen/dpi_118dp"
                         android:layout_centerInParent="true"/>
 
                     <RelativeLayout
                         android:id="@+id/minutes_list_down"
-                        android:layout_width="40dp"
-                        android:layout_height="20dp"
+                        android:layout_width="@dimen/dpi_40dp"
+                        android:layout_height="@dimen/dpi_20dp"
                         android:layout_centerHorizontal="true"
                         android:layout_alignParentBottom="true"
                         android:background="@drawable/content_indication_down"
@@ -547,10 +553,11 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
+
                     <LinearLayout
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="@dimen/dpi_18dp"
+                        android:layout_height="@dimen/dpi_18dp"
                         android:background="@drawable/check_box_tick_white"
                         android:gravity="center_vertical"
                         android:orientation="vertical" />
@@ -559,18 +566,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/dpi_10dp"
                     android:gravity="center"
                     android:text="@string/check_box_affirmative"
                     android:textColor="@color/black"
-                    android:textSize="34sp" />
+                    android:textSize="@dimen/dpi_34sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="60dp"
+                android:layout_marginStart="@dimen/dpi_60dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -582,10 +589,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        android:layout_width="@dimen/dpi_18dp"
+                        android:layout_height="@dimen/dpi_18dp"
                         android:background="@drawable/check_box_tick_white"
                         android:gravity="center_vertical"
                         android:orientation="vertical" />
@@ -594,11 +601,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="@dimen/dpi_10dp"
                     android:gravity="center"
                     android:text="@string/check_box_negative"
                     android:textColor="@color/black"
-                    android:textSize="34sp" />
+                    android:textSize="@dimen/dpi_34sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -617,7 +624,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/dpi_20dp"
                 android:orientation="horizontal"
                 android:gravity="center">
 
@@ -629,21 +636,21 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/minus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/repetition_number_text"
-                    android:layout_width="210dp"
+                    android:layout_width="@dimen/dpi_210dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textAlignment="center"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/dpi_30sp" />
 
                 <LinearLayout
                     android:id="@+id/repetition_number_increase"
@@ -653,10 +660,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
             </LinearLayout>
@@ -675,21 +682,21 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/minus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/repetition_interval_text"
-                    android:layout_width="210dp"
+                    android:layout_width="@dimen/dpi_210dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textAlignment="center"
-                    android:textSize="30sp" />
+                    android:textSize="@dimen/dpi_30sp" />
 
                 <LinearLayout
                     android:id="@+id/repetition_interval_increase"
@@ -699,10 +706,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
             </LinearLayout>
@@ -755,7 +762,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/dpi_5dp"
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:scaleY="1.9"
@@ -769,21 +776,22 @@
                     android:nextFocusLeft="@id/prev_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
+
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/minus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/rep_days_duration_text"
-                    android:layout_width="250dp"
+                    android:layout_width="@dimen/dpi_250dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/black"
                     android:textAlignment="center"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/dpi_25sp" />
 
                 <LinearLayout
                     android:id="@+id/rep_days_duration_increase"
@@ -793,10 +801,10 @@
                     android:nextFocusRight="@id/next_step_button"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp">
+                    android:padding="@dimen/dpi_6dp">
                     <LinearLayout
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                        android:layout_width="@dimen/dpi_16dp"
+                        android:layout_height="@dimen/dpi_16dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
             </LinearLayout>
@@ -804,33 +812,33 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="@dimen/dpi_70dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/custom_stop_date_button"
-                    android:layout_width="80dp"
+                    android:layout_width="@dimen/dpi_80dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
                     android:nextFocusRight="@id/next_step_button"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_select_custom_date"
-                    android:textSize="30sp"
+                    android:textSize="@dimen/dpi_30sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -838,9 +846,9 @@
                 android:id="@+id/repetition_stop_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="@dimen/dpi_50dp"
                 android:gravity="center_vertical"
-                android:textSize="30sp"
+                android:textSize="@dimen/dpi_30sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
         </LinearLayout>
@@ -852,13 +860,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="11dp"
+            android:layout_marginBottom="@dimen/dpi_11dp"
             android:background="@drawable/selected_date_background"
-            android:paddingTop="4dp"
-            android:paddingStart="11dp"
-            android:paddingEnd="11dp"
-            android:paddingBottom="4dp"
-            android:textSize="30sp"
+            android:paddingTop="@dimen/dpi_4dp"
+            android:paddingStart="@dimen/dpi_11dp"
+            android:paddingEnd="@dimen/dpi_11dp"
+            android:paddingBottom="@dimen/dpi_4dp"
+            android:textSize="@dimen/dpi_30sp"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:visibility="gone"/>

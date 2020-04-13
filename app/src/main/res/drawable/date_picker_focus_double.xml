@@ -4,22 +4,22 @@
         <layer-list>
             <item>
                 <shape android:shape="oval">
-                    <padding android:left="3dp"
-                        android:top="3dp"
-                        android:right="3dp"
-                        android:bottom="3dp"/>
-                    <stroke android:width="2dp"
+                    <padding android:left="@dimen/dpi_3dp"
+                        android:top="@dimen/dpi_3dp"
+                        android:right="@dimen/dpi_3dp"
+                        android:bottom="@dimen/dpi_3dp"/>
+                    <stroke android:width="@dimen/dpi_2dp"
                         android:color="@color/sh_green_medium" />
-                    <size android:width="20dp"
-                        android:height="20dp"/>
+                    <size android:width="@dimen/dpi_20dp"
+                        android:height="@dimen/dpi_20dp"/>
                 </shape>
             </item>
             <item>
                 <shape android:shape="oval">
-                    <stroke android:width="2dp"
+                    <stroke android:width="@dimen/dpi_2dp"
                         android:color="@color/ir_blue" />
-                    <size android:width="20dp"
-                        android:height="20dp"/>
+                    <size android:width="@dimen/dpi_20dp"
+                        android:height="@dimen/dpi_20dp"/>
                     <solid android:color="@color/focus_lighter" />
                 </shape>
             </item>
@@ -29,22 +29,22 @@
         <layer-list>
             <item>
                 <shape android:shape="oval">
-                    <padding android:left="3dp"
-                        android:top="3dp"
-                        android:right="3dp"
-                        android:bottom="3dp"/>
-                    <stroke android:width="2dp"
+                    <padding android:left="@dimen/dpi_3dp"
+                        android:top="@dimen/dpi_3dp"
+                        android:right="@dimen/dpi_3dp"
+                        android:bottom="@dimen/dpi_3dp"/>
+                    <stroke android:width="@dimen/dpi_2dp"
                         android:color="@color/sh_green_medium" />
-                    <size android:width="20dp"
-                        android:height="20dp"/>
+                    <size android:width="@dimen/dpi_20dp"
+                        android:height="@dimen/dpi_20dp"/>
                 </shape>
             </item>
             <item>
                 <shape android:shape="oval">
-                    <stroke android:width="2dp"
+                    <stroke android:width="@dimen/dpi_2dp"
                         android:color="@color/ir_blue" />
-                    <size android:width="20dp"
-                        android:height="20dp"/>
+                    <size android:width="@dimen/dpi_20dp"
+                        android:height="@dimen/dpi_20dp"/>
                 </shape>
             </item>
         </layer-list>

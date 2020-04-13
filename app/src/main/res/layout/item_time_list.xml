@@ -5,15 +5,16 @@
     android:layout_width="wrap_content"
     android:focusable="true"
     android:clickable="true"
-    android:paddingVertical="6dp"
-    android:paddingHorizontal="8dp"
+    android:paddingVertical="@dimen/dpi_6dp"
+    android:paddingHorizontal="@dimen/dpi_8dp"
     android:background="@drawable/date_picker_focus_time">
 
     <TextView
         android:id="@+id/item_time_list_text"
         android:layout_height="wrap_content"
-        android:layout_width="30dp"
-        android:textSize="@dimen/fragment_item_text_size"
+        android:layout_width="@dimen/dpi_30dp"
+        android:textSize="@dimen/dpi_20sp"
         android:gravity="center"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@color/grey_medium"/>
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.droidmare.calendar.views.adapters.calendar;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.CalendarGridItem;
-import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.common.utils.DateUtils;
 
 import java.util.ArrayList;
@@ -48,12 +48,11 @@ public class CalendarGridAdapter extends RecyclerView.Adapter<CalendarGridAdapte
     }
 
     //Function for setting the element that will get the focus when dpad right button is clicked at the right edge of the calendar grid:
-    public void setNextFocusRight (boolean listIsFocusable) {
+    public void setNextFocusRight() {
 
         //Only elements at the right edge of the calendar must be configured:
         for (int i = 6; i < viewList.size(); i += 7) {
-            viewList.get(i).itemView.setNextFocusRightId( R.id.event_list);
-            //else viewList.get(i).itemView.setNextFocusRightId( R.id.ir_add_new_event_layout);
+            viewList.get(i).itemView.setNextFocusRightId(R.id.event_list);
         }
     }
 
@@ -108,12 +107,6 @@ public class CalendarGridAdapter extends RecyclerView.Adapter<CalendarGridAdapte
         }
     }
 
-    // method that updates the "eventOriginal" object inside the event list of the selected day, replacing it by the "eventModification" parameter;
-    public void updateSelectedDayEvent (EventListItem eventModification, EventListItem eventOriginal) {
-        ArrayList<EventListItem> selectedDayEvents = getItem(getSelectedPosition()).getEventList();
-        selectedDayEvents.set(selectedDayEvents.indexOf(eventOriginal),eventModification);
-    }
-
     // method that selects a new day inside the calendar view:
     public void selectNewDay(boolean clickAction) {
 
@@ -153,8 +146,8 @@ public class CalendarGridAdapter extends RecyclerView.Adapter<CalendarGridAdapte
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_calendar_grid, parent, false);
         ViewHolder holder = new ViewHolder(view);
         viewList.add(holder);
@@ -163,7 +156,7 @@ public class CalendarGridAdapter extends RecyclerView.Adapter<CalendarGridAdapte
 
     // binds the data to the view in each cell
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         CalendarGridItem item = itemList.get(position);
 
@@ -222,9 +215,6 @@ public class CalendarGridAdapter extends RecyclerView.Adapter<CalendarGridAdapte
 
     // getter for the selected year:
     public int getSelectedYear () { return selectedYear; }
-
-    // getter for the selected item's view:
-    public ViewHolder getSelectedView() { return viewList.get(selectedPosition); }
 
     // the selected item gets the focus:
     public void focusSelectedItem() {

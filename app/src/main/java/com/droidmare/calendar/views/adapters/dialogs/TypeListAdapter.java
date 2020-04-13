@@ -51,7 +51,7 @@ public class TypeListAdapter extends RecyclerView.Adapter<TypeListAdapter.ViewHo
 
         holder.text.setText(typeText);
         holder.icon.setImageDrawable(typeIcon);
-        holder.itemView.requestFocus();
+        if (position == 0) holder.itemView.requestFocus();
     }
 
     // total number of cells

@@ -8,29 +8,29 @@
 
     <RelativeLayout
         android:id="@+id/calendar_item"
-        android:layout_height="66dp"
+        android:layout_height="@dimen/dpi_66dp"
         android:layout_width="match_parent"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:paddingBottom="4dp"
+        android:paddingStart="@dimen/dpi_4dp"
+        android:paddingEnd="@dimen/dpi_4dp"
+        android:paddingBottom="@dimen/dpi_4dp"
         android:background="@drawable/grid_item_divider">
 
         <TextView
             android:id="@+id/item_text"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="@dimen/dpi_4dp"
             android:gravity="start"
-            android:textSize="37sp"
+            android:textSize="@dimen/dpi_37sp"
             android:textColor="@color/black"/>
 
         <ImageView
             android:id="@+id/item_icon"
-            android:layout_height="32dp"
-            android:layout_width="32dp"
+            android:layout_height="@dimen/dpi_32dp"
+            android:layout_width="@dimen/dpi_32dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:padding="2dp"
+            android:padding="@dimen/dpi_2dp"
             android:src="@drawable/pending_event_icon"
             android:visibility="invisible"/>
     </RelativeLayout>

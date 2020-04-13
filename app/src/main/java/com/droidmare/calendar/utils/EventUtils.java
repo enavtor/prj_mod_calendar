@@ -3,27 +3,21 @@ package com.droidmare.calendar.utils;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.util.Log;
 
-import com.droidmare.R;
 import com.droidmare.calendar.events.ActivityEvent;
 import com.droidmare.calendar.events.DoctorEvent;
 import com.droidmare.calendar.events.StimulusEvent;
 import com.droidmare.calendar.events.MedicationEvent;
-import com.droidmare.calendar.events.personal.PersonalEvent;
-import com.droidmare.calendar.events.personal.TextNoFeedbackEvent;
-import com.droidmare.calendar.models.CalEventJsonObject;
+import com.droidmare.calendar.events.PersonalEvent;
+import com.droidmare.calendar.events.TextNoFeedbackEvent;
 import com.droidmare.calendar.models.EventListItem;
 import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.models.EventJsonObject;
 import com.droidmare.common.utils.DateUtils;
 import com.droidmare.common.utils.ServiceUtils;
-import com.droidmare.common.utils.ToastUtils;
 
 import java.util.ArrayList;
-
-import static android.support.v4.content.ContextCompat.startActivity;
 
 //Utils for creating event objects and alarms
 //@author Eduardo on 08/02/2018.
@@ -110,9 +104,6 @@ public class EventUtils {
 
         String[] eventJsonList = {event.createNewReminder()};
 
-        Log.d("REMINDER", "makeAlarm: " + event.createNewReminder());
-        Log.d("REMINDER", "makeAlarm: " + eventJsonList[1]);
-
         sendReminders(context, eventJsonList, false);
     }
 
@@ -164,7 +155,7 @@ public class EventUtils {
 
                 //Every event is added to its corresponding day:
                 int dayOfTheEvent = eventJson.getInt(ConstantValues.EVENT_DAY_FIELD, -1);
-                event = com.droidmare.calendar.utils.EventUtils.makeEvent(context, eventJson);
+                event = makeEvent(context, eventJson);
 
                 if (event != null) eventsList[dayOfTheEvent - 1].add(event);
             }

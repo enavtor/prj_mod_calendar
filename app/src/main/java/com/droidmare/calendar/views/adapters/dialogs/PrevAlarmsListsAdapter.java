@@ -1,6 +1,7 @@
 package com.droidmare.calendar.views.adapters.dialogs;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +31,8 @@ public class PrevAlarmsListsAdapter extends RecyclerView.Adapter<PrevAlarmsLists
     }
 
     // inflates the cell layout from xml when needed
-    @Override
-    public PrevAlarmsListsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override @NonNull
+    public PrevAlarmsListsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.item_prev_alarm_params, parent, false);
         return new PrevAlarmsListsAdapter.ViewHolder(view);
     }

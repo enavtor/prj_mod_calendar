@@ -6,13 +6,13 @@
     android:focusable="true"
     android:clickable="true"
     android:background="@drawable/items_edge_focus"
-    android:layout_marginBottom="10dp">
+    android:layout_marginBottom="@dimen/dpi_10dp">
 
     <TextView
         android:id="@+id/prev_alarm_param_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textSize="30sp"
+        android:textSize="@dimen/dpi_30sp"
         android:textColor="@color/grey_medium"/>
 </LinearLayout>

@@ -7,14 +7,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:paddingTop="17dp"
-        android:paddingStart="94dp"
-        android:paddingEnd="94dp"
+        android:paddingTop="@dimen/dpi_17dp"
+        android:paddingStart="@dimen/dpi_94dp"
+        android:paddingEnd="@dimen/dpi_94dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="120dp">
+            android:layout_height="@dimen/dpi_120dp">
 
             <LinearLayout
                 android:id="@+id/daily_type_layout"
@@ -24,28 +24,28 @@
 
                 <LinearLayout
                     android:id="@+id/daily_rep_type_button"
-                    android:layout_width="60dp"
+                    android:layout_width="@dimen/dpi_60dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
                     android:nextFocusLeft="@id/prev_step_button"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_rep_type_daily"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/dpi_34sp"
                     android:textColor="@color/black" />
             </LinearLayout>
 
@@ -54,32 +54,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/daily_type_layout"
-                android:layout_marginStart="80dp"
+                android:layout_marginStart="@dimen/dpi_80dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/alternate_rep_type_button"
-                    android:layout_width="60dp"
+                    android:layout_width="@dimen/dpi_60dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_rep_type_alternate"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/dpi_34sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -91,28 +91,28 @@
 
                 <LinearLayout
                     android:id="@+id/weekly_rep_type_button"
-                    android:layout_width="60dp"
+                    android:layout_width="@dimen/dpi_60dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
                     android:nextFocusLeft="@id/prev_step_button"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_rep_type_weekly"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/dpi_34sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -126,27 +126,27 @@
 
                 <LinearLayout
                     android:id="@+id/monthly_rep_type_button"
-                    android:layout_width="60dp"
+                    android:layout_width="@dimen/dpi_60dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_rep_type_monthly"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/dpi_34sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
 
@@ -155,32 +155,32 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/alternate_type_layout"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="@dimen/dpi_35dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/annual_rep_type_button"
-                    android:layout_width="60dp"
+                    android:layout_width="@dimen/dpi_60dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/edition_elements_background"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="6dp"
+                    android:padding="@dimen/dpi_6dp"
                     android:gravity="center">
 
                     <LinearLayout
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
+                        android:layout_width="@dimen/dpi_22dp"
+                        android:layout_height="@dimen/dpi_22dp"
                         android:background="@drawable/plus_symbol_black" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="@dimen/dpi_15dp"
                     android:gravity="center"
                     android:text="@string/parameters_rep_type_annual"
-                    android:textSize="34sp"
+                    android:textSize="@dimen/dpi_34sp"
                     android:textColor="@color/black"/>
             </LinearLayout>
         </RelativeLayout>
@@ -189,18 +189,18 @@
             android:id="@+id/rep_type_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="@dimen/dpi_35dp"
             android:gravity="center_vertical"
-            android:textSize="26sp"
+            android:textSize="@dimen/dpi_26sp"
             android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/rep_config_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dpi_10dp"
             android:gravity="center_vertical"
-            android:textSize="26sp"
+            android:textSize="@dimen/dpi_26sp"
             android:textColor="@color/black"/>
     </LinearLayout>
 
@@ -214,11 +214,11 @@
             android:id="@+id/alternate_layout_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="60dp"
+            android:layout_marginTop="@dimen/dpi_20dp"
+            android:layout_marginStart="@dimen/dpi_60dp"
+            android:layout_marginEnd="@dimen/dpi_60dp"
             android:layout_alignParentTop="true"
-            android:textSize="32sp"
+            android:textSize="@dimen/dpi_32sp"
             android:textColor="@color/black"/>
 
         <LinearLayout
@@ -239,21 +239,22 @@
                 android:nextFocusLeft="@id/prev_step_button"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="6dp">
+                android:padding="@dimen/dpi_6dp">
+
                 <LinearLayout
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dpi_16dp"
+                    android:layout_height="@dimen/dpi_16dp"
                     android:background="@drawable/minus_symbol_black" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/alternate_interval_text"
-                android:layout_width="200dp"
+                android:layout_width="@dimen/dpi_200dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textAlignment="center"
-                android:textSize="30sp" />
+                android:textSize="@dimen/dpi_30sp" />
 
             <LinearLayout
                 android:id="@+id/alternate_interval_increase"
@@ -263,10 +264,10 @@
                 android:nextFocusRight="@id/next_step_button"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="6dp">
+                android:padding="@dimen/dpi_6dp">
                 <LinearLayout
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="@dimen/dpi_16dp"
+                    android:layout_height="@dimen/dpi_16dp"
                     android:background="@drawable/plus_symbol_black" />
             </LinearLayout>
         </LinearLayout>
@@ -293,7 +294,7 @@
                 android:layout_height="wrap_content"/>
 
             <RelativeLayout
-                android:layout_width="1dp"
+                android:layout_width="@dimen/dpi_1dp"
                 android:layout_height="match_parent"
                 android:background="@color/grey_light_darker" />
         </LinearLayout>
@@ -309,7 +310,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/dpi_30dp"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -319,7 +320,7 @@
                 android:layout_height="wrap_content"/>
 
             <RelativeLayout
-                android:layout_width="1dp"
+                android:layout_width="@dimen/dpi_1dp"
                 android:layout_height="match_parent"
                 android:background="@color/grey_light_darker" />
         </LinearLayout>

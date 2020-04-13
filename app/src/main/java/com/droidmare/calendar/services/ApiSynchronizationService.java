@@ -66,9 +66,12 @@ public class ApiSynchronizationService extends CommonService {
 
         UserDataService.setSyncServiceReference(this);
 
-        urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + UserDataService.getUserId();
+        String userId = UserDataService.getUserId();
 
-        startSyncTimer();
+        urlForRetrieving = ApiConnectionService.BASE_URL + "event/" + userId;
+
+        //The synchronization takes place only if there is a user logged into the system, otherwise all the events would be locally deleted on each execution:
+        if (userId != null) startSyncTimer();
     }
 
     //Method that starts the timer for resynchronizing the events every 5 minutes:
@@ -105,7 +108,10 @@ public class ApiSynchronizationService extends CommonService {
     public void onDestroy() {
         database.close();
         isRunning = false;
-        resyncTimer.cancel();
+        if (resyncTimer != null) {
+            resyncTimer.cancel();
+            resyncTimer.purge();
+        }
         super.onDestroy();
     }
 
@@ -187,6 +193,7 @@ public class ApiSynchronizationService extends CommonService {
                 Log.e(TAG, "The event was created in the API");
                 Log.e(TAG, retrievedEvent.eventToString());
                 storeEventIntoDatabase(retrievedEvent);
+                EventUtils.makeAlarm(getApplicationContext(), retrievedEvent);
             }
 
             //On the contrary, if it does exist, it is necessary to check which kind of sync operation must be performed:
@@ -249,6 +256,8 @@ public class ApiSynchronizationService extends CommonService {
             //If the event has a POST pending operation it means that the event hasn't been sent to the API yet:
             else if (localEvent.getPendingOperation().equals(ApiConnectionService.REQUEST_METHOD_POST)) {
                 Log.e(TAG, "The event was locally created");
+                //Since a new alarm is going to be set after the attempt to send the event to the API, its current alarm is deleted here:
+                EventUtils.deleteAlarm(getApplicationContext(), localEvent);
                 requestApiOperation(localEvent, ApiConnectionService.REQUEST_METHOD_POST);
                 pauseService();
             }
@@ -288,6 +297,9 @@ public class ApiSynchronizationService extends CommonService {
             //In this case the retrievedEvent is not irrelevant, since it will be used to establish if the modification affects the currently selected day's event list:
             mainActivityReference.get().relocateFocusAfterSync(localEvent, retrievedEvent, LOCAL_SYNC_OP_EDIT);
 
+        //The alarm for this event must be update:
+        EventUtils.makeAlarm(getApplicationContext(), retrievedEvent);
+
         EventsPublisher.modifyEvent(getContextToPublish(), eventToModifyArray);
     }
 
@@ -298,6 +310,9 @@ public class ApiSynchronizationService extends CommonService {
         if (mainActivityReference != null && mainActivityReference.get() != null)
             //In this case the retrievedEvent is irrelevant, since it will not be used:
             mainActivityReference.get().relocateFocusAfterSync(eventToDelete, null, LOCAL_SYNC_OP_DELETE);
+
+        //The alarm for this event must be update
+        EventUtils.deleteAlarm(getApplicationContext(), eventToDelete);
 
         EventsPublisher.deleteEvent(getContextToPublish(), eventToDelete.getEventId());
     }

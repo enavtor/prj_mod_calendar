@@ -218,7 +218,7 @@ public class CalendarFragment extends Fragment {
 
     //Function for setting the element that will get the focus when dpad right button is clicked at the right edge of the calendar grid:
     public void setNextFocusRight (boolean listIsFocusable) {
-        calendarAdapter.setNextFocusRight(listIsFocusable);
+        calendarAdapter.setNextFocusRight();
 
         //It is also necessary to set the next year button's next focus right:
         if (listIsFocusable) nextYear.setNextFocusRightId(eventFragment.getEventList().getId());
@@ -251,7 +251,7 @@ public class CalendarFragment extends Fragment {
             ((MainActivity) fragmentContext).hideLoadingScreen();
 
             //Since this function will be called when a month or year change is performed but the event list must only be updated when a new day is selected or an event
-            //operation (modify, delete, add, go to current, etc) is performed, the event list will be updated only if the month and year coincide with the selected ones:
+            //operation (modify, delete, add, go to current, etc) is performed, the event list will be updated only if the month and year match the selected ones:
             if (DateUtils.sameMonthAndYear(calendarAdapter.getSelectedMonth(), calendarAdapter.getSelectedYear()))
                 refreshEventList();
 

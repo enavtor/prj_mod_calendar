@@ -9,10 +9,10 @@
         android:id="@+id/set_date_item_text"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
+        android:paddingStart="@dimen/dpi_2dp"
+        android:paddingEnd="@dimen/dpi_2dp"
         android:background="@drawable/parameters_grid_item_divider"
-        android:textSize="26sp"
+        android:textSize="@dimen/dpi_26sp"
         android:textAlignment="center"
         android:textColor="@color/black"/>
 </RelativeLayout>

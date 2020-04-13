@@ -4,31 +4,31 @@
     android:id="@+id/event_item_body"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
+    android:layout_marginLeft="@dimen/dpi_8dp"
+    android:layout_marginRight="@dimen/dpi_8dp"
     android:background="@drawable/events_focus"
     android:clickable="true"
     android:focusable="true"
     android:nextFocusRight="@id/event_item_body"
-    android:padding="5dp">
+    android:padding="@dimen/dpi_5dp">
 
     <RelativeLayout
         android:id="@+id/event_elements_holder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp">
+        android:padding="@dimen/dpi_5dp">
 
         <RelativeLayout
             android:id="@+id/event_icon_holder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="5dp">
+            android:layout_marginStart="@dimen/dpi_5dp">
 
             <ImageView
                 android:id="@+id/event_icon"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/dpi_60dp"
+                android:layout_height="@dimen/dpi_60dp"
                 android:layout_centerInParent="true"
                 android:contentDescription="@string/app_name" />
         </RelativeLayout>
@@ -37,7 +37,7 @@
             android:id="@+id/event_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="@dimen/dpi_15dp"
             android:layout_toStartOf="@id/repetition_icon_holder"
             android:layout_toEndOf="@id/event_icon_holder">
 
@@ -54,7 +54,7 @@
                     android:ellipsize="end"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:textSize="25sp" />
+                    android:textSize="@dimen/dpi_25sp" />
             </LinearLayout>
 
             <TextView
@@ -62,19 +62,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/item_title_holder"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="1dp"
+                android:layout_marginTop="@dimen/dpi_2dp"
+                android:layout_marginBottom="@dimen/dpi_1dp"
                 android:ellipsize="end"
                 android:gravity="start"
                 android:maxLines="1"
                 android:textColor="@color/black"
-                android:textSize="25sp" />
+                android:textSize="@dimen/dpi_25sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/repetition_icon_holder"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/dpi_50dp"
+            android:layout_height="@dimen/dpi_50dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:visibility="gone">
@@ -94,13 +94,13 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:paddingStart="1dp"
+                android:paddingStart="@dimen/dpi_1dp"
                 android:paddingEnd="0dp"
-                android:paddingTop="2.5dp"
+                android:paddingTop="@dimen/dpi_dec_2.5dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textScaleX="0.95"
-                android:textSize="24sp"
+                android:textSize="@dimen/dpi_24sp"
                 android:textStyle="bold" />
         </RelativeLayout>
     </RelativeLayout>
@@ -125,24 +125,24 @@
             android:nextFocusRight="@id/modify_event_button"
             android:nextFocusUp="@id/view_event_button"
             android:nextFocusDown="@id/view_event_button"
-            android:padding="4dp">
+            android:padding="@dimen/dpi_4dp">
 
             <TextView
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dpi_120dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/event_buttons_background"
                 android:gravity="center"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:text="@string/view_event_button"
                 android:textColor="@color/white"
-                android:textSize="23sp" />
+                android:textSize="@dimen/dpi_23sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/modify_event_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/dpi_10dp"
             android:background="@drawable/items_edge_focus"
             android:clickable="true"
             android:focusable="true"
@@ -151,24 +151,24 @@
             android:nextFocusRight="@id/delete_event_button"
             android:nextFocusUp="@id/modify_event_button"
             android:nextFocusDown="@id/modify_event_button"
-            android:padding="4dp">
+            android:padding="@dimen/dpi_4dp">
 
             <TextView
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dpi_120dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/event_buttons_background"
                 android:gravity="center"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:text="@string/modify_event_button"
                 android:textColor="@color/white"
-                android:textSize="23sp" />
+                android:textSize="@dimen/dpi_23sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/delete_event_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/dpi_10dp"
             android:background="@drawable/items_edge_focus"
             android:clickable="true"
             android:focusable="true"
@@ -177,24 +177,24 @@
             android:nextFocusRight="@id/dismiss_menu_button"
             android:nextFocusUp="@id/delete_event_button"
             android:nextFocusDown="@id/delete_event_button"
-            android:padding="4dp">
+            android:padding="@dimen/dpi_4dp">
 
             <TextView
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dpi_120dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/event_buttons_background"
                 android:gravity="center"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:text="@string/delete_event_button"
                 android:textColor="@color/white"
-                android:textSize="23sp" />
+                android:textSize="@dimen/dpi_23sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/dismiss_menu_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="@dimen/dpi_10dp"
             android:background="@drawable/items_edge_focus"
             android:clickable="true"
             android:focusable="true"
@@ -203,17 +203,17 @@
             android:nextFocusRight="@id/view_event_button"
             android:nextFocusUp="@id/dismiss_menu_button"
             android:nextFocusDown="@id/dismiss_menu_button"
-            android:padding="4dp">
+            android:padding="@dimen/dpi_4dp">
 
             <TextView
-                android:layout_width="120dp"
+                android:layout_width="@dimen/dpi_120dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/event_buttons_background"
                 android:gravity="center"
-                android:padding="6dp"
+                android:padding="@dimen/dpi_6dp"
                 android:text="@string/dismiss_menu_button"
                 android:textColor="@color/white"
-                android:textSize="23sp" />
+                android:textSize="@dimen/dpi_23sp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

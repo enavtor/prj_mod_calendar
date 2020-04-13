@@ -6,8 +6,8 @@
     <solid android:color="@color/white_more_transparent" />
 
     <stroke
-        android:width="2dp"
+        android:width="@dimen/dpi_2dp"
         android:color="@color/grey_light_darker" />
 
-    <corners android:radius="1dp" />
+    <corners android:radius="@dimen/dpi_1dp" />
 </shape>

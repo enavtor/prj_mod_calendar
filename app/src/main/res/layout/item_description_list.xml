@@ -3,8 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginEnd="12dp"
+    android:layout_marginTop="@dimen/dpi_5dp"
+    android:layout_marginEnd="@dimen/dpi_12dp"
     android:background="@drawable/text_item_background"
     android:focusable="true"
     android:clickable="true">
@@ -13,9 +13,9 @@
         android:id="@+id/default_description_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
+        android:textSize="@dimen/dpi_32sp"
         android:textColor="@color/black"
-        android:padding="5dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"/>
+        android:padding="@dimen/dpi_5dp"
+        android:paddingStart="@dimen/dpi_15dp"
+        android:paddingEnd="@dimen/dpi_15dp"/>
 </RelativeLayout>

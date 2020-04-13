@@ -36,5 +36,7 @@ public class AlarmResetService extends CommonIntentService {
                 Log.e(COMMON_TAG, "onHandelIntent. InterruptedException: " + ie.getMessage());
             }
         }
+
+        Log.d(COMMON_TAG, "All alarms reset");
     }
 }

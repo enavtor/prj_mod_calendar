@@ -3,6 +3,7 @@ package com.droidmare.calendar.utils;
 import android.util.Log;
 
 import com.droidmare.calendar.models.EventListItem;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.utils.DateUtils;
 
 import org.json.JSONArray;
@@ -33,9 +34,9 @@ public class SortUtils {
 
                         JSONObject sortedAlarm = sortedList.getJSONObject(j);
 
-                        String unsortedDate = unsortedAlarm.getString("Alarm");
+                        String unsortedDate = unsortedAlarm.getString(ConstantValues.PREV_ALARMS_ALARM_FIELD);
 
-                        String sortedDate = sortedAlarm.getString("Alarm");
+                        String sortedDate = sortedAlarm.getString(ConstantValues.PREV_ALARMS_ALARM_FIELD);
 
                         if (DateUtils.fullDateIsPrevious(unsortedDate, sortedDate)) {
                             //Since the method put(index, JSONObject) of JSONArray overwrites the JSONObject in index,

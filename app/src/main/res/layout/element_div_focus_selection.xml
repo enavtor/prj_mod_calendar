@@ -19,24 +19,24 @@
             android:layout_height="match_parent">
 
             <RelativeLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/dpi_50dp"
+                android:layout_height="@dimen/dpi_50dp"
                 android:layout_centerInParent="true"
                 android:layout_toStartOf="@id/time_divisor_center"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="48dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_width="@dimen/dpi_48dp"
+                    android:layout_height="@dimen/dpi_2dp"
+                    android:layout_marginTop="@dimen/dpi_1dp"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentTop="true"
                     android:background="@color/grey_medium_lighter"/>
 
                 <LinearLayout
-                    android:layout_width="48dp"
-                    android:layout_height="2dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_width="@dimen/dpi_48dp"
+                    android:layout_height="@dimen/dpi_2dp"
+                    android:layout_marginBottom="@dimen/dpi_5dp"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
                     android:background="@color/grey_medium_lighter"/>
@@ -44,30 +44,30 @@
 
             <LinearLayout
                 android:id="@+id/time_divisor_center"
-                android:layout_width="29dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/dpi_29dp"
+                android:layout_height="@dimen/dpi_50dp"
                 android:layout_centerInParent="true"
                 android:orientation="horizontal" />
 
             <RelativeLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/dpi_50dp"
+                android:layout_height="@dimen/dpi_50dp"
                 android:layout_centerInParent="true"
                 android:layout_toEndOf="@id/time_divisor_center"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="48dp"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="1dp"
+                    android:layout_width="@dimen/dpi_48dp"
+                    android:layout_height="@dimen/dpi_2dp"
+                    android:layout_marginTop="@dimen/dpi_1dp"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentTop="true"
                     android:background="@color/grey_medium_lighter"/>
 
                 <LinearLayout
-                    android:layout_width="48dp"
-                    android:layout_height="2dp"
-                    android:layout_marginBottom="5dp"
+                    android:layout_width="@dimen/dpi_48dp"
+                    android:layout_height="@dimen/dpi_2dp"
+                    android:layout_marginBottom="@dimen/dpi_5dp"
                     android:layout_centerHorizontal="true"
                     android:layout_alignParentBottom="true"
                     android:background="@color/grey_medium_lighter"/>
@@ -87,17 +87,17 @@
 
                 <RelativeLayout
                     android:id="@+id/hour_selection_focus"
-                    android:layout_width="50dp"
-                    android:layout_height="46dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_width="@dimen/dpi_50dp"
+                    android:layout_height="@dimen/dpi_46dp"
+                    android:layout_marginBottom="@dimen/dpi_4dp"
                     android:background="@drawable/selection_list_focus"
                     android:visibility="invisible"/>
             </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/time_focus_center"
-                android:layout_width="29dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/dpi_29dp"
+                android:layout_height="@dimen/dpi_50dp"
                 android:layout_centerInParent="true"
                 android:orientation="horizontal" />
 
@@ -109,9 +109,9 @@
 
                 <RelativeLayout
                     android:id="@+id/minute_selection_focus"
-                    android:layout_width="50dp"
-                    android:layout_height="46dp"
-                    android:layout_marginBottom="4dp"
+                    android:layout_width="@dimen/dpi_50dp"
+                    android:layout_height="@dimen/dpi_46dp"
+                    android:layout_marginBottom="@dimen/dpi_4dp"
                     android:background="@drawable/selection_list_focus"
                     android:visibility="invisible"/>
             </RelativeLayout>

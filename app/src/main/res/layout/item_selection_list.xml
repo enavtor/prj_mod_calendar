@@ -11,10 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_centerInParent="true"
-        android:paddingTop="6dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingBottom="6dp"
-        android:textSize="@dimen/fragment_item_text_size"
-        android:textAlignment="center"/>
+        android:paddingTop="@dimen/dpi_6dp"
+        android:paddingStart="@dimen/dpi_8dp"
+        android:paddingEnd="@dimen/dpi_8dp"
+        android:paddingBottom="@dimen/dpi_6dp"
+        android:textSize="@dimen/dpi_20sp"
+        android:textAlignment="center"
+        android:textColor="@color/grey_medium_lighter"/>
 </RelativeLayout>

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.droidmare.R;
 import com.droidmare.calendar.models.EventListItem;
-import com.droidmare.reminders.model.Reminder;
+import com.droidmare.common.models.ConstantValues;
 import com.droidmare.common.utils.ImageUtils;
 
 //Model for an event item (of type medication) declaration
@@ -23,7 +23,7 @@ public class MedicationEvent extends EventListItem {
     @Override
     public void setNewEvent() {
 
-        eventType = Reminder.ReminderType.MEDICATION_REMINDER;
+        eventType = ConstantValues.MEDICATION_EVENT_TYPE;
 
         eventTypeTitle = resources.getString(R.string.medication_reminder_title);
 
